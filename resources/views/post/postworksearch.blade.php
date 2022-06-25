@@ -8,9 +8,9 @@
 </div> 
 <div class="form-group">
     @if ($postdisplaydata['favoritetitle'])  
-        <button type="button" class="btn btn-primary btn-block searchclass" id="#favorite">お気に入りから探す</button>
+        <button type="button" class="btn btn-primary btn-block searchclass trigger" id="#favorite">お気に入りから探す</button>
     @else
-        <button type="button" class="btn btn-primary btn-block searchclass disabled" id="#favorite" disabled>お気に入りから探す</button>
+        <button type="button" class="btn btn-primary btn-block searchclass trigger" id="#favorite" disabled>お気に入りから探す</button>
     @endif
 </div> 
 <div class="form-group">
@@ -36,15 +36,25 @@
                     <tbody>
                         <tr>
                             <th scope="row">{{ $i+1 }}</th>
-                            <td>{{ $postdisplaydata['browsehistorytitle'][$i] }}</td>
+                            <td><a class="modal-linkreturn" href="#" data-bs-toggle="tooltip{{ $i }}" data-html="true" data-dismiss="modal" data-target="{{ $postdisplaydata['browsehistorytitle'][$i] }}" title="{{ $postdisplaydata['browsehistorytitle'][$i] }}<br><img src=&quot;http://127.0.0.1:8000/assets/img/icon/workindetail/goodicon.png&quot;>">{{ $postdisplaydata['browsehistorytitle'][$i] }}</a></td>
                             <td>{{ $postdisplaydata['browsehistorytime'][$i] }}</td>
                         </tr>
                     </tbody>
+                    <!-- Generated markup by the plugin -->
+                    <div class="tooltip bs-tooltip-top" role="tooltip{{ $i }}">
+                        <div class="tooltip-arrow"></div>
+                            <div class="tooltip-inner">
+                                {{ $i }}
+                            </div>
+                        </div>
+                    </div>
                 @endfor
             </table>
         </div>
     </div>
 @endif
+
+
 
 @if (!empty($postdisplaydata['favoritetitle']))  
     <div class="worksearch card" id="favorite">
@@ -61,7 +71,7 @@
                     <tbody>
                         <tr>
                             <th scope="row">{{ $i+1 }}</th>
-                            <td>{{ $postdisplaydata['favoritetitle'][$i] }}</td>
+                            <td><a href="#" data-bs-toggle="tooltip" title="Some tooltip text!">{{ $postdisplaydata['favoritetitle'][$i] }}</a></td>
                         </tr>
                     </tbody>
                 @endfor
@@ -129,4 +139,10 @@
             $($(this).attr('id')).show(); 
         });
     });
+
+    $('.modal-linkreturn').click(function (event) {
+		var target = $(this).data('target');
+		let worknameid = document.getElementById("worknameid");
+        worknameid.value = target;
+	});
 </script>

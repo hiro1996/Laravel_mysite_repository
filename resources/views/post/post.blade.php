@@ -35,7 +35,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-user"></i></span>
                             </div>
-                            <input class="form-control" placeholder="レビュー作品名(直接入力すると予測表示します)" type="text" name="workname" value="{{ $postdisplaydata['worktitle'] ?? '' }}" list="searchlist" autocomplete="on">
+                            <input class="form-control" placeholder="レビュー作品名(直接入力すると予測表示します)" type="text" id="worknameid" name="workname" value="{{ $postdisplaydata['worktitle'] ?? '' }}" list="searchlist" autocomplete="on">
                             <datalist id="searchlist">
                                 @for ($i = 0;$i < count($workall);$i++)
                                     <option value="{{ $workall[$i] }}"></option>
@@ -57,14 +57,14 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <label for="worktitle" class="col-sm-13 col-form-label">作品検索は<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchmodal">こちら</button></label>
+                                <label for="worktitle" class="col-sm-13 col-form-label">作品検索は<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#searchmodal">こちら</button></label>
                             </div>
                         </div> 
                     </div>
                 </div>
             </div> 
 
-            <div class="modal fade" id="searchmodal" data-bs-keyboard="false" tabindex="-1" aria-labelledby="searchmodalLabel" area-hidden="true" data-backdrop="static">
+            <div class="modal fade" id="searchmodal" data-bs-keyboard="false" tabindex="-1" aria-labelledby="searchmodal" area-hidden="true" data-backdrop="static">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">

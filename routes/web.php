@@ -52,7 +52,7 @@ Route::post('/attributecomplete', 'App\Http\Controllers\MypageController@attribu
 
 Route::get('/work_search', 'App\Http\Controllers\WorkController@worksearch');
 
-Route::post('/work_search/gojuonsearch', 'App\Http\Controllers\WorkController@worksearchAjax');
+Route::post('/work_search/gojuonsearch', 'App\Http\Controllers\WorkController@worksearchajax');
 
 Route::get('/work_history', 'App\Http\Controllers\WorkController@workhistory');
 
@@ -77,8 +77,6 @@ Route::get('/opinion', 'App\Http\Controllers\OpinionController@opinion');
 Route::post('/opinion/conf', 'App\Http\Controllers\OpinionController@opinionconf');
 
 Route::post('/opinion/complete', 'App\Http\Controllers\OpinionController@opinioncomplete');
-
-Route::get('/genrepost', 'App\Http\Controllers\WorkController@workgenrepost');
 
 Route::get('/setting', 'App\Http\Controllers\MypageController@setting');
 
@@ -116,4 +114,8 @@ Route::post('/workindetail/favorite/add', 'App\Http\Controllers\WorkController@w
 
 Route::post('/workindetail/favorite/delete', 'App\Http\Controllers\WorkController@workindetailfavoritedelete');
 
+Route::post('/genrepostcomplete', 'App\Http\Controllers\WorkController@workgenrepostcomplete');
 
+Route::post('/workindetail/goodbutton/add', 'App\Http\Controllers\WorkController@workindetailgoodiconadd');
+
+Route::post('/workindetail/goodbutton/delete', 'App\Http\Controllers\WorkController@workindetailgoodicondelete');

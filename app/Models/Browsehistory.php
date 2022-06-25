@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class Browsehistory extends Model
 {
-    public function browsehistoryModelGet() {
+    public function browsehistoryModelGet($getcount) {
         $where = [
             'loginid' => session('loginid')
         ];
-        $browsehistories = DB::table('browsehistories')->where($where)->orderBy('history_time','DESC')->limit(10)->get();
+        $browsehistories = DB::table('browsehistories')->where($where)->orderBy('history_time','DESC')->limit($getcount)->get();
         return $browsehistories;
     }
 

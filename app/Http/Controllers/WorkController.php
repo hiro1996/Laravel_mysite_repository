@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Browsehistory;
 use App\Models\Favorite;
 use App\Models\Genrepost;
+use App\Models\Genrepostanswer;
+use App\Models\Goodiconhistory;
 use App\Models\Guestrecord;
 use App\Models\Post;
 use App\Models\Record;
@@ -24,7 +26,7 @@ class WorkController extends Controller
     //furigana = 作品検索画面内の「五十音検索」のid
     //word = 単語
     //workanimes = 検索する対象テーブル
-    public function worksearchAjax(Request $request, Work $work) {
+    public function worksearchajax(Request $request, Work $work) {
         $word = $request->only('word','work','artist','keyword');
         $works = $work->workModelWhere('worksearch','furigana',$word["word"],$word["work"],$word["artist"],$word["keyword"],'workanimes');
         return response()->json(
@@ -35,7 +37,7 @@ class WorkController extends Controller
     }
 
     public function workhistory(Browsehistory $browsehistory) {
-        $browsehistories = $browsehistory->browsehistoryModelGet();
+        $browsehistories = $browsehistory->browsehistoryModelGet(10);
         $i = 0;
         foreach ($browsehistories as $browsehist) {
             $browsedatas = $browsehistory->browsehistoryDataModelGet($browsehist->workid,$browsehist->DB_table_name);
@@ -49,7 +51,7 @@ class WorkController extends Controller
         return view('work.workhistory',compact('browsehistorydatas'));
     }
 
-    public function workindetail(Work $work, $url, $url2, Favorite $favorite, Post $post, Record $record, Guestrecord $guestrecord, Browsehistory $browsehistory) {
+    public function workindetail(Work $work, $url, $url2, Favorite $favorite, Post $post, Record $record, Guestrecord $guestrecord, Genrepost $genrepost, Genrepostanswer $genrepostanswer, Browsehistory $browsehistory, Goodiconhistory $goodiconhistory) {
         /**
          * コンテンツトップでどの作品をクリックしたかを判別するURLを取得し、urlからどの作品DBのデータを参照するか確認
          */
@@ -124,6 +126,66 @@ class WorkController extends Controller
          */
         $workdata['posts'] = $post->postModelGet($workdata['workid']);
 
+        /**
+         * ジャンル投票用のデータを取得
+         */
+        $genreposts = $genrepost->genrepostModelGet();
+        $arrangementone = 1;
+        $arrangementtwo = 1;
+        foreach ($genreposts as $genre) {
+            if ($genre->genrepost_select_id == 1) {
+                $category[1][$arrangementone][] = $genre->genre;
+                if (count($category[1][$arrangementone]) == 7) $arrangementone++;
+            } else {
+                $category[2][$arrangementtwo][] = $genre->genre;
+                if (count($category[2][$arrangementtwo]) == 7) $arrangementtwo++;
+            }
+        }
+        $workdata["category"] = $category;
+
+        $workdata["genrepostanswers"] = FALSE;
+        if ($genrepostanswer->genrepostanswerModelSearch($workdata['workid'])) {
+            for ($i = 1;$i < 3;$i++) {
+                $genrepostanswers[$i] = $genrepostanswer->genrepostanswerModelGet($workdata['workid'],$i);
+                $j = 0;
+                foreach ($genrepostanswers[$i] as $genre) {
+                    $genrepostanswersdata[$i][$j] = $genre->genre;
+                    $j++;
+                }
+            }
+            $workdata["genrepostanswers"] = $genrepostanswersdata;
+        }
+
+        /**
+         * ログインユーザーが当画面にログインした場合、すでにいいねを押したレビューだけ黄goodアイコン、それ以外は白goodアイコン
+         * 未ログインユーザーが当画面にログインした場合、デフォルト表示は必ず白goodアイコン
+         * 各作品IDとレビューIDから各レビューを取得
+         */
+        if (count($workdata["posts"]) != 0) {
+            if (session('loginid')) {
+                for ($i = 1;$i <= count($workdata["posts"]);$i++) {
+                    $goodiconurl[$i] = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodicon.png';
+                    $forurljudge[$i] = 'beforeclick'.$i;
+                    $login_iconcount = $goodiconhistory->goodiconhistoryModelGet('login_iconcount',$loginid,$workdata['workid'],$i);
+                    if ($login_iconcount > 0) {
+                        $goodiconurl[$i] = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodiconpush.png';
+                        $forurljudge[$i] = 'afterclick'.$i;
+                    }
+                    $counts[$i] = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$workdata['workid'],$i);
+                }
+            } else {
+                for ($i = 1;$i <= count($workdata["posts"]);$i++) {
+                    $goodiconurl[$i] = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodicon.png';
+                    $forurljudge[$i] = 'beforeclick'.$i;
+                    $counts[$i] = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$workdata['workid'],$i);
+                }
+            }
+            $workdata["count"] = $counts;
+            $workdata["goodiconurl"] = $goodiconurl;
+            $workdata["forurljudgeclass"] = $forurljudge;
+        } 
+        
+
         return view('work.workindetail',compact('workdata','favoriteclass','favoritetext'));
     }
 
@@ -142,7 +204,6 @@ class WorkController extends Controller
             $workid = $work->workid;
         }
         $favorite->favoriteModelInsert($workid,$db);
-
         return response()->json(
             [
                 "data" => $workid
@@ -165,8 +226,6 @@ class WorkController extends Controller
             $workid = $work->workid;
         }
         $favorite->favoriteModelDelete($workid,$db);
-        
-
         return response()->json(
             [
                 "data" => $workid
@@ -174,22 +233,68 @@ class WorkController extends Controller
         );
     }
 
-    public function workgenrepost(Genrepost $genrepost) {
+    public function workgenrepostcomplete(Request $request, Genrepost $genrepost, Genrepostanswer $genrepostanswer) {
+        $genrepostsreq = $request->only('genrepost','workid');
 
-        $genreposts = $genrepost->genrepostModelGet();
-
-        $arrangementone = 1;
-        $arrangementtwo = 1;
-        foreach ($genreposts as $genre) {
-            if ($genre->genrepost_select_id == 1) {
-                $category[1][$arrangementone][] = $genre->genre;
-                if (count($category[1][$arrangementone]) == 7) $arrangementone++;
-            } else {
-                $category[2][$arrangementtwo][] = $genre->genre;
-                if (count($category[2][$arrangementtwo]) == 7) $arrangementtwo++;
+        $loginid = 'Guest';
+        if (session('loginid')) {
+            $loginid = session('loginid'); 
+            if ($genrepostanswer->genrepostanswerModelExist($loginid,$genrepostsreq['workid'])) {
+                $genrepostanswer->genrepostanswerModelDelete($loginid,$genrepostsreq['workid']);
             }
         }
+        for ($i = 0;$i < count($genrepostsreq['genrepost']);$i++) {
+            $genrepostid = $genrepost->genrepostModelSearch('genre',$genrepostsreq['genrepost'][$i],'genrepostid');
+            $genrepostselectid = $genrepost->genrepostModelSearch('genre',$genrepostsreq['genrepost'][$i],'genrepostselectid');
+            $genrepostanswer->genrepostanswerModelInsert($loginid,$genrepostsreq['workid'],$genrepostid,$genrepostselectid);
+        }
+        for ($i = 1;$i < 3;$i++) {
+            $genrepostanswers[$i] = $genrepostanswer->genrepostanswerModelGet($genrepostsreq['workid'],$i);
+            $j = 0;
+            foreach ($genrepostanswers[$i] as $genre) {
+                $genrepostanswersdata[$i][$j] = $genre->genre;
+                $j++;
+            }
+        }
+        return response()->json(
+            [
+                "result" => 'OK',
+                "genrepostdata" => $genrepostanswersdata
+            ],
+        );
+    }
 
-        return view('work.workgenrepost',compact('category'));
+    public function workindetailgoodiconadd(Request $request, Goodiconhistory $goodiconhistory) {
+        $count = $request->only('workid','reviewid');
+
+        $loginid = 'Guest';
+        if (session('loginid')) $loginid = session('loginid');
+        $goodiconhistory->goodiconhistoryModelInsert($loginid,$count["workid"],$count["reviewid"]);
+
+        $goodicon = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodiconpush.png';
+        $counts = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$count["workid"],$count["reviewid"]);
+        return response()->json(
+            [
+                "count" => $counts,
+                "icon" => $goodicon
+            ],
+        );
+    }
+
+    public function workindetailgoodicondelete(Request $request, Goodiconhistory $goodiconhistory) {
+        $count = $request->only('workid','reviewid');
+
+        $loginid = 'Guest';
+        if (session('loginid')) $loginid = session('loginid');
+        $goodiconhistory->goodiconhistoryModelDelete($loginid,$count["workid"],$count["reviewid"]);
+
+        $goodicon = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodicon.png';
+        $counts = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$count["workid"],$count["reviewid"]);
+        return response()->json(
+            [
+                "count" => $counts,
+                "icon" => $goodicon
+            ],
+        );
     }
 }

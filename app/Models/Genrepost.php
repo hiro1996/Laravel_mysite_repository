@@ -12,4 +12,25 @@ class Genrepost extends Model
         $genreposts = DB::table('genreposts')->get();
         return $genreposts;
     }
+
+    public function genrepostModelSearch($whereColumn,$whereOutput,$select) {
+        $where = [
+            $whereColumn => $whereOutput,
+        ];
+        $output = DB::table('genreposts')->where($where)->get();
+
+        switch ($select) {
+            case 'genrepostid':
+                foreach ($output as $op) {
+                    $output = $op->genrepostid;
+                }
+            break;
+            case 'genrepostselectid':
+                foreach ($output as $op) {
+                    $output = $op->genrepost_select_id;
+                }
+            break;
+        }
+        return $output;
+    }
 }

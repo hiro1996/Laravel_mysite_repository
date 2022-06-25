@@ -58,14 +58,10 @@ function usersearchajax() {
 
             csvinputElement.value = 'para';
             csvformElement.appendChild(csvinputElement);
-
-
             divChildElement.appendChild(imgChildElement);
             divChildElement.appendChild(csvElement);
             divChildElement.appendChild(csvformElement);
-
             divElement.appendChild(divChildElement);
-
             $("#csvid").html(divElement);
         } else {
             $("#collapsesearchbuttonid").html('<div id="not-search">検索結果がありません。</div>');
@@ -79,7 +75,6 @@ function usersearchajax() {
 
 function allCheck() {
     const checkbox = document.getElementsByName("check")
-
     for(i = 0; i < checkbox.length; i++) {
         checkbox[i].checked = true
     }

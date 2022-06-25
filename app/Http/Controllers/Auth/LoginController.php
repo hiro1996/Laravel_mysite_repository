@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Rankingtablesetting;
 use App\Models\Work;
 use App\Models\Attribute;
+use App\Models\Browsehistory;
 use App\Models\Printorderjsid;
 use App\Models\Rankingtitlesetting;
 use App\Models\Record;
@@ -137,7 +138,7 @@ class LoginController extends Controller
         return redirect('/top');
     }
 
-    public function contentstop(Request $request, Work $work, User $user, Attribute $attribute, Printorderjsid $printorderjsid, Rankingtitlesetting $rankingtitlesetting) {
+    public function contentstop(Request $request, Work $work, User $user, Attribute $attribute, Printorderjsid $printorderjsid, Rankingtitlesetting $rankingtitlesetting, Browsehistory $browsehistory) {
         /**
          * パスワード設定画面から遷移
          * new_password 新しいパスワード
@@ -247,6 +248,22 @@ class LoginController extends Controller
         foreach ($rankingtitlesettings as $rankingtitlesetting) {
             $contentstop['table_title'] = $rankingtitlesetting->table_title;
             $contentstop['button_name'] = $rankingtitlesetting->button_name;
+        }
+
+        /**
+         * 最近チェックした作品
+         */
+        $contentstop['img'] = FALSE;
+        $browsehistories = $browsehistory->browsehistoryModelGet(5);
+        $i = 0;
+        foreach ($browsehistories as $browsehist) {
+            $browsedatas = $browsehistory->browsehistoryDataModelGet($browsehist->workid,$browsehist->DB_table_name);
+            foreach ($browsedatas as $data) {
+                $contentstop['title'][$i] = $data->title;
+                $contentstop['img'][$i] = $data->img;
+                $contentstop['historydate'][$i] = $browsehist->history_time;
+            }
+            $i++;
         }
 
         return view('contentstop',compact('contentstop'));

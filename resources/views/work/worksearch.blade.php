@@ -27,11 +27,11 @@
                             <input type="text" class="form-control" id="keyword" name="keyword" placeholder="キーワード">
                         </div>
                     </div>
-                    <strong class="text-muted">五十音検索(文字をクリックで色が変わり、選択状態になります。複数選択可)</strong>
+                    <strong class="text-muted">五十音検索(文字をクリックで色が変わり、選択状態になります。)</strong>
                     @include('block.gojuonsearch')
                     <div class="form-group">
                         <div class="text-center searchbuttondivclass">
-                            <input onclick="searchAjax()" type="button" id="searchbuttonid" class="btn btn-primary btn-block searchbuttonclass" value="検索">
+                            <input onclick="searchajax()" type="button" id="searchbuttonid" class="btn btn-primary btn-block searchbuttonclass" value="検索">
                         </div> 
                     </div> 
                 @include('block.worksearchendtitle')
