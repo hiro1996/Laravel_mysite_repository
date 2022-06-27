@@ -42,6 +42,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/adminpage.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/adminlink.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/setting.css') }}">
+        <link rel="stylesheet" href="https://cdn.rawgit.com/jgthms/bulma/master/css/bulma.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
         <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">

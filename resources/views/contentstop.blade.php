@@ -4,9 +4,9 @@
 
 @include('include.header')
 
-    <div class="p-3 mb-2 carousel-bg text-black">
-        <div class="container">
-            <h3 class="my-1">新着情報</h3>
+    <div class="p-5 mb-2 carousel-bg text-black">
+        <h3 class="my-1">新着情報</h3>
+        <div class="column is-full has-background-primary">
             <div class="carousel slide" id="sample" data-ride="carousel">
             
             </div>
@@ -56,32 +56,26 @@
         </div>
     </div>
 
-
-    <?php
-        $title = 'XXXXサイトとは';
-        $rankingtitleleft = '';
-        $rankingtitleright = '';
-    ?>
-
-    <section class="whatissite">
-        <div class="form-group">
-            <div class="text-center">
-            お家で何を見よう？自分にとってのおすすめの映画、おすすめの漫画、おすすめのアニメって何だろう？そんな疑問はありませんか？<br>
-            本サイトは自分がどんなアニメ、漫画、映画を見たいかのおすすめを教えてくれるサイトです。<br>
-            さらに、見た作品について「ここが面白い！」という感想があれば、「レビュ-投稿する」でレビュー投稿して、<br>
-            その作品の面白さを他のユーザーに端的に知らせてあげよう！ネタバレはやめてね！<br>
-            今週の全ユーザーおすすめランキングには、レビュー投稿された作品の面白度合いをポイント化してランキングを表示するよ！<br>
-            あなたのおすすめランキングには、自分が気になるタグを設定しておくと、それに応じたおすすめランキングを表示するよ！<br>
+    <section class="ad">
+        <div class="p-5 columns">
+            <div class="column is-two-fifths">
+                <div class="text-center">
+                お家で何を見よう？自分にとってのおすすめの映画、おすすめの漫画、おすすめのアニメって何だろう？そんな疑問はありませんか？<br>
+                本サイトは自分がどんなアニメ、漫画、映画を見たいかのおすすめを教えてくれるサイトです。<br>
+                さらに、見た作品について「ここが面白い！」という感想があれば、「レビュ-投稿する」でレビュー投稿して、<br>
+                その作品の面白さを他のユーザーに端的に知らせてあげよう！ネタバレはやめてね！<br>
+                今週の全ユーザーおすすめランキングには、レビュー投稿された作品の面白度合いをポイント化してランキングを表示するよ！<br>
+                あなたのおすすめランキングには、自分が気になるタグを設定しておくと、それに応じたおすすめランキングを表示するよ！<br>
+                </div>
+            </div>
+            <div class="column is-three-fifths">
+                <div class="card">
+                    あああああ
+                </div>
             </div>
         </div>
     </section>
         
-        <div class="form-group">
-            <div class="text-center">
-                <a href="/opinion" class="btn btn-secondary">ご意見投稿する</a>
-            </div>
-        </div>
-
     <?php
         $rankingtitleleft = '';
         $rankingtitleright = '';
@@ -106,7 +100,7 @@
                         <ul class="contenttopworklist-ul">
                             @for ($i = 1;$i <= 6;$i++)
                                 <li class="contenttopworklist-li">
-                                    <a href="/work_indetail/{{ $contentstop['workfilm_url'][$i] }}" target="_blank">
+                                    <a href="/work_indetail/{{ $contentstop['workfilm_url'][$i] }}">
                                         <img src="{{ $contentstop['workfilm_img'][$i] }}" alt="{{ $contentstop['workfilm_img'][$i] }}" width="200" height="150">
                                         <div class="worktitlename">
                                             {{ $contentstop['workfilm_title'][$i] }}
