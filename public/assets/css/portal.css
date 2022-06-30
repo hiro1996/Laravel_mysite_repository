@@ -1,8 +1,18 @@
   /* Custom page CSS
   -------------------------------------------------- */
   /* Not required for template or sticky footer method. */
+  .main {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  section {
+    background-color: skyblue;
+  }
+
   .container {
-    max-width: 1000px;
+    max-width: 900px;
     width: auto;
     margin : 100px;
     box-shadow: 2px 2px 4px;
@@ -32,6 +42,15 @@
   }
 
   /*header*/
+  .notification {
+    margin-right: 15px;
+  }
+
+  .notificationsclass {
+    display: block;
+    margin: auto;
+  }
+
   .work-count {
     font-family: Meiryo;
     font-size: 20px;

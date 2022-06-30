@@ -10,6 +10,7 @@ use App\Models\Rankingtablesetting;
 use App\Models\Work;
 use App\Models\Attribute;
 use App\Models\Browsehistory;
+use App\Models\Notification;
 use App\Models\Printorderjsid;
 use App\Models\Rankingtitlesetting;
 use App\Models\Record;
@@ -138,7 +139,7 @@ class LoginController extends Controller
         return redirect('/top');
     }
 
-    public function contentstop(Request $request, Work $work, User $user, Attribute $attribute, Printorderjsid $printorderjsid, Rankingtitlesetting $rankingtitlesetting, Browsehistory $browsehistory) {
+    public function contentstop(Request $request, Work $work, User $user, Attribute $attribute, Printorderjsid $printorderjsid, Rankingtitlesetting $rankingtitlesetting, Browsehistory $browsehistory, Notification $notification) {
         /**
          * パスワード設定画面から遷移
          * new_password 新しいパスワード
@@ -265,6 +266,8 @@ class LoginController extends Controller
             }
             $i++;
         }
+
+        
 
         return view('contentstop',compact('contentstop'));
     }

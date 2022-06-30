@@ -4,14 +4,16 @@
 
 @include('include.header')
 
-    <div class="p-5 mb-2 carousel-bg text-black">
+<div class="main carousel-bg">
+
+    <section class="p-5 mb-2 text-black">
         <h3 class="my-1">新着情報</h3>
         <div class="column is-full has-background-primary">
             <div class="carousel slide" id="sample" data-ride="carousel">
             
             </div>
         </div>
-    </div>
+    </section>
 
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#configid">Modal Open</button>
 
@@ -56,10 +58,13 @@
         </div>
     </div>
 
-    <section class="ad">
-        <div class="p-5 columns">
+    <?php
+        $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
+    ?>
+    <section class="p-5 ad">
+        <div class="columns">
             <div class="column is-two-fifths">
-                <div class="text-center">
+                <div class="p-3 card">
                 お家で何を見よう？自分にとってのおすすめの映画、おすすめの漫画、おすすめのアニメって何だろう？そんな疑問はありませんか？<br>
                 本サイトは自分がどんなアニメ、漫画、映画を見たいかのおすすめを教えてくれるサイトです。<br>
                 さらに、見た作品について「ここが面白い！」という感想があれば、「レビュ-投稿する」でレビュー投稿して、<br>
@@ -69,8 +74,8 @@
                 </div>
             </div>
             <div class="column is-three-fifths">
-                <div class="card">
-                    あああああ
+                <div class="p-3 card">
+                    <img src="{{ $thumbnail_top }}" width="1050" height="1050">
                 </div>
             </div>
         </div>
@@ -213,6 +218,8 @@
             </div>
         </section>
     @endif
+
+</div>
 
 
 @include('include.footer')

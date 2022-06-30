@@ -1,6 +1,7 @@
 <?php
 
     use Illuminate\Support\Facades\DB;
+    use App\Models\Notification;
 
     if (session('loginid')) {
         $uservalue = DB::table('users')->where(['loginid' => session('loginid')])->get();
@@ -12,6 +13,18 @@
 
     $url = "127.0.0.1:8000/";
 
+    /**
+    * ヘッダーの通知
+    */
+
+    $notification = new Notification();
+    $notifications = $notification->notificationModelGet();
+    $i = 0;
+    foreach ($notifications as $noti) {
+        $contentstop['notification_title'][$i] = $noti->notification_title;
+        $contentstop['notification_img'][$i] = asset($noti->img);
+        $i++;
+    }
 ?>
 
 
@@ -169,31 +182,55 @@
                         </div>
                     </ul>
                     <ul class="navbar-nav navbar-light ml-auto">
-                        @empty(session('loginid'))
-                            <div class="container-fluid">
+                        <div class="container-fluid">
+                            <?php
+                                $notifications = asset('assets/img/icon/top/notifications.jpg');
+                            ?>
+                            <li class="nav-item notification">
+                                <a class="dropdown-toggle" href="#" id="notofication" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <img src="{{ $notifications }}" width="30" height="30">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="notofication">
+                                    @if(session('loginid'))
+                                        <table class="table is-narrow">
+                                            <tbody>
+                                                @for ($i = 0;$i < count($contentstop['notification_title']);$i++)
+                                                    <tr>
+                                                        <td><img src="{{ $contentstop['notification_img'][$i] }}" class="notificationsclass" width="100" height="100"></td>
+                                                        <td>{{ $contentstop['notification_title'][$i] }}</td>
+                                                    </tr>
+                                                @endfor
+                                            </tbody>
+                                        </table>
+                                    @else
+                                        ログインしてください
+                                    @endif
+                                </div>
+                            </li>
+                            @empty(session('loginid'))
                                 <li class="nav-item">
                                     <a class="nav-link" aria-current="page" href="/login">ログイン</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" aria-current="page" href="/register">新規登録</a>
                                 </li>
-                        @else
-                            @if($userid == 2)
-                                <li class="nav-item">
-                                    <a class="nav-link" aria-current="page" href="/adminpage">管理者設定ページ</a>
-                                </li>
                             @else
+                                @if($userid == 2)
+                                    <li class="nav-item">
+                                        <a class="nav-link" aria-current="page" href="/adminpage">管理者設定ページ</a>
+                                    </li>
+                                @else
+                                    <li class="nav-item">
+                                        <a class="nav-link" aria-current="page" href="/mypage">マイページ</a>
+                                    </li>
+                                @endif
                                 <li class="nav-item">
-                                    <a class="nav-link" aria-current="page" href="/mypage">マイページ</a>
+                                    <a class="nav-link" aria-current="page" href="#">ようこそ&nbsp;{{ session('loginid') }}さん</a>
                                 </li>
-                            @endif
-                            <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="#">ようこそ&nbsp;{{ session('loginid') }}さん</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="logout" aria-current="page" href="/logout">ログアウト</a>
-                            </li>
-                        @endempty
+                                <li class="nav-item">
+                                    <a class="nav-link" id="logout" aria-current="page" href="/logout">ログアウト</a>
+                                </li>
+                            @endempty
                             <li class="nav-item">
                                 <a class="nav-link" aria-current="page" href="/post">レビュー投稿</a>
                             </li>
