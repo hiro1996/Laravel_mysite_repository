@@ -23,7 +23,7 @@ class PostController extends Controller
         } else { //ログインしていない時
             $postdisplaydata['nickname'] = 'Guest';
         }
-        $workall = $work->workAllModelGet();
+        $workall = $work->workNameModelGet();
 
 
         $favoritetmps = $favorite->favoriteAllModelGet();

@@ -9,12 +9,12 @@ use Illuminate\Support\Facades\DB;
 class Work extends Model
 {
 
-    public function workAllModelGet() {
+    public function workNameModelGet() {
         $works = DB::table('works')->get();
 
         $i = 0;
-        foreach ($works as $anime) {
-            $workall[$i] = $anime->title;
+        foreach ($works as $work) {
+            $workall[$i] = $work->title;
             $i++;
         }
 
