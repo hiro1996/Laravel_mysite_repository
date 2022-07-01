@@ -28,7 +28,7 @@ class WorkController extends Controller
     //workanimes = 検索する対象テーブル
     public function worksearchajax(Request $request, Work $work) {
         $word = $request->only('word','work','artist','keyword');
-        $works = $work->workModelWhere('worksearch','furigana',$word["word"],$word["work"],$word["artist"],$word["keyword"],'workanimes');
+        $works = $work->workModelWhere('worksearch','furigana',$word["word"],$word["work"],$word["artist"],$word["keyword"],'works');
         return response()->json(
             [
                 "data" => $works
@@ -40,7 +40,7 @@ class WorkController extends Controller
         $browsehistories = $browsehistory->browsehistoryModelGet(10);
         $i = 0;
         foreach ($browsehistories as $browsehist) {
-            $browsedatas = $browsehistory->browsehistoryDataModelGet($browsehist->workid,$browsehist->DB_table_name);
+            $browsedatas = $browsehistory->browsehistoryDataModelGet($browsehist->workid);
             foreach ($browsedatas as $data) {
                 $browsehistorydatas['title'][$i] = $data->title;
                 $browsehistorydatas['img'][$i] = $data->img;
@@ -56,12 +56,11 @@ class WorkController extends Controller
          * コンテンツトップでどの作品をクリックしたかを判別するURLを取得し、urlからどの作品DBのデータを参照するか確認
          */
         $urlstr = $url.'/'.$url2;
-        $db = $work->workDBModelGet(NULL,NULL,NULL,NULL,$url,NULL);
 
         /**
          * どの作品DBから参照するかとクリックした作品のURLをキーとして、作品詳細画面で表示する作品情報を取得
          */
-        $workdata = $work->workModelGet($db,'url',$urlstr);
+        $workdata = $work->workModelGet('url',$urlstr);
 
         foreach ($workdata as $workd) {
             $workdata['workid'] = $workd->workid;
@@ -81,7 +80,7 @@ class WorkController extends Controller
             if ($browsehistory->browsehistoryModelExist($loginid,$workdata['workid'])) {
                 $browsehistory->browsehistoryModelUpdate('loginid',$loginid,'workid',$workdata['workid'],'history_time',now());
             } else {
-                $browsehistory->browsehistoryModelInsert($loginid,$workdata['workid'],$db);
+                $browsehistory->browsehistoryModelInsert($loginid,$workdata['workid']);
             }
         } 
 
@@ -197,13 +196,12 @@ class WorkController extends Controller
         $url = explode("/",$workindetails["url"]);
         $urlstr = str_replace("/work_indetail/","",$workindetails["url"]);
         
-        $db = $work->workDBModelGet(NULL,NULL,NULL,NULL,$url[2],NULL);
-        $works = $work->workModelGet($db,'url',$urlstr);
+        $works = $work->workModelGet('url',$urlstr);
 
         foreach ($works as $work) {
             $workid = $work->workid;
         }
-        $favorite->favoriteModelInsert($workid,$db);
+        $favorite->favoriteModelInsert($workid);
         return response()->json(
             [
                 "data" => $workid
@@ -219,13 +217,12 @@ class WorkController extends Controller
         $url = explode("/",$workindetails["url"]);
         $urlstr = str_replace("/work_indetail/","",$workindetails["url"]);
         
-        $db = $work->workDBModelGet(NULL,NULL,NULL,NULL,$url[2],NULL);
-        $works = $work->workModelGet($db,'url',$urlstr);
+        $works = $work->workModelGet('url',$urlstr);
 
         foreach ($works as $work) {
             $workid = $work->workid;
         }
-        $favorite->favoriteModelDelete($workid,$db);
+        $favorite->favoriteModelDelete($workid);
         return response()->json(
             [
                 "data" => $workid

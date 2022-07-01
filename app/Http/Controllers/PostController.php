@@ -32,7 +32,7 @@ class PostController extends Controller
         if (count($favoritetmps) > 0) {
             $i = 0;
             foreach ($favoritetmps as $favotmp) {
-                $favoritetmp2 = $favorite->favoriteModelGet($favotmp->DB_table_name,$favotmp->workid);
+                $favoritetmp2 = $favorite->favoriteModelGet($favotmp->workid);
 
                 foreach ($favoritetmp2 as $favo) {
                     $postdisplaydata['favoritetitle'][$i] = $favo->title;
@@ -48,7 +48,7 @@ class PostController extends Controller
         if (count($browseworks) > 0) {
             $i = 0;
             foreach ($browseworks as $browse) {
-                $browsehistoriesworks = $work->workModelGet($browse->DB_table_name,'workid',$browse->workid);
+                $browsehistoriesworks = $work->workModelGet('workid',$browse->workid);
                 $postdisplaydata['browsehistorytime'][$i] = $browse->history_time;
 
                 foreach ($browsehistoriesworks as $history) {
@@ -71,8 +71,7 @@ class PostController extends Controller
         $postbody = $request->postbody;
 
         $request->validate([
-            'workname' => 'required|exists:workfilms,title',
-            'workname' => 'required|exists:workanimes,title',
+            'workname' => 'required|exists:works,title',
             'poststar' => 'required',
             'postbody' => 'required|max:250',
         ],
@@ -94,7 +93,7 @@ class PostController extends Controller
 
         $loginid = 'Guest';
         if ($name !== 'Guest') $loginid = $user->userModelSearch('nickname',$name,'loginid'); //ログインしていれば、そのユーザーのユーザーIDを取得。まだテストしてない
-        $workid = $work->workModelSearch('workanimes',$workname,'workid'); //投稿した作品のIDを取得
+        $workid = $work->workModelSearch('works',$workname,'workid'); //投稿した作品のIDを取得
 
         $post->postModelInsert($loginid,$workid,$poststar,$postbody); //ユーザーIDと作品IDとレビュー内容を登録
         return view('post.postcomplete');

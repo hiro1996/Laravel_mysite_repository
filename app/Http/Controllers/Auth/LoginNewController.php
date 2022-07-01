@@ -92,12 +92,9 @@ class LoginNewController extends Controller
             /**
              * 作品IDとユーザーIDをrecordsテーブルに初期化して登録
              */
-            $tablelist = ['workanimes','workfilms'];
-            for ($i = 0;$i < count($tablelist);$i++) {
-                $workdatas = $work->workModelGet($tablelist[$i],NULL,NULL);
-                foreach ($workdatas as $id) {
-                    $record->recordModelInsert($loginid,$id->workid,0);
-                }
+            $workdatas = $work->workModelGet(NULL,NULL);
+            foreach ($workdatas as $id) {
+                $record->recordModelInsert($loginid,$id->workid,0);
             }
 
 
@@ -212,24 +209,16 @@ class LoginNewController extends Controller
         /**
          * おすすめの映画、アニメのタイトル、画像、URL
          */
-        $workfilms = $work->workModelGet('workfilms',NULL,NULL);
-        $workanimes = $work->workModelGet('workanimes',NULL,NULL);
+        $works = $work->workModelGet(NULL,NULL);
 
         $i = 1;
-        foreach ($workfilms as $work) {
-            $contentstop['workfilm_title'][$i] = $work->title;
-            $contentstop['workfilm_img'][$i] = $work->img;
-            $contentstop['workfilm_url'][$i] = $work->url;
+        foreach ($works as $work) {
+            $contentstop['work_title'][$i] = $work->title;
+            $contentstop['work_img'][$i] = $work->img;
+            $contentstop['work_url'][$i] = $work->url;
             $i++;
         }
 
-        $i = 1;
-        foreach ($workanimes as $work) {
-            $contentstop['workanime_title'][$i] = $work->title;
-            $contentstop['workanime_img'][$i] = $work->img;
-            $contentstop['workanime_url'][$i] = $work->url;
-            $i++;
-        }
 
         /**
          * モーダル内の質問
@@ -257,7 +246,7 @@ class LoginNewController extends Controller
         $browsehistories = $browsehistory->browsehistoryModelGet(5);
         $i = 0;
         foreach ($browsehistories as $browsehist) {
-            $browsedatas = $browsehistory->browsehistoryDataModelGet($browsehist->workid,$browsehist->DB_table_name);
+            $browsedatas = $browsehistory->browsehistoryDataModelGet($browsehist->workid);
             foreach ($browsedatas as $data) {
                 $contentstop['title'][$i] = $data->title;
                 $contentstop['img'][$i] = $data->img;

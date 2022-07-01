@@ -1,7 +1,6 @@
-
-@php
+<?php
     $title = 'ログイン画面';
-@endphp
+?>
 
 @include('include.header')
 
@@ -59,6 +58,3 @@
     @include('block.endtitle')
 
 @include('include.footer')
-
-   
-    

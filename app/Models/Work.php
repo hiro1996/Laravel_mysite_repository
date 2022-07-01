@@ -10,25 +10,12 @@ class Work extends Model
 {
 
     public function workAllModelGet() {
-        $workfilms = DB::table('workfilms')->get();
-        $workanimes = DB::table('workanimes')->get();
+        $works = DB::table('works')->get();
 
         $i = 0;
-        foreach ($workfilms as $film) {
-            //$filmsurl = $film->url;
-            //$filmlists = explode('/',$filmsurl);
-            $workall[$i] = $film->title;
-            //$workall[$i]["".$filmlists[0].""] = $film->title;
+        foreach ($works as $anime) {
+            $workall[$i] = $anime->title;
             $i++;
-        }
-
-        $j = count($workall);
-        foreach ($workanimes as $anime) {
-            //$animesurl = $anime->url;
-            //$animelists = explode('/',$animesurl);
-            $workall[$j] = $anime->title;
-            //$workall[$j]["".$animelists[0].""] = $anime->title;
-            $j++;
         }
 
         /**
@@ -38,17 +25,17 @@ class Work extends Model
         return $workall;
     }
 
-    public function workModelWhere($key,$whereColumn,$word = NULL,$work = NULL,$artist = NULL,$keyword = NULL,$worktablename) {
+    public function workModelWhere($key,$whereColumn,$word = NULL,$work = NULL,$artist = NULL,$keyword = NULL) {
         switch ($key) {
             case 'worksindetail':
                 $where = [
                     $whereColumn => $word,
                 ];
-                $works = DB::table($worktablename)->where($where)->get();
+                $works = DB::table('works')->where($where)->get();
                 break;
             //五十音検索のひらがなで始まる検索
             case 'worksearch':
-                $works = DB::table($worktablename);
+                $works = DB::table('works');
                 if ($word) {
                     $works = $works->where('furigana','like',''.$word[0].'%');
                     if (count($word) > 1) {
@@ -65,8 +52,8 @@ class Work extends Model
         return $works;
     }
 
-    public function workModelGet($worktablename,$wherecolumn,$wheredata) {
-        $works = DB::table($worktablename);
+    public function workModelGet($wherecolumn,$wheredata) {
+        $works = DB::table('works');
         if ($wherecolumn != NULL) {
             $where = [
                 $wherecolumn => $wheredata,
@@ -77,14 +64,4 @@ class Work extends Model
         return $works;
     }
 
-    public function workDBModelGet($workid,$title,$furigana,$img,$url,$explaing) {
-        if (($workid >= 10000001 && $workid <= 20000000) || ($url == 'anime')) {
-            $db = 'workanimes';
-        } elseif (($workid >= 20000001 && $workid <= 30000000) || ($url == 'film')) {
-            $db = 'workfilms';
-        } else {
-            $db = 'workcomics';
-        }
-        return $db;
-    }
 }

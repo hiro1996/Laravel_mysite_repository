@@ -16,19 +16,18 @@ class Browsehistory extends Model
         return $browsehistories;
     }
 
-    public function browsehistoryDataModelGet($workid,$db) {
+    public function browsehistoryDataModelGet($workid) {
         $where = [
             'workid' => $workid
         ];
-        $browsedatas = DB::table($db)->where($where)->get();
+        $browsedatas = DB::table('works')->where($where)->get();
         return $browsedatas;
     }
 
-    public function browsehistoryModelInsert($loginid,$workid,$db) {
+    public function browsehistoryModelInsert($loginid,$workid) {
         $insert = [
             'loginid' => $loginid,
             'workid' => $workid,
-            'DB_table_name' => $db,
             'history_time' => now()
         ];
         DB::table('browsehistories')->insert($insert);

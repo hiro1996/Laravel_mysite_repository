@@ -106,10 +106,10 @@
                         <ul class="contenttopworklist-ul">
                             @for ($i = 1;$i <= 6;$i++)
                                 <li class="contenttopworklist-li">
-                                    <a href="/work_indetail/{{ $contentstop['workfilm_url'][$i] }}">
-                                        <img src="{{ $contentstop['workfilm_img'][$i] }}" alt="{{ $contentstop['workfilm_img'][$i] }}" width="200" height="150">
+                                    <a href="/work_indetail/{{ $contentstop['work_url'][$i] }}">
+                                        <img src="{{ $contentstop['work_img'][$i] }}" alt="{{ $contentstop['work_img'][$i] }}" width="200" height="150">
                                         <div class="worktitlename">
-                                            {{ $contentstop['workfilm_title'][$i] }}
+                                            {{ $contentstop['work_title'][$i] }}
                                         </div>
                                     </a>
                                 </li>
@@ -204,16 +204,18 @@
     </section>
 
     @if (!empty($contentstop["img"]))
-        <section>
+        <section class="p-5 recentcheck">
             <div class="contentstop-container">
                 <article class="card-body">
                     <h2 class="card-title text-center mb-4 mt-1">
                         <div class="workcheck" id="workcheck">最近チェックした作品</div>
                     </h2>
-                    <div class="d-flex justify-content-around">
-                        @for ($i = 0;$i < count($contentstop["img"]);$i++) 
-                            <div class="p-2"><img src="{{ $contentstop['img'][$i] }}" width="90" height="120"></div>
-                        @endfor
+                    <div class="p-3 card">
+                        <div class="d-flex justify-content-around">
+                            @for ($i = 0;$i < count($contentstop["img"]);$i++) 
+                                <div class="p-2"><img src="{{ $contentstop['img'][$i] }}" width="90" height="120"></div>
+                            @endfor
+                        </div>
                     </div>
                 </article>
             </div>
