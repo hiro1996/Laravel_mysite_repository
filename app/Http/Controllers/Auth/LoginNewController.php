@@ -51,7 +51,6 @@ class LoginNewController extends Controller
     }
 
     public function login(Request $request, User $user, Work $work, Record $record, Rankingtablesetting $rankingtablesetting) {
-        //dd(Auth::user());
         /**
          * 新規作成画面から遷移
          * loginid ログインID
