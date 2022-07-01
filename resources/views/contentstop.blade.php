@@ -33,6 +33,7 @@
                             @include('modal.rankingconfigfooter')
                         </div>
                     </div>
+                    <input type="hidden" id="count" value="{{ count($contentstop['attributes']['q_explain']) }}">
                 @endfor
             </div>
         </div>
@@ -221,23 +222,21 @@
 
 </div>
 
-
 @include('include.footer')
 
-<script>
-    var contentstopmodals = <?php $attributes;?>
-
+<script type="text/javascript">
+    let count = document.getElementById('count');
     /*
      * 質問モーダルの2つ目以降は非表示 
      * 次へボタンを初期非表示
      */
     $('#show1').show();
-    for(let i = 2;i <= 4;i++) {
+    for(let i = 2;i <= count.value;i++) {
         $('#show' + i).hide();
     }
     $('#modalcomplete').hide();
     
-    for (let i = 1;i <= 4;i++) {
+    for (let i = 1;i <= count.value;i++) {
         $('#idnext' + i + '').hide();
     }
     
@@ -246,7 +245,7 @@
          * 次へボタン押下で、次の質問モーダル表示 
          * 前へボタン押下で、前の質問モーダル表示 
          */
-        for(let i = 1;i < 4;i++) {    
+        for(let i = 1;i < count.value;i++) {    
             $('#idnext' + i + '').click(function() {
                 $('.modal-class').not($(this).attr('id')).hide();
                 $('.modal-body-sub').show();
@@ -254,7 +253,7 @@
             })
         }
        
-        for(let i = 4;i > 1;i--) {    
+        for(let i = count.value;i > 1;i--) {    
             $('#idprevious' + i + '').click(function() {
                 $('.modal-class').not($(this).attr('id')).hide();
                 $('.modal-body-sub').show();
@@ -267,7 +266,7 @@
      * 何かしらの質問チェックで次へボタンを出現
      */ 
     function chkButton($chk) {
-        for (i = 1;i <= 4;i++) {
+        for (i = 1;i <= count.value;i++) {
             if ($chk == 'check' + i) {
                 chkList = [];
                 let getCheck = document.getElementsByClassName('checkattr' + i);
@@ -309,6 +308,9 @@
             gettypelist.push(3);
             gettextidlist.push(gettext[i].value);
         }   
+        console.log(getchecklist);
+        console.log(gettypelist);
+        console.log(gettextidlist);
 
         $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -322,16 +324,12 @@
             },
             dataType: "json",
         }).done(function(response) {
-            
+            $('#configid').modal('hide');
+            $('#configcompleteid').modal('show');
+            $('.modalcomplete-body-sub').show();
         }).fail(function(failresponse) {
             console.log("エラー");
         })
-    })
-
-    $('.completebutton').click(function() {
-        $('#configid').modal('hide');
-        $('#configcompleteid').modal('show');
-        $('.modalcomplete-body-sub').show();
     })
 
     
