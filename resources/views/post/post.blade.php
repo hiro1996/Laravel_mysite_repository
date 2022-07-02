@@ -37,8 +37,8 @@
                             </div>
                             <input class="form-control" placeholder="レビュー作品名(直接入力すると予測表示します)" type="text" id="worknameid" name="workname" value="{{ $postdisplaydata['worktitle'] ?? '' }}" list="searchlist" autocomplete="on">
                             <datalist id="searchlist">
-                                @for ($i = 0;$i < count($workall);$i++)
-                                    <option value="{{ $workall[$i] }}"></option>
+                                @for ($i = 0;$i < count($postdisplaydata['wotkalltitle']);$i++)
+                                    <option value="{{ $postdisplaydata['wotkalltitle'][$i] }}"></option>
                                 @endfor
                             </datalist>
                         </div> 

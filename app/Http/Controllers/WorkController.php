@@ -40,30 +40,27 @@ class WorkController extends Controller
         $browsehistories = $browsehistory->browsehistoryModelGet(10);
         $i = 0;
         foreach ($browsehistories as $browsehist) {
-            $browsedatas = $browsehistory->browsehistoryDataModelGet($browsehist->workid);
-            foreach ($browsedatas as $data) {
-                $browsehistorydatas['title'][$i] = $data->title;
-                $browsehistorydatas['img'][$i] = $data->img;
-                $browsehistorydatas['historydate'][$i] = $browsehist->history_time;
-            }
+            $browsehistorydatas['title'][$i] = $browsehist->title;
+            $browsehistorydatas['img'][$i] = $browsehist->img;
+            $browsehistorydatas['historydate'][$i] = $browsehist->history_time;
             $i++;
         }
         return view('work.workhistory',compact('browsehistorydatas'));
     }
 
-    public function workindetail(Work $work, $url, $url2, Favorite $favorite, Post $post, Record $record, Guestrecord $guestrecord, Genrepost $genrepost, Genrepostanswer $genrepostanswer, Browsehistory $browsehistory, Goodiconhistory $goodiconhistory) {
+    public function workindetail(Work $work, $url, $url2, $url3, Favorite $favorite, Post $post, Record $record, Guestrecord $guestrecord, Genrepost $genrepost, Genrepostanswer $genrepostanswer, Browsehistory $browsehistory, Goodiconhistory $goodiconhistory) {
         /**
          * コンテンツトップでどの作品をクリックしたかを判別するURLを取得し、urlからどの作品DBのデータを参照するか確認
          */
-        $urlstr = $url.'/'.$url2;
+        $urlstr = $url.'/'.$url2.'/'.$url3;
 
         /**
          * どの作品DBから参照するかとクリックした作品のURLをキーとして、作品詳細画面で表示する作品情報を取得
          */
-        $workdata = $work->workModelGet('url',$urlstr);
+        $workdata = $work->workModelGet('where','url',$urlstr);
 
         foreach ($workdata as $workd) {
-            $workdata['workid'] = $workd->workid;
+            $workdata['worksubid'] = $workd->id;
             $workdata['img'] = $workd->img;
             $workdata['title'] = $workd->title;
             $workdata['furigana'] = $workd->furigana;
@@ -77,10 +74,10 @@ class WorkController extends Controller
         $loginid = 'Guest';
         if (session('loginid')) {
             $loginid = session('loginid');
-            if ($browsehistory->browsehistoryModelExist($loginid,$workdata['workid'])) {
-                $browsehistory->browsehistoryModelUpdate('loginid',$loginid,'workid',$workdata['workid'],'history_time',now());
+            if ($browsehistory->browsehistoryModelExist($loginid,$workdata['worksubid'])) {
+                $browsehistory->browsehistoryModelUpdate('loginid',$loginid,'worksubid',$workdata['worksubid'],'history_time',now());
             } else {
-                $browsehistory->browsehistoryModelInsert($loginid,$workdata['workid']);
+                $browsehistory->browsehistoryModelInsert($loginid,$workdata['worksubid']);
             }
         } 
 
@@ -90,12 +87,12 @@ class WorkController extends Controller
         if (session('loginid')) {
             $records = $record->recordModelGet();
             foreach ($records as $reco) {
-                $record->recordModelUpdate('loginid',session('loginid'),'workid',$workdata['workid'],'browsehistory_sum',$reco->browsehistory_sum + 1); //閲覧回数が更新されない
+                $record->recordModelUpdate('loginid',session('loginid'),'workid',$workdata['worksubid'],'browsehistory_sum',$reco->browsehistory_sum + 1); //閲覧回数が更新されない
             }
         } else {
             $guestrecords = $guestrecord->guestrecordModelGet();
             foreach ($guestrecords as $guestreco) {
-                $guestrecord->guestrecordModelUpdate('workid',$workdata['workid'],'browsehistory_sum',$guestreco->browsehistory_sum + 1); //閲覧回数が更新されない
+                $guestrecord->guestrecordModelUpdate('workid',$workdata['worksubid'],'browsehistory_sum',$guestreco->browsehistory_sum + 1); //閲覧回数が更新されない
             }
         }
 
@@ -112,7 +109,7 @@ class WorkController extends Controller
             }
         }
 
-        if (in_array($workdata['workid'],$favoritelist)) {
+        if (in_array($workdata['worksubid'],$favoritelist)) {
             $favoriteclass = 'btn btn-secondary btn-block';
             $favoritetext = 'お気に入りに登録済み';
         } else {
@@ -123,7 +120,7 @@ class WorkController extends Controller
         /**
          * 投稿テーブル(posts)から作品詳細を開こうとしている作品IDに紐づく投稿を取得
          */
-        $workdata['posts'] = $post->postModelGet($workdata['workid']);
+        $workdata['posts'] = $post->postModelGet($workdata['worksubid']);
 
         /**
          * ジャンル投票用のデータを取得
@@ -143,9 +140,9 @@ class WorkController extends Controller
         $workdata["category"] = $category;
 
         $workdata["genrepostanswers"] = FALSE;
-        if ($genrepostanswer->genrepostanswerModelSearch($workdata['workid'])) {
+        if ($genrepostanswer->genrepostanswerModelSearch($workdata['worksubid'])) {
             for ($i = 1;$i < 3;$i++) {
-                $genrepostanswers[$i] = $genrepostanswer->genrepostanswerModelGet($workdata['workid'],$i);
+                $genrepostanswers[$i] = $genrepostanswer->genrepostanswerModelGet($workdata['worksubid'],$i);
                 $j = 0;
                 foreach ($genrepostanswers[$i] as $genre) {
                     $genrepostanswersdata[$i][$j] = $genre->genre;
@@ -165,18 +162,18 @@ class WorkController extends Controller
                 for ($i = 1;$i <= count($workdata["posts"]);$i++) {
                     $goodiconurl[$i] = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodicon.png';
                     $forurljudge[$i] = 'beforeclick'.$i;
-                    $login_iconcount = $goodiconhistory->goodiconhistoryModelGet('login_iconcount',$loginid,$workdata['workid'],$i);
+                    $login_iconcount = $goodiconhistory->goodiconhistoryModelGet('login_iconcount',$loginid,$workdata['worksubid'],$i);
                     if ($login_iconcount > 0) {
                         $goodiconurl[$i] = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodiconpush.png';
                         $forurljudge[$i] = 'afterclick'.$i;
                     }
-                    $counts[$i] = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$workdata['workid'],$i);
+                    $counts[$i] = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$workdata['worksubid'],$i);
                 }
             } else {
                 for ($i = 1;$i <= count($workdata["posts"]);$i++) {
                     $goodiconurl[$i] = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodicon.png';
                     $forurljudge[$i] = 'beforeclick'.$i;
-                    $counts[$i] = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$workdata['workid'],$i);
+                    $counts[$i] = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$workdata['worksubid'],$i);
                 }
             }
             $workdata["count"] = $counts;
@@ -196,7 +193,7 @@ class WorkController extends Controller
         $url = explode("/",$workindetails["url"]);
         $urlstr = str_replace("/work_indetail/","",$workindetails["url"]);
         
-        $works = $work->workModelGet('url',$urlstr);
+        $works = $work->workModelGet('where','url',$urlstr);
 
         foreach ($works as $work) {
             $workid = $work->workid;
@@ -217,7 +214,7 @@ class WorkController extends Controller
         $url = explode("/",$workindetails["url"]);
         $urlstr = str_replace("/work_indetail/","",$workindetails["url"]);
         
-        $works = $work->workModelGet('url',$urlstr);
+        $works = $work->workModelGet('where','url',$urlstr);
 
         foreach ($works as $work) {
             $workid = $work->workid;

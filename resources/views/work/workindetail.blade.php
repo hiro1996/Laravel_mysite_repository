@@ -207,7 +207,7 @@
                             <div class="form-group">
                                 <div class="text-center">
                                     <button id="genrepost" type="button" class="btn btn-primary btn-lg genrepost" data-dismiss="modal">投票</button>
-                                    <input type="hidden" class="workclass" id="workid" value="{{ $workdata['workid'] }}">
+                                    <input type="hidden" class="workclass" id="worksubid" value="{{ $workdata['worksubid'] }}">
                                 </div> 
                             </div> 
                         </div> 
@@ -291,7 +291,7 @@
 
     $('#genrepost').click(function() {
         let genrepost = document.getElementsByName("genre");
-        let workid = document.getElementById("workid");
+        let workid = document.getElementById("worksubid");
         genrepostcount = [];
         for (let i = 0;i < genrepost.length;i++) {
             if (genrepost[i].checked) {
@@ -327,7 +327,7 @@
 
     for (let i = 1;i <= maxid.value;i++) {
     $('#goodid' + i).click(function() {
-        let workid = document.getElementById("workid");
+        let workid = document.getElementById("worksubid");
         let reviewid = document.getElementById("reviewid" + i);
         let goodid = document.getElementById("goodid" + i); 
         let goodurlid = document.getElementById("goodurlid" + i); 

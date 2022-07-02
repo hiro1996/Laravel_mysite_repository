@@ -9,7 +9,6 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\Work;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -23,7 +22,12 @@ class PostController extends Controller
         } else { //ログインしていない時
             $postdisplaydata['nickname'] = 'Guest';
         }
-        $workall = $work->workNameModelGet();
+        $worktitle = $work->workModelGet('select','title',NULL);
+        $i = 0;
+        foreach ($worktitle as $title) {
+            $postdisplaydata['wotkalltitle'][$i] = $title->title;
+            $i++;
+        }
 
 
         $favoritetmps = $favorite->favoriteAllModelGet();
@@ -48,7 +52,7 @@ class PostController extends Controller
         if (count($browseworks) > 0) {
             $i = 0;
             foreach ($browseworks as $browse) {
-                $browsehistoriesworks = $work->workModelGet('workid',$browse->workid);
+                $browsehistoriesworks = $work->workModelGet('where','workid',$browse->workid);
                 $postdisplaydata['browsehistorytime'][$i] = $browse->history_time;
 
                 foreach ($browsehistoriesworks as $history) {
@@ -60,7 +64,7 @@ class PostController extends Controller
 
         $postdisplaydata['worktitle'] = NULL;
         if ($request->worktitle) $postdisplaydata['worktitle'] = $request->worktitle;
-        return view('post.post',compact('postdisplaydata','workall'));
+        return view('post.post',compact('postdisplaydata'));
 
     }
 

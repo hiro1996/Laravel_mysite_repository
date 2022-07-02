@@ -193,7 +193,6 @@ class AdminController extends Controller
         $g2fa = new Google2FA();
         $key = $user->userModelSearch('user_value_id',$accountid,'secret_key');
         $valid = $g2fa->verifyKey($key,$onepass);
-        var_dump($key,$onepass,$valid);
 
 
         $user->userModelUpdate('user_value_id',$accountid,'onetime_pass_flag',1);
@@ -211,7 +210,7 @@ class AdminController extends Controller
         /**
          * おすすめの映画、アニメのタイトル、画像、URL
          */
-        $works = $work->workModelGet(NULL,NULL);
+        $works = $work->workModelGet(NULL,NULL,NULL);
 
         $i = 1;
         foreach ($works as $work) {

@@ -92,8 +92,8 @@ class LoginNewController extends Controller
             /**
              * 作品IDとユーザーIDをrecordsテーブルに初期化して登録
              */
-            $workdatas = $work->workModelGet(NULL,NULL);
-            foreach ($workdatas as $id) {
+            $workids = $work->workModelGet('select','workid',NULL);
+            foreach ($workids as $id) {
                 $record->recordModelInsert($loginid,$id->workid,0);
             }
 
@@ -209,7 +209,7 @@ class LoginNewController extends Controller
         /**
          * おすすめの映画、アニメのタイトル、画像、URL
          */
-        $works = $work->workModelGet(NULL,NULL);
+        $works = $work->workModelGet(NULL,NULL,NULL);
 
         $i = 1;
         foreach ($works as $work) {
@@ -246,12 +246,9 @@ class LoginNewController extends Controller
         $browsehistories = $browsehistory->browsehistoryModelGet(5);
         $i = 0;
         foreach ($browsehistories as $browsehist) {
-            $browsedatas = $browsehistory->browsehistoryDataModelGet($browsehist->workid);
-            foreach ($browsedatas as $data) {
-                $contentstop['title'][$i] = $data->title;
-                $contentstop['img'][$i] = $data->img;
-                $contentstop['historydate'][$i] = $browsehist->history_time;
-            }
+            $contentstop['title'][$i] = $browsehist->title;
+            $contentstop['img'][$i] = asset($browsehist->img);
+            $contentstop['historydate'][$i] = $browsehist->history_time;
             $i++;
         }
 
