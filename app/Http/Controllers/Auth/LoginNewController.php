@@ -89,7 +89,11 @@ class LoginNewController extends Controller
              */
             $user->userModelInsert($loginid,$nickname,$password,$email,1);
             $workdigitcounts = $worktype->worktypecountModelGet();
-            $rankingtablesetting->rankingtablesettingModelInsert($loginid);
+            $digit = '';
+            for ($i = 0;$i < $workdigitcounts;$i++) {
+                $digit = $digit.'1';
+            }
+            $rankingtablesetting->rankingtablesettingModelInsert($loginid,$digit);
 
             /**
              * 作品IDとユーザーIDをrecordsテーブルに初期化して登録

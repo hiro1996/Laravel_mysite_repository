@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class Rankingtablesetting extends Model
 {
-    public function rankingtablesettingModelInsert($loginid) {
+    public function rankingtablesettingModelInsert($loginid,$genresumnum) {
         $insert = [
             'loginid' => $loginid,
             'rankingtablesetting_default_flag' => 1,
-            'genresumnum' => 111,
+            'genresumnum' => $genresumnum,
             'user_value_id' => 1
         ];
         $rankingtablesettings = DB::table('rankingtablesettings')->insert($insert);
