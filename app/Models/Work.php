@@ -36,12 +36,12 @@ class Work extends Model
         return $works;
     }
 
-    public function workModelGet($key,$wherecolumn,$wheredata) {
+    public function workModelGet($key,$table,$wherecolumn,$wheredata) {
         $works = DB::table('works');
         if ($key == 'where') {
-            $works->join('worksubs',function($join) use ($wherecolumn,$wheredata) {
+            $works->join('worksubs',function($join) use ($table,$wherecolumn,$wheredata) {
                 $join->on('works.workid','=','worksubs.workid')
-                    ->where('worksubs.'.$wherecolumn,'=',$wheredata);
+                    ->where(''.$table.'.'.$wherecolumn,'=',$wheredata);
             });
         } elseif ($key == 'select') {
             $works->join('worksubs',function($join) {

@@ -87,8 +87,8 @@
         $rankingtitleright = '';
     ?>
     
-    <section class="allusersection" id="allusersection">
-        <div class="contentstop-container">
+    <section class="card allusersection" id="allusersection">
+        <div class="p-3 contentstop-container">
             <article class="card-body">
                 <h2 class="card-title text-center mb-4 mt-1">
                     <div class="contentstoptitle" id="contentstoptitle">{{ $contentstop['table_title'] }}</div>
@@ -104,12 +104,12 @@
                 <div class="card alluser" id="alluser">
                     <div id="filmtable" class="tab-pane active">
                         <ul class="contenttopworklist-ul">
-                            @for ($i = 1;$i <= 6;$i++)
+                            @for ($i = 0;$i <= 2;$i++)
                                 <li class="contenttopworklist-li">
-                                    <a href="/{{ $contentstop['work_url'][$i] }}">
-                                        <img src="{{ $contentstop['work_img'][$i] }}" alt="{{ $contentstop['work_img'][$i] }}" width="200" height="150">
+                                    <a href="{{ $contentstop['work_url'][$i][1] }}">
+                                        <img src="{{ $contentstop['work_img'][$i][1] }}" alt="{{ $contentstop['work_img'][$i][1] }}" width="200" height="150">
                                         <div class="worktitlename">
-                                            {{ $contentstop['work_title'][$i] }}
+                                            {{ $contentstop['work_title'][$i][1] }}
                                         </div>
                                     </a>
                                 </li>
@@ -120,9 +120,6 @@
 
 
             <div class="card myuser" id="myuser">
-                <?php $film = "映画"; ?>
-                <?php $comic = "漫画"; ?>
-                <?php $anime = "アニメ"; ?>
                 @empty(session('loginid')) <!--ログインしていない人-->
                     <div class="form-group">
                         <div class="text-center">
@@ -135,85 +132,60 @@
                         </div>
                     </div> 
                 @else <!--ログインしている人-->
-                    <ul class="nav nav-tabs">
-                        @isset($film)
-                            <li class="nav-item">
-                                <a href="#recommendfilmtable" class="nav-link" data-toggle="tab">映画</a>
-                            </li>
-                        @endisset
-                        @isset($comic)
-                            <li class="nav-item">
-                                <a href="#recommendcomictable" class="nav-link" data-toggle="tab">漫画</a>
-                            </li>
-                        @endisset
-                        @isset($anime)
-                            <li class="nav-item">
-                                <a href="#recommendanimetable" class="nav-link" data-toggle="tab">アニメ</a>
-                            </li>
-                        @endisset
-                    </ul>
+                    <div class="tabs is-centered">
+                        @for ($i = 0;$i < count($contentstop['worktype_list']);$i++)
+                            <ul id="{{ $contentstop['id_list'][$i] }}">
+                                <li class="is-{{ $contentstop['active_list'][$i] }}">
+                                    <a>
+                                        <span class="icon is-small">
+                                            <i class="fas fa-desktop" aria-hidden="true"></i>
+                                        </span>
+                                        <span>{{ $contentstop['tab_list'][$i] }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        @endfor
+                    </div>
                     <div class="tab-content">
-                    @isset($film)
-                        <div id="recommendfilmtable" class="tab-pane active">
-                            <table class="table table-sm">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th class="align-middle">Rank</th>
-                                        <th class="align-middle">作品画像</th>
-                                        <th class="align-middle">作品名</th>
-                                        <th class="align-middle">前回の順位</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    @endisset
-                    @isset($comic)
-                        <div id="recommendcomictable" class="tab-pane">
-                            <table class="table table-sm">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th class="align-middle">Rank</th>
-                                        <th class="align-middle">作品画像</th>
-                                        <th class="align-middle">作品名</th>
-                                        <th class="align-middle">前回の順位</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    @endisset
-                    @isset($anime)
-                        <div id="recommendanimetable" class="tab-pane">
-                            <table class="table table-sm">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th class="align-middle">Rank</th>
-                                        <th class="align-middle">作品画像</th>
-                                        <th class="align-middle">作品名</th>
-                                        <th class="align-middle">前回の順位</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    @endisset    
-                </div>
-            @endempty
-        </div>
+                        @for ($i = 0;$i < count($contentstop['worktype_list']);$i++)
+                            <div id="{{ $contentstop['id_list'][$i] }}" class="tab-pane {{ $contentstop['active_list'][$i] }}">
+                                <article class="card-body">
+                                    <div class="p-3">
+                                        <div class="d-flex justify-content-around">
+                                            @for ($j = 0;$j < count($contentstop["work_img"][$i]);$j++) 
+                                                <a href="{{ $contentstop['work_url'][$i][$j] }}">
+                                                    <div class="p-2">
+                                                        <img src="{{ $contentstop['work_img'][$i][$j] }}" alt="{{ $contentstop['work_img'][$i][$j] }}" width="90" height="120">
+                                                        <div class="worktitlename">
+                                                            {{ $contentstop['work_title'][$i][$j] }}
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        @endfor
+                    </div>
+                @endempty
+            </div>
 
-        </article>
+            </article>
         </div>
     </section>
 
     @if (!empty($contentstop["img"]))
-        <section class="p-5 recentcheck">
+        <section class="card recentcheck">
+            <div class="workcheck" id="workcheck">
+                <h2 class="card-title text-center mb-4 mt-1">最近チェックした作品</h2>
+            </div>
             <div class="contentstop-container">
-                <article class="card-body">
-                    <h2 class="card-title text-center mb-4 mt-1">
-                        <div class="workcheck" id="workcheck">最近チェックした作品</div>
-                    </h2>
-                    <div class="p-3 card">
+                <article class="check">
+                    <div class="p-3">
                         <div class="d-flex justify-content-around">
-                            @for ($i = 0;$i < count($contentstop["img"]);$i++) 
-                                <div class="p-2"><img src="{{ $contentstop['img'][$i] }}" width="90" height="120"></div>
+                            @for ($i = 0;$i < count($contentstop["recentcheck_img"]);$i++) 
+                                <div class="p-2"><img src="{{ $contentstop['recentcheck_img'][$i] }}" width="90" height="120"></div>
                             @endfor
                         </div>
                     </div>

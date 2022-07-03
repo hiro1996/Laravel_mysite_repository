@@ -210,7 +210,7 @@ class AdminController extends Controller
         /**
          * おすすめの映画、アニメのタイトル、画像、URL
          */
-        $works = $work->workModelGet(NULL,NULL,NULL);
+        $works = $work->workModelGet('where','works',NULL,NULL);
 
         $i = 1;
         foreach ($works as $work) {

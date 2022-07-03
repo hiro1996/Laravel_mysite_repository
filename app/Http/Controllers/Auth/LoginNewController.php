@@ -14,6 +14,7 @@ use App\Models\Notification;
 use App\Models\Printorderjsid;
 use App\Models\Rankingtitlesetting;
 use App\Models\Record;
+use App\Models\Worktype;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -50,7 +51,7 @@ class LoginNewController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function login(Request $request, User $user, Work $work, Record $record, Rankingtablesetting $rankingtablesetting) {
+    public function login(Request $request, User $user, Work $work, Worktype $worktype, Record $record, Rankingtablesetting $rankingtablesetting) {
         /**
          * 新規作成画面から遷移
          * loginid ログインID
@@ -87,12 +88,13 @@ class LoginNewController extends Controller
              * 一般ユーザーで登録
              */
             $user->userModelInsert($loginid,$nickname,$password,$email,1);
+            $workdigitcounts = $worktype->worktypecountModelGet();
             $rankingtablesetting->rankingtablesettingModelInsert($loginid);
 
             /**
              * 作品IDとユーザーIDをrecordsテーブルに初期化して登録
              */
-            $workids = $work->workModelGet('select','workid',NULL);
+            $workids = $work->workModelGet('select',NULL,'workid',NULL);
             foreach ($workids as $id) {
                 $record->recordModelInsert($loginid,$id->workid,0);
             }
@@ -135,7 +137,7 @@ class LoginNewController extends Controller
         return redirect('/top');
     }
 
-    public function contentstop(Request $request, Work $work, User $user, Attribute $attribute, Printorderjsid $printorderjsid, Rankingtitlesetting $rankingtitlesetting, Browsehistory $browsehistory, Notification $notification) {
+    public function contentstop(Request $request, Work $work, Worktype $worktype, User $user, Attribute $attribute, Printorderjsid $printorderjsid, Rankingtitlesetting $rankingtitlesetting, Rankingtablesetting $rankingtablesetting, Browsehistory $browsehistory, Notification $notification) {
         /**
          * パスワード設定画面から遷移
          * new_password 新しいパスワード
@@ -207,20 +209,6 @@ class LoginNewController extends Controller
         }
 
         /**
-         * おすすめの映画、アニメのタイトル、画像、URL
-         */
-        $works = $work->workModelGet(NULL,NULL,NULL);
-
-        $i = 1;
-        foreach ($works as $work) {
-            $contentstop['work_title'][$i] = $work->title;
-            $contentstop['work_img'][$i] = $work->img;
-            $contentstop['work_url'][$i] = $work->url;
-            $i++;
-        }
-
-
-        /**
          * モーダル内の質問
          */
         $contentstop['attributes'] = $attribute->attributeModelGet('attrpage');
@@ -234,24 +222,77 @@ class LoginNewController extends Controller
         } else {
             $rankingtitlesettings = $rankingtitlesetting->rankingtitlesettingFlagModelGet(session('loginid'));
         }
-        foreach ($rankingtitlesettings as $rankingtitlesetting) {
-            $contentstop['table_title'] = $rankingtitlesetting->table_title;
-            $contentstop['button_name'] = $rankingtitlesetting->button_name;
+        foreach ($rankingtitlesettings as $rankingtitle) {
+            $contentstop['table_title'] = $rankingtitle->table_title;
+            $contentstop['button_name'] = $rankingtitle->button_name;
+        }
+
+        /**
+         * おすすめのランキング
+         * ユーザーが表示したい作品ジャンルのみ表示するよう取得
+         */
+        $genre_list = [];
+        $tab_list = [];
+        $id_list = [];
+        $active_list = [];
+        $worktypes = $worktype->worktypeModelGet();
+        foreach ($worktypes as $worktype) {
+            array_push($genre_list,$worktype->worktype_eng);
+            array_push($tab_list,$worktype->worktype_name);
+            array_push($id_list,'recommend'.$worktype->worktype_eng.'table');
+        }
+        $contentstop['genre_list'] = $genre_list;
+        $contentstop['tab_list'] = $tab_list;
+        $contentstop['id_list'] = $id_list;
+
+        $rankingtablesettings = $rankingtablesetting->rankingtablesettingModelGet();
+        //$worktypecount = $worktype->worktypecountModelGet();
+        foreach ($rankingtablesettings as $rankingtable) {
+            $genresumnum = $rankingtable->genresumnum;
+        }
+        $genrenum = str_split($genresumnum);
+
+        $worktype_list = [];
+        for ($i = 0;$i < count($genrenum);$i++) {
+            if ($genresumnum[$i] == 1) {
+                array_push($worktype_list,'0'.$i+1);
+            }
+        }
+
+        for ($i = 0;$i < count($worktype_list);$i++) {
+            if (!in_array('active',$active_list)) {
+                array_push($active_list,'active');
+            } else {
+                array_push($active_list,'');
+            }
+        }
+        $contentstop['worktype_list'] = $worktype_list;
+        $contentstop['active_list'] = $active_list;
+
+
+        for ($i = 0;$i < count($worktype_list);$i++) {
+            $workdatas = $work->workModelGet('where','works','work_type',$worktype_list[$i]);
+            $j = 0;
+            foreach ($workdatas as $workd) {
+                $contentstop['work_title'][$i][$j] = $workd->title;
+                $contentstop['work_img'][$i][$j] = asset($workd->img);
+                $contentstop['work_url'][$i][$j] = $workd->url;
+                $j++;
+            }
         }
 
         /**
          * 最近チェックした作品
          */
-        $contentstop['img'] = FALSE;
+        $contentstop['recentcheck_img'] = FALSE;
         $browsehistories = $browsehistory->browsehistoryModelGet(5);
         $i = 0;
         foreach ($browsehistories as $browsehist) {
-            $contentstop['title'][$i] = $browsehist->title;
-            $contentstop['img'][$i] = asset($browsehist->img);
-            $contentstop['historydate'][$i] = $browsehist->history_time;
+            $contentstop['recentcheck_title'][$i] = $browsehist->title;
+            $contentstop['recentcheck_img'][$i] = asset($browsehist->img);
+            $contentstop['recentcheck_historydate'][$i] = $browsehist->history_time;
             $i++;
         }
-
         
 
         return view('contentstop',compact('contentstop'));

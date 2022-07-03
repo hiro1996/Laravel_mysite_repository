@@ -57,7 +57,7 @@ class WorkController extends Controller
         /**
          * どの作品DBから参照するかとクリックした作品のURLをキーとして、作品詳細画面で表示する作品情報を取得
          */
-        $workdata = $work->workModelGet('where','url',$urlstr);
+        $workdata = $work->workModelGet('where','worksubs','url',$urlstr);
 
         foreach ($workdata as $workd) {
             $workdata['worksubid'] = $workd->id;
@@ -193,7 +193,7 @@ class WorkController extends Controller
         $url = explode("/",$workindetails["url"]);
         $urlstr = str_replace("/work_indetail/","",$workindetails["url"]);
         
-        $works = $work->workModelGet('where','url',$urlstr);
+        $works = $work->workModelGet('where','worksubs','url',$urlstr);
 
         foreach ($works as $work) {
             $workid = $work->workid;
@@ -214,7 +214,7 @@ class WorkController extends Controller
         $url = explode("/",$workindetails["url"]);
         $urlstr = str_replace("/work_indetail/","",$workindetails["url"]);
         
-        $works = $work->workModelGet('where','url',$urlstr);
+        $works = $work->workModelGet('where','worksubs','url',$urlstr);
 
         foreach ($works as $work) {
             $workid = $work->workid;

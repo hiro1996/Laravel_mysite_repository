@@ -22,7 +22,7 @@ class PostController extends Controller
         } else { //ログインしていない時
             $postdisplaydata['nickname'] = 'Guest';
         }
-        $worktitle = $work->workModelGet('select','title',NULL);
+        $worktitle = $work->workModelGet('select',NULL,'title',NULL);
         $i = 0;
         foreach ($worktitle as $title) {
             $postdisplaydata['wotkalltitle'][$i] = $title->title;
@@ -52,7 +52,7 @@ class PostController extends Controller
         if (count($browseworks) > 0) {
             $i = 0;
             foreach ($browseworks as $browse) {
-                $browsehistoriesworks = $work->workModelGet('where','workid',$browse->workid);
+                $browsehistoriesworks = $work->workModelGet('where','worksubs','workid',$browse->workid);
                 $postdisplaydata['browsehistorytime'][$i] = $browse->history_time;
 
                 foreach ($browsehistoriesworks as $history) {

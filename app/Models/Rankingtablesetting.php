@@ -12,9 +12,7 @@ class Rankingtablesetting extends Model
         $insert = [
             'loginid' => $loginid,
             'rankingtablesetting_default_flag' => 1,
-            'film' => 1,
-            'comic' => 1,
-            'anime' => 1,
+            'genresumnum' => 111,
             'user_value_id' => 1
         ];
         $rankingtablesettings = DB::table('rankingtablesettings')->insert($insert);
