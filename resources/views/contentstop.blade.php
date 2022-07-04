@@ -106,10 +106,10 @@
                         <ul class="contenttopworklist-ul">
                             @for ($i = 0;$i <= 2;$i++)
                                 <li class="contenttopworklist-li">
-                                    <a href="{{ $contentstop['work_url'][$i][1] }}">
-                                        <img src="{{ $contentstop['work_img'][$i][1] }}" alt="{{ $contentstop['work_img'][$i][1] }}" width="200" height="150">
+                                    <a href="{{ $contentstop['workall_url'][$i] }}">
+                                        <img src="{{ $contentstop['workall_img'][$i] }}" alt="{{ $contentstop['workall_img'][$i] }}" width="200" height="150">
                                         <div class="worktitlename">
-                                            {{ $contentstop['work_title'][$i][1] }}
+                                            {{ $contentstop['workall_title'][$i] }}
                                         </div>
                                     </a>
                                 </li>

@@ -47,6 +47,10 @@ class Work extends Model
             $works->join('worksubs',function($join) {
                 $join->on('works.workid','=','worksubs.workid');
             })->select($wherecolumn);
+        } elseif ($key == 'sum') {
+            $works->join('worksubs',function($join) {
+                $join->on('works.workid','=','worksubs.workid');
+            })->select(DB::raw('works.title,worksubs.url,worksubs.img,worksubs.browse_record * worksubs.notificate_record  AS record_times'));
         } else {
             $works->join('worksubs',function($join) {
                 $join->on('works.workid','=','worksubs.workid');

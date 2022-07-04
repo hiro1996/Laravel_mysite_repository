@@ -8,8 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class Worktype extends Model
 {
-    public function worktypeModelGet() {
-        $worksubs = DB::table('worktypes')->get();
+    public function worktypeModelGet($wherecolumn,$wheredata) {
+        $where = [
+            $wherecolumn => $wheredata
+        ];
+        $worksubs = DB::table('worktypes')->where($where)->get();
         return $worksubs;
     }
 

@@ -235,54 +235,68 @@ class LoginNewController extends Controller
          * おすすめのランキング
          * ユーザーが表示したい作品ジャンルのみ表示するよう取得
          */
-        $genre_list = [];
-        $tab_list = [];
-        $id_list = [];
-        $active_list = [];
-        $worktypes = $worktype->worktypeModelGet();
-        foreach ($worktypes as $worktype) {
-            array_push($genre_list,$worktype->worktype_eng);
-            array_push($tab_list,$worktype->worktype_name);
-            array_push($id_list,'recommend'.$worktype->worktype_eng.'table');
-        }
-        $contentstop['genre_list'] = $genre_list;
-        $contentstop['tab_list'] = $tab_list;
-        $contentstop['id_list'] = $id_list;
+        if (session('loginid')) {
+            $genre_list = [];
+            $tab_list = [];
+            $id_list = [];
+            $active_list = [];
 
-        $rankingtablesettings = $rankingtablesetting->rankingtablesettingModelGet();
-        //$worktypecount = $worktype->worktypecountModelGet();
-        foreach ($rankingtablesettings as $rankingtable) {
-            $genresumnum = $rankingtable->genresumnum;
-        }
-        $genrenum = str_split($genresumnum);
-
-        $worktype_list = [];
-        for ($i = 0;$i < count($genrenum);$i++) {
-            if ($genresumnum[$i] == 1) {
-                array_push($worktype_list,'0'.$i+1);
+            $rankingtablesettings = $rankingtablesetting->rankingtablesettingModelGet();
+            foreach ($rankingtablesettings as $rankingtable) {
+                $genresumnum = $rankingtable->genresumnum;
             }
-        }
+            $genrenum = str_split($genresumnum);
 
-        for ($i = 0;$i < count($worktype_list);$i++) {
-            if (!in_array('active',$active_list)) {
-                array_push($active_list,'active');
-            } else {
-                array_push($active_list,'');
+            $worktype_list = [];
+            for ($i = 0;$i < count($genrenum);$i++) {
+                if ($genresumnum[$i] == 1) {
+                    array_push($worktype_list,'0'.$i+1);
+                }
             }
-        }
-        $contentstop['worktype_list'] = $worktype_list;
-        $contentstop['active_list'] = $active_list;
 
-
-        for ($i = 0;$i < count($worktype_list);$i++) {
-            $workdatas = $work->workModelGet('where','works','work_type',$worktype_list[$i]);
-            $j = 0;
-            foreach ($workdatas as $workd) {
-                $contentstop['work_title'][$i][$j] = $workd->title;
-                $contentstop['work_img'][$i][$j] = asset($workd->img);
-                $contentstop['work_url'][$i][$j] = $workd->url;
-                $j++;
+            for ($i = 0;$i < count($worktype_list);$i++) {
+                $worktypes = $worktype->worktypeModelGet('worktypeid',$worktype_list[$i]);
+                foreach ($worktypes as $workt) {
+                    array_push($genre_list,$workt->worktype_eng);
+                    array_push($tab_list,$workt->worktype_name);
+                    array_push($id_list,'recommend'.$workt->worktype_eng.'table');
+                }
             }
+            $contentstop['genre_list'] = $genre_list;
+            $contentstop['tab_list'] = $tab_list;
+            $contentstop['id_list'] = $id_list;
+
+            for ($i = 0;$i < count($worktype_list);$i++) {
+                if (!in_array('active',$active_list)) {
+                    array_push($active_list,'active');
+                } else {
+                    array_push($active_list,'');
+                }
+            }
+            $contentstop['worktype_list'] = $worktype_list;
+            $contentstop['active_list'] = $active_list;
+
+
+            for ($i = 0;$i < count($worktype_list);$i++) {
+                $workdatas = $work->workModelGet('where','works','work_type',$worktype_list[$i]);
+                $j = 0;
+                foreach ($workdatas as $workd) {
+                    $contentstop['work_title'][$i][$j] = $workd->title;
+                    $contentstop['work_img'][$i][$j] = asset($workd->img);
+                    $contentstop['work_url'][$i][$j] = $workd->url;
+                    $j++;
+                }
+            }
+        } 
+    
+
+        $workdatas = $work->workModelGet('sum',NULL,NULL,NULL);
+        $i = 0;
+        foreach ($workdatas as $workd) {
+            $contentstop['workall_title'][$i] = $workd->title;
+            $contentstop['workall_img'][$i] = asset($workd->img);
+            $contentstop['workall_url'][$i] = $workd->url;
+            $i++;
         }
 
         /**
