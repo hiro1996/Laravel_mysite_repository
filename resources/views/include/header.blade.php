@@ -37,6 +37,7 @@
 
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
         <link rel="stylesheet" href="{{ asset('assets/css/common.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/portal.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/post.css') }}">
