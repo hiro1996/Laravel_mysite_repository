@@ -232,8 +232,8 @@ class LoginNewController extends Controller
         }
 
         /**
-         * おすすめのランキング
-         * ユーザーが表示したい作品ジャンルのみ表示するよう取得
+         * おすすめのランキング用作品を取得
+         * ユーザーにより表示する作品ジャンルとその内容が変化
          */
         if (session('loginid')) {
             $genre_list = [];
@@ -289,7 +289,9 @@ class LoginNewController extends Controller
             }
         } 
     
-
+        /**
+         * 全ユーザーランキング表示用、全ユーザーで表示される作品は同じ、ただし1日ごとに表示される作品は変わる
+         */
         $workdatas = $work->workModelGet('sum',NULL,NULL,NULL);
         $i = 0;
         foreach ($workdatas as $workd) {
