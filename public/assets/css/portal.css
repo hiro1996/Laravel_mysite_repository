@@ -12,6 +12,12 @@
     background-color: skyblue;
   }
 
+  .article-shadow {
+    box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .5);
+    background-color: white;
+    margin-bottom: 1.5rem;
+  }
+
   .container {
     max-width: 900px;
     width: auto;

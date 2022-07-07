@@ -70,9 +70,9 @@ $title = 'トップページ';
 <?php
 $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
 ?>
-<section class="columns p-4 m-0">
-    <div class="submenu column is-4">
-        <aside class="notification is-info is-light">
+<article class="columns p-4 m-0">
+    <div class="submenu column is-3">
+        <aside class="article-shadow notification is-info is-light">
             <div class="mb-2">
                 <span class="tag is-danger">News</span>
             </div>
@@ -80,7 +80,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                 Bulma の使い方 日本語ドキュメントを公開しました！
             </div>
         </aside>
-        <aside class="box menu">
+        <aside class="article-shadow menu">
             <p class="menu-label">
                 サービス
             </p>
@@ -121,12 +121,10 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         $rankingtitleright = '';
         ?>
 
-        <article class="box media allusersection" id="allusersection">
+        <section class="article-shadow allusersection" id="allusersection">
             <div class="p-3 contentstop-container">
-                <article class="card-body">
-                    <h2 class="card-title text-center mb-4 mt-1">
-                        <div class="contentstoptitle" id="contentstoptitle">{{ $contentstop['table_title'] }}</div>
-                    </h2>
+                <div class="ranking">
+                    <div class="contentstoptitle" id="contentstoptitle">{{ $contentstop['table_title'] }}</div>
                     @if(!empty($contentstop['button_name']))
                     <div class="d-flex justify-content-around">
                         <span>{{ $rankingtitleleft }}</span>
@@ -135,7 +133,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                     </div>
                     @endif
                     <br>
-                    <div class="card alluser" id="alluser">
+                    <div class="alluser" id="alluser">
                         <div id="filmtable" class="tab-pane active">
                             <ul class="contenttopworklist-ul">
                                 @for ($i = 0;$i <= 2;$i++) <li class="contenttopworklist-li">
@@ -152,7 +150,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                     </div>
 
 
-                    <div class="card myuser" id="myuser">
+                    <div class="myuser" id="myuser">
                         @empty(session('loginid'))
                         <!--ログインしていない人-->
                         <div class="form-group">
@@ -178,11 +176,11 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                                     </a>
                                 </li>
                                 </ul>
-                                @endfor
+                            @endfor
                         </div>
                         <div class="tab-content">
                             @for ($i = 0;$i < count($contentstop['worktype_list']);$i++) <div id="{{ $contentstop['id_list'][$i] }}" class="tab-pane {{ $contentstop['active_list'][$i] }}">
-                                <article class="card-body">
+                                <article class="contents">
                                     <div class="p-3">
                                         <div class="d-flex justify-content-around">
                                             @for ($j = 0;$j < count($contentstop["work_img"][$i]);$j++) <a href="{{ $contentstop['work_url'][$i][$j] }}">
@@ -201,32 +199,32 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                         </div>
                         @endempty
                     </div>
-                </article>
+                </div>
             </div>
-        </article>
+        </section>
 
         @if ($contentstop["recentcheck_img"])
-        <section class="box media recentcheck">
-            <div class="workcheck" id="workcheck">
-                <h2 class="card-title text-center mb-4 mt-1">最近チェックした作品</h2>
-            </div>
+        <section class="article-shadow recentcheck">
             <div class="contentstop-container">
-                <article class="check">
-                    <div class="p-3">
-                        <div class="d-flex justify-content-around">
-                            @for ($i = 0;$i < count($contentstop["recentcheck_img"]);$i++) 
-                            <div class="p-2">
-                                <img src="{{ $contentstop['recentcheck_img'][$i] }}" width="90" height="120">
+                <div class="p-3 contentstoptitle" id="contentstoptitle">最近チェックした作品</div>
+                <div class="contentstop-container">
+                    <article class="check">
+                        <div class="p-3">
+                            <div class="d-flex justify-content-around">
+                                @for ($i = 0;$i < count($contentstop["recentcheck_img"]);$i++) 
+                                    <div class="p-2">
+                                        <img src="{{ $contentstop['recentcheck_img'][$i] }}" width="200" height="200">
+                                    </div>
+                                @endfor
                             </div>
-                            @endfor
                         </div>
-                    </div>
-                </article>
+                    </article>
+                </div>
             </div>
         </section>
         @endif
     </div>
-</section>
+</article>
 
 
 @include('include.footer')

@@ -6,13 +6,13 @@ use Illuminate\Routing\Middleware\ValidateSignature;
 
 Auth::routes();
 
-Route::match(['get','post'], '/top', 'App\Http\Controllers\Auth\LoginController@contentstop'); 
+Route::match(['get','post'], '/top', 'App\Http\Controllers\Auth\LoginNewController@contentstop'); 
 
 Route::post('/admincontentstop', 'App\Http\Controllers\AdminController@admincontentstop'); 
 
-Route::get('/login', 'App\Http\Controllers\Auth\LoginController@login');
+Route::get('/login', 'App\Http\Controllers\Auth\LoginNewController@login');
 
-Route::get('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
+Route::get('/logout', 'App\Http\Controllers\Auth\LoginNewController@logout');
 
 Route::post('/register', 'App\Http\Controllers\Auth\RegisterController@register');
 
@@ -56,7 +56,7 @@ Route::post('/work_search/gojuonsearch', 'App\Http\Controllers\WorkController@wo
 
 Route::get('/work_history', 'App\Http\Controllers\WorkController@workhistory');
 
-Route::get('/work_indetail/{url}/{url2}', 'App\Http\Controllers\WorkController@workindetail');
+Route::get('/{url}/{url2}/{url3}', 'App\Http\Controllers\WorkController@workindetail');
 
 Route::get('/mypage', 'App\Http\Controllers\MypageController@mypage');
 
