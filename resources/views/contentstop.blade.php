@@ -206,7 +206,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         @if ($contentstop["recentcheck_img"])
         <section class="article-shadow recentcheck">
             <div class="contentstop-container">
-                <div class="p-3 contentstoptitle" id="contentstoptitle">最近チェックした作品</div>
+                <div class="p-3 contentstoptitle" id="contentstopcheck">最近チェックした作品</div>
                 <div class="contentstop-container">
                     <article class="check">
                         <div class="p-3">
@@ -223,6 +223,26 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
             </div>
         </section>
         @endif
+
+        <section class="article-shadow reservation">
+            <div class="contentstop-container">
+                <div class="p-3 contentstoptitle" id="contentstopreserve">新着作品</div>
+                <div class="contentstop-container">
+                    <article class="check">
+                        <div class="p-3">
+                            <div class="d-flex justify-content-around">
+                                @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++) 
+                                    <div class="p-2">
+                                        <img src="{{ $contentstop['worknew_img'][$i] }}" width="200" height="200">
+                                    </div>
+                                @endfor
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
     </div>
 </article>
 

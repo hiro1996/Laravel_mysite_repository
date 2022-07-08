@@ -313,7 +313,18 @@ class LoginNewController extends Controller
             $contentstop['recentcheck_historydate'][$i] = $browsehist->history_time;
             $i++;
         }
-        
+
+        /**
+         * 新着作品
+         */
+        $workdatas = $work->workModelGet('reserve',NULL,NULL,NULL);
+        $i = 0;
+        foreach ($workdatas as $workd) {
+            $contentstop['worknew_title'][$i] = $workd->title;
+            $contentstop['worknew_img'][$i] = asset($workd->img);
+            $contentstop['worknew_url'][$i] = $workd->url;
+            $i++;
+        }
 
         return view('contentstop',compact('contentstop'));
     }

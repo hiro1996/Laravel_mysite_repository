@@ -51,6 +51,14 @@ class Work extends Model
             $works->join('worksubs',function($join) {
                 $join->on('works.workid','=','worksubs.workid');
             })->select(DB::raw('works.title,worksubs.url,worksubs.img,worksubs.browse_record * worksubs.notificate_record  AS record_times'));
+        } elseif ($key == 'reserve') {
+            $where = [
+                'rsvsetflag' => 1
+            ];
+            $works->join('worksubs',function($join) use ($where) {
+                $join->on('works.workid','=','worksubs.workid')
+                    ->where($where);
+            });
         } else {
             $works->join('worksubs',function($join) {
                 $join->on('works.workid','=','worksubs.workid');
