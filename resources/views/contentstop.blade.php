@@ -136,15 +136,16 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                     <div class="alluser" id="alluser">
                         <div id="filmtable" class="tab-pane active">
                             <ul class="contenttopworklist-ul">
-                                @for ($i = 0;$i <= 2;$i++) <li class="contenttopworklist-li">
-                                    <a href="{{ $contentstop['workall_url'][$i] }}">
-                                        <img src="{{ $contentstop['workall_img'][$i] }}" alt="{{ $contentstop['workall_img'][$i] }}" width="200" height="150">
-                                        <div class="worktitlename">
-                                            {{ $contentstop['workall_title'][$i] }}
-                                        </div>
-                                    </a>
+                                @for ($i = 0;$i <= 2;$i++) 
+                                    <li class="contenttopworklist-li">
+                                        <a href="{{ $contentstop['workall_url'][$i] }}">
+                                            <img src="{{ $contentstop['workall_img'][$i] }}" alt="{{ $contentstop['workall_img'][$i] }}" width="200" height="150">
+                                            <div class="worktitlename">
+                                                {{ $contentstop['workall_title'][$i] }}
+                                            </div>
+                                        </a>
                                     </li>
-                                    @endfor
+                                @endfor
                             </ul>
                         </div>
                     </div>
@@ -166,20 +167,23 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                         @else
                         <!--ログインしている人-->
                         <div class="tabs is-centered">
-                            @for ($i = 0;$i < count($contentstop['worktype_list']);$i++) <ul id="{{ $contentstop['id_list'][$i] }}">
-                                <li class="is-{{ $contentstop['active_list'][$i] }}">
-                                    <a>
-                                        <span class="icon is-small">
-                                            <i class="fas fa-desktop" aria-hidden="true"></i>
-                                        </span>
-                                        <span>{{ $contentstop['tab_list'][$i] }}</span>
-                                    </a>
-                                </li>
+                            @for ($i = 0;$i < count($contentstop['worktype_list']);$i++) 
+                                <ul id="{{ $contentstop['id_list'][$i] }}">
+                                    <li class="is-{{ $contentstop['active_list'][$i] }}">
+                                        <a>
+                                            <span class="icon is-small">
+                                                <i class="fas fa-{{ $contentstop['icon_list'][$i] }}" aria-hidden="true"></i>
+                                            </span>
+                                            <span>{{ $contentstop['tab_list'][$i] }}</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             @endfor
                         </div>
+
                         <div class="tab-content">
-                            @for ($i = 0;$i < count($contentstop['worktype_list']);$i++) <div id="{{ $contentstop['id_list'][$i] }}" class="tab-pane {{ $contentstop['active_list'][$i] }}">
+                            @for ($i = 0;$i < count($contentstop['worktype_list']);$i++) 
+                            <div id="{{ $contentstop['id_list'][$i] }}" class="tab-pane {{ $contentstop['active_list'][$i] }}">
                                 <article class="contents">
                                     <div class="p-3">
                                         <div class="d-flex justify-content-around">
@@ -191,11 +195,12 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                                                     </div>
                                                 </div>
                                                 </a>
-                                                @endfor
+                                            @endfor
                                         </div>
                                     </div>
                                 </article>
-                                @endfor
+                            </div>
+                            @endfor
                         </div>
                         @endempty
                     </div>

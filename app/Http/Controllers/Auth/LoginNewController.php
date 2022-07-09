@@ -14,6 +14,7 @@ use App\Models\Notification;
 use App\Models\Printorderjsid;
 use App\Models\Rankingtitlesetting;
 use App\Models\Record;
+use App\Models\Workresult;
 use App\Models\Worktype;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -241,6 +242,10 @@ class LoginNewController extends Controller
             $id_list = [];
             $active_list = [];
 
+            /**
+             * ユーザーがなんのジャンルを設定しているかを取得、(0 未設定ジャンル、1 設定ジャンル)
+             * 文字列で連結されているため、str_splitで分割
+             */
             $rankingtablesettings = $rankingtablesetting->rankingtablesettingModelGet();
             foreach ($rankingtablesettings as $rankingtable) {
                 $genresumnum = $rankingtable->genresumnum;
@@ -248,9 +253,17 @@ class LoginNewController extends Controller
             $genrenum = str_split($genresumnum);
 
             $worktype_list = [];
+            $icon_list = [];
             for ($i = 0;$i < count($genrenum);$i++) {
                 if ($genresumnum[$i] == 1) {
                     array_push($worktype_list,'0'.$i+1);
+                }
+            }
+
+            for ($i = 0;$i < count($worktype_list);$i++) {
+                $worktypes = $worktype->worktypeModelGet('worktypeid',$worktype_list[$i]);
+                foreach ($worktypes as $workt) {
+                    array_push($icon_list,$workt->worktype_icon);
                 }
             }
 
@@ -265,6 +278,7 @@ class LoginNewController extends Controller
             $contentstop['genre_list'] = $genre_list;
             $contentstop['tab_list'] = $tab_list;
             $contentstop['id_list'] = $id_list;
+            $contentstop['icon_list'] = $icon_list;
 
             for ($i = 0;$i < count($worktype_list);$i++) {
                 if (!in_array('active',$active_list)) {
