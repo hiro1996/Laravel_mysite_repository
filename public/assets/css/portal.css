@@ -26,6 +26,11 @@
     padding: 0 30px;
   }
 
+  .contentstopbigtitle {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
   .footercontainer {
     width: auto;
     padding: 0 5px;
@@ -117,6 +122,20 @@
       margin: 0 auto;
   }
 
+  .rankingimg {
+    max-width: 115px;
+    height: 162px;
+  }
+
+  .recentimg {
+    max-width: 115px;
+    height: 162px;
+  }
+
+  .newimg {
+    max-width: 115px;
+    height: 162px;
+  }
 
   /* Footer */
 #footerwrap {

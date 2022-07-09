@@ -78,7 +78,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                 <span class="tag is-danger">News</span>
             </div>
             <div>
-                Bulma の使い方 日本語ドキュメントを公開しました！
+                ガチャを回しておすすめ作品を見ましょう
             </div>
         </aside>
         <aside class="article-shadow menu">
@@ -125,7 +125,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         <section class="article-shadow allusersection" id="allusersection">
             <div class="p-3 contentstop-container">
                 <div class="ranking">
-                    <div class="contentstoptitle" id="contentstoptitle">{{ $contentstop['table_title'] }}</div>
+                    <div class="contentstoptitle" id="contentstoptitle"><span class="contentstopbigtitle">{{ $contentstop['table_title'] }}</span></div>
                     @if(!empty($contentstop['button_name']))
                     <div class="d-flex justify-content-around">
                         <span>{{ $rankingtitleleft }}</span>
@@ -140,7 +140,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                                 @for ($i = 0;$i <= 2;$i++) 
                                     <li class="contenttopworklist-li">
                                         <a href="{{ $contentstop['workall_url'][$i] }}">
-                                            <img src="{{ $contentstop['workall_img'][$i] }}" alt="{{ $contentstop['workall_img'][$i] }}" width="200" height="150">
+                                            <img class="rankingimg" src="{{ $contentstop['workall_img'][$i] }}" alt="{{ $contentstop['workall_img'][$i] }}">
                                             <div class="worktitlename">
                                                 {{ $contentstop['workall_title'][$i] }}
                                             </div>
@@ -193,7 +193,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                                                 <div class="p-2">
                                                     <img src="{{ $contentstop['work_img'][$i][$j] }}" alt="{{ $contentstop['work_img'][$i][$j] }}" width="90" height="120">
                                                     <div class="worktitlename">
-                                                        {{ $contentstop['work_title'][$i][$j] }}
+                                                        <span>{{ $contentstop['work_title'][$i][$j] }}</span>
                                                     </div>
                                                 </div>
                                                 </a>
@@ -213,14 +213,14 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         @if ($contentstop["recentcheck_img"])
         <section class="article-shadow recentcheck">
             <div class="contentstop-container">
-                <div class="p-3 contentstoptitle" id="contentstopcheck">最近チェックした作品</div>
+                <div class="p-3 contentstoptitle" id="contentstopcheck"><span class="contentstopbigtitle">最近チェックした作品</span></div>
                 <div class="contentstop-container">
                     <article class="check">
                         <div class="p-3">
                             <div class="d-flex justify-content-around">
                                 @for ($i = 0;$i < count($contentstop["recentcheck_img"]);$i++) 
                                     <div class="p-2">
-                                        <img src="{{ $contentstop['recentcheck_img'][$i] }}" width="200" height="200">
+                                        <img class="recentimg" src="{{ $contentstop['recentcheck_img'][$i] }}" width="200" height="200">
                                     </div>
                                 @endfor
                             </div>
@@ -233,14 +233,52 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
 
         <section class="article-shadow reservation">
             <div class="contentstop-container">
-                <div class="p-3 contentstoptitle" id="contentstopreserve">新着作品</div>
+                <div class="p-3 contentstoptitle" id="contentstopreserve"><span class="contentstopbigtitle">新着作品</span></div>
                 <div class="contentstop-container">
                     <article class="check">
                         <div class="p-3">
                             <div class="d-flex justify-content-around">
                                 @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++) 
                                     <div class="p-2">
-                                        <img src="{{ $contentstop['worknew_img'][$i] }}" width="200" height="200">
+                                        <img class="newimg" src="{{ $contentstop['worknew_img'][$i] }}">
+                                    </div>
+                                @endfor
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="article-shadow review">
+            <div class="contentstop-container">
+                <div class="p-3 contentstoptitle" id="contentstopreview"><span class="contentstopbigtitle">今日のレビューレポート</span></div>
+                <div class="contentstop-container">
+                    <article class="check">
+                        <div class="p-3">
+                            <div class="d-flex justify-content-around">
+                                @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++) 
+                                    <div class="p-2">
+                                        <img class="newimg" src="{{ $contentstop['worknew_img'][$i] }}">
+                                    </div>
+                                @endfor
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="article-shadow review">
+            <div class="contentstop-container">
+                <div class="p-3 contentstoptitle" id="contentstopcampaign"><span class="contentstopbigtitle">キャンペーン等</span></div>
+                <div class="contentstop-container">
+                    <article class="check">
+                        <div class="p-3">
+                            <div class="d-flex justify-content-around">
+                                @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++) 
+                                    <div class="p-2">
+                                        <img class="newimg" src="{{ $contentstop['worknew_img'][$i] }}">
                                     </div>
                                 @endfor
                             </div>
