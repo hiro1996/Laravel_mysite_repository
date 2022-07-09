@@ -241,6 +241,8 @@ class LoginNewController extends Controller
             $tab_list = [];
             $id_list = [];
             $active_list = [];
+            $show_list = [];
+            $tf_list = [];
 
             /**
              * ユーザーがなんのジャンルを設定しているかを取得、(0 未設定ジャンル、1 設定ジャンル)
@@ -283,12 +285,19 @@ class LoginNewController extends Controller
             for ($i = 0;$i < count($worktype_list);$i++) {
                 if (!in_array('active',$active_list)) {
                     array_push($active_list,'active');
+                    array_push($show_list,'show');
+                    array_push($tf_list,'true');
                 } else {
                     array_push($active_list,'');
+                    array_push($show_list,'');
+                    array_push($tf_list,'false');
                 }
             }
             $contentstop['worktype_list'] = $worktype_list;
             $contentstop['active_list'] = $active_list;
+            $contentstop['show_list'] = $show_list;
+            $contentstop['tf_list'] = $tf_list;
+
 
 
             for ($i = 0;$i < count($worktype_list);$i++) {

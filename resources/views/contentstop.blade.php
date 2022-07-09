@@ -27,7 +27,8 @@ $title = 'トップページ';
     <div class="modal fade" id="configid" tabindex="-1" role="dialog" aria-labelledby="configid" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                @for ($i = 1;$i <= count($contentstop["attributes"]["q_explain"]);$i++) <div class="modal-class" id='{{ $contentstop["attributes"]["modalshow_id_name"][$i] }}'>
+                @for ($i = 1;$i <= count($contentstop["attributes"]["q_explain"]);$i++) 
+                <div class="modal-class" id='{{ $contentstop["attributes"]["modalshow_id_name"][$i] }}'>
                     <div class="modal-header">
                         @include('block.modaltitle')
                         @include('block.modalendtitle')
@@ -167,27 +168,28 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                         @else
                         <!--ログインしている人-->
                         <div class="tabs is-centered">
-                            @for ($i = 0;$i < count($contentstop['worktype_list']);$i++) 
-                                <ul id="{{ $contentstop['id_list'][$i] }}">
-                                    <li class="is-{{ $contentstop['active_list'][$i] }}">
-                                        <a>
+                            <ul class="nav nav-tabs">
+                                @for ($i = 0;$i < count($contentstop['worktype_list']);$i++) 
+                                    <li class="nav-item">
+                                        <a href="#{{ $contentstop['id_list'][$i] }}" class="nav-link {{ $contentstop['active_list'][$i] }}" data-toggle="tab">
                                             <span class="icon is-small">
                                                 <i class="fas fa-{{ $contentstop['icon_list'][$i] }}" aria-hidden="true"></i>
                                             </span>
                                             <span>{{ $contentstop['tab_list'][$i] }}</span>
                                         </a>
                                     </li>
-                                </ul>
-                            @endfor
+                                @endfor
+                            </ul>
                         </div>
 
                         <div class="tab-content">
                             @for ($i = 0;$i < count($contentstop['worktype_list']);$i++) 
-                            <div id="{{ $contentstop['id_list'][$i] }}" class="tab-pane {{ $contentstop['active_list'][$i] }}">
+                            <div class="tab-pane {{ $contentstop['active_list'][$i] }}" id="{{ $contentstop['id_list'][$i] }}">
                                 <article class="contents">
                                     <div class="p-3">
                                         <div class="d-flex justify-content-around">
-                                            @for ($j = 0;$j < count($contentstop["work_img"][$i]);$j++) <a href="{{ $contentstop['work_url'][$i][$j] }}">
+                                            @for ($j = 0;$j < count($contentstop["work_img"][$i]);$j++) 
+                                                <a href="{{ $contentstop['work_url'][$i][$j] }}">
                                                 <div class="p-2">
                                                     <img src="{{ $contentstop['work_img'][$i][$j] }}" alt="{{ $contentstop['work_img'][$i][$j] }}" width="90" height="120">
                                                     <div class="worktitlename">
@@ -253,6 +255,12 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
 
 
 @include('include.footer')
+<script>
+    $('.tabsjsclass').click(function() {
+        $('.contentsjs').not($('.tabsjsclass').attr('id')).hide();
+    })
+</script>
+
 
 <script type="text/javascript">
     let count = document.getElementById('count');

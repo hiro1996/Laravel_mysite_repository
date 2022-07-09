@@ -11,5 +11,6 @@ class Workresult extends Model
     public function workresultModelGet() {
         $where = [];
         $workresults = DB::table('workresults')->get();
+        return $workresults;
     }
 }
