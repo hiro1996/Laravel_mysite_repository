@@ -65,6 +65,10 @@ class WorkController extends Controller
             $workdata['title'] = $workd->title;
             $workdata['furigana'] = $workd->furigana;
             $workdata['explaining'] = $workd->explaining;
+            $workdata['publisher'] = $workd->publisher;
+            $workdata['publicationmagazine_label'] = $workd->publicationmagazine_label;
+            $workdata['auther'] = $workd->auther;
+
         }
 
         /**

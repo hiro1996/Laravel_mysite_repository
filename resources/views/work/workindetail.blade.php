@@ -66,7 +66,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
             {{ $workdata['title'] }}
         </strong>
         <div class="worktitlefurigana">
-            ふりがな
+            {{ $workdata['furigana'] }}
         </div>
         <article class="columns p-4 m-0 workindetailexplaining workindetailclass">       
             <div class="column is-6">
@@ -84,16 +84,17 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                     <dt>ジャンル</dt>
                     <dd>青年マンガ</dd>
                     <dt>出版社</dt>
-                    <dd>ワイワイコミックス</dd>
+                    <dd>{{ $workdata['publisher'] }}</dd>
                     <dt>掲載誌・レーベル</dt>
-                    <dd>COMICエトワール</dd>
+                    <dd>{{ $workdata['publicationmagazine_label'] }}</dd>
                     <dt>著者・作者</dt>
-                    <dd>作者名作者名作者名</dd>
+                    <dd>{{ $workdata['auther'] }}</dd>
                 </dl>
             </div>
         </article>
 
         <article class="workindetailclass">
+            <strong class="explain-abstract">概要</strong>
             <div class="explain-favoritebtn">
                 <div class="explain">
                     {{ $workdata['explaining'] }}

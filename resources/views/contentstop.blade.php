@@ -231,6 +231,25 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         </section>
         @endif
 
+        <section class="article-shadow ninki">
+            <div class="contentstop-container">
+                <div class="p-3 contentstoptitle" id="contentstopreserve"><span class="contentstopbigtitle">人気急上昇</span></div>
+                <div class="contentstop-container">
+                    <article class="check">
+                        <div class="p-3">
+                            <div class="d-flex justify-content-around">
+                                @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++) 
+                                    <div class="p-2">
+                                        <img class="newimg" src="{{ $contentstop['worknew_img'][$i] }}">
+                                    </div>
+                                @endfor
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
         <section class="article-shadow reservation">
             <div class="contentstop-container">
                 <div class="p-3 contentstoptitle" id="contentstopreserve"><span class="contentstopbigtitle">新着作品</span></div>
