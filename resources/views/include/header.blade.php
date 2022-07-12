@@ -187,7 +187,7 @@
                             ?>
                             <li class="nav-item notification">
                                 <a class="dropdown-toggle" href="#" id="notofication" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <img src="{{ $notifications }}" width="30" height="30">
+                                    <i class="fas fa-exclamation-circle fa-2x"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="notofication">
                                     @if(session('loginid'))

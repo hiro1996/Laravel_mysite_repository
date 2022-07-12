@@ -343,9 +343,15 @@ class LoginNewController extends Controller
         $workdatas = $work->workModelGet('reserve',NULL,NULL,NULL);
         $i = 0;
         foreach ($workdatas as $workd) {
-            $contentstop['worknew_title'][$i] = $workd->title;
+            if (mb_strlen($workd->title) > 5) {
+                $tmp = strstr($workd->title,mb_substr($workd->title,5),TRUE);
+                $contentstop['worknew_title'][$i] = $tmp.'...';
+            } else {
+                $contentstop['worknew_title'][$i] = $workd->title;
+            }
             $contentstop['worknew_img'][$i] = asset($workd->img);
             $contentstop['worknew_url'][$i] = $workd->url;
+            $contentstop['worknew_date'][$i] = $workd->siteviewday.'発売';
             $i++;
         }
 

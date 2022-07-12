@@ -219,8 +219,12 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                         <div class="p-3">
                             <div class="d-flex justify-content-around">
                                 @for ($i = 0;$i < count($contentstop["recentcheck_img"]);$i++) 
-                                    <div class="p-2">
-                                        <img class="recentimg" src="{{ $contentstop['recentcheck_img'][$i] }}" width="200" height="200">
+                                    <div class="worknewdate">
+                                        {{ $contentstop['worknew_date'][$i] }}
+                                        <img class="recentimg" src="{{ $contentstop['recentcheck_img'][$i] }}">
+                                        <div class="worktitlename">
+                                            <b>{{ $contentstop['worknew_title'][$i] }}</b>
+                                        </div>
                                     </div>
                                 @endfor
                             </div>
@@ -238,9 +242,13 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                     <article class="check">
                         <div class="p-3">
                             <div class="d-flex justify-content-around">
-                                @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++) 
-                                    <div class="p-2">
-                                        <img class="newimg" src="{{ $contentstop['worknew_img'][$i] }}">
+                                @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++)
+                                    <div class="worknewdate">
+                                        {{ $contentstop['worknew_date'][$i] }}
+                                        <img class="reserveimg" src="{{ $contentstop['worknew_img'][$i] }}">
+                                        <div class="worktitlename">
+                                            <b>{{ $contentstop['worknew_title'][$i] }}</b>
+                                        </div>
                                     </div>
                                 @endfor
                             </div>
@@ -257,9 +265,15 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                     <article class="check">
                         <div class="p-3">
                             <div class="d-flex justify-content-around">
-                                @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++) 
-                                    <div class="p-2">
+                                @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++)
+                                    <div class="worknew">
+                                        <div class="worknewdate">{{ $contentstop['worknew_date'][$i] }}</div>
+                                        <a href="{{ $contentstop['worknew_url'][$i] }}">
                                         <img class="newimg" src="{{ $contentstop['worknew_img'][$i] }}">
+                                        <div class="worktitlename">
+                                            <b>{{ $contentstop['worknew_title'][$i] }}</b>
+                                        </div>
+                                        </a>
                                     </div>
                                 @endfor
                             </div>
@@ -276,9 +290,13 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                     <article class="check">
                         <div class="p-3">
                             <div class="d-flex justify-content-around">
-                                @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++) 
-                                    <div class="p-2">
+                                @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++)
+                                    <div class="worknewdate">
+                                        {{ $contentstop['worknew_date'][$i] }}
                                         <img class="newimg" src="{{ $contentstop['worknew_img'][$i] }}">
+                                        <div class="worktitlename">
+                                            <b>{{ $contentstop['worknew_title'][$i] }}</b>
+                                        </div>
                                     </div>
                                 @endfor
                             </div>
@@ -288,16 +306,20 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
             </div>
         </section>
 
-        <section class="article-shadow review">
+        <section class="article-shadow campaign">
             <div class="contentstop-container">
                 <div class="p-3 contentstoptitle" id="contentstopcampaign"><span class="contentstopbigtitle">キャンペーン等</span></div>
                 <div class="contentstop-container">
                     <article class="check">
                         <div class="p-3">
                             <div class="d-flex justify-content-around">
-                                @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++) 
-                                    <div class="p-2">
+                                @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++)
+                                    <div class="worknewdate">
+                                        {{ $contentstop['worknew_date'][$i] }}
                                         <img class="newimg" src="{{ $contentstop['worknew_img'][$i] }}">
+                                        <div class="worktitlename">
+                                            <b>{{ $contentstop['worknew_title'][$i] }}</b>
+                                        </div>
                                     </div>
                                 @endfor
                             </div>

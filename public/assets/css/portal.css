@@ -132,6 +132,10 @@
     height: 162px;
   }
 
+  .worknewdate {
+    color: grey;/*文字色*/
+  }
+
   .newimg {
     max-width: 115px;
     height: 162px;

@@ -68,9 +68,15 @@ class WorkController extends Controller
             $workdata['publisher'] = $workd->publisher;
             $workdata['publicationmagazine_label'] = $workd->publicationmagazine_label;
             $workdata['auther'] = $workd->auther;
-
+            $workdata['newtag'] = FALSE;
+            if ($workd->worktransinfoid == 2) {
+                $newtagviewmax = date('Y-m-d',strtotime($workd->siteviewday.'+ '.$workd->setvalue.'days'));
+                if (date('Y-m-d') < $newtagviewmax) {
+                    $workdata['newtag'] = TRUE;
+                }
+            }
         }
-
+        
         /**
          * 閲覧履歴テーブル(browsehistories)に作品IDとログインしているユーザーIDもしくは未ログイン時のユーザーを登録
          * すでに登録されている作品IDとユーザーIDの組み合わせがある場合、閲覧日を更新

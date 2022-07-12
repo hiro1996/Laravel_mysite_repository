@@ -39,10 +39,9 @@ class Work extends Model
     public function workModelGet($key,$table,$wherecolumn,$wheredata) {
         $works = DB::table('works');
         if ($key == 'where') {
-            $works->join('worksubs',function($join) use ($table,$wherecolumn,$wheredata) {
-                $join->on('works.workid','=','worksubs.workid')
-                    ->where(''.$table.'.'.$wherecolumn,'=',$wheredata);
-            });
+            $works->join('worksubs','works.workid','=','worksubs.workid') 
+                ->leftjoin('worktransinfos','worksubs.worktransinfoid','=','worktransinfos.id')
+            ->where(''.$table.'.'.$wherecolumn,'=',$wheredata);
         } elseif ($key == 'select') {
             $works->join('worksubs',function($join) {
                 $join->on('works.workid','=','worksubs.workid');
@@ -53,12 +52,12 @@ class Work extends Model
             })->select(DB::raw('works.title,worksubs.url,worksubs.img,worksubs.browse_record * worksubs.notificate_record  AS record_times'));
         } elseif ($key == 'reserve') {
             $where = [
-                'rsvsetflag' => 1
+                'worktransinfoid' => 1
             ];
-            $works->join('worksubs',function($join) use ($where) {
-                $join->on('works.workid','=','worksubs.workid')
-                    ->where($where);
-            });
+            $works->join('worksubs','works.workid','=','worksubs.workid') 
+                ->join('worktransinfos','worksubs.worktransinfoid','=','worktransinfos.id')
+            ->where($where)
+            ->orderBy('worksubs.siteviewday','ASC');
         } else {
             $works->join('worksubs',function($join) {
                 $join->on('works.workid','=','worksubs.workid');

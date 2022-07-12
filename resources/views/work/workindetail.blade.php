@@ -73,11 +73,31 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                 <div class="thumbnailpic">
                     <img class="workdetailmainimg" src="{{ $img }}">
                 </div>
+                <div class="ranking">
+                    <div class="monthlyranking d-flex justify-content-around">
+                        <div class="monthlyrankingtitle">
+                            月間ランキング  
+                        </div>
+                        <div class="monthlyrankingnum">
+                            16位  
+                        </div>
+                    </div>
+                    <div class="weeklyranking d-flex justify-content-around">
+                        <div class="weeklyrankingtitle">
+                            週間ランキング    
+                        </div>
+                        <div class="weeklyrankingnum">
+                            16位  
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="column">
+                @if ($workdata['newtag'])
                 <div class="mb-2">
                     <span class="tag is-danger">NEW</span>
                 </div>
+                @endif
                 <dl>                
                     <dt>カテゴリ</dt>
                     <dd>漫画</dd>
@@ -89,6 +109,12 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                     <dd>{{ $workdata['publicationmagazine_label'] }}</dd>
                     <dt>著者・作者</dt>
                     <dd>{{ $workdata['auther'] }}</dd>
+                    <dt class="tags categorytag">
+                        <span class="tag is-rounded is-medium is-primary">primary</span>
+                        <span class="tag is-rounded is-medium is-danger">primary</span>
+                        <span class="tag is-rounded is-medium is-warning">primary</span>
+                        <span class="tag is-rounded is-medium is-link">primary</span>
+                    </dt>
                 </dl>
             </div>
         </article>
