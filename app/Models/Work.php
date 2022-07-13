@@ -58,6 +58,16 @@ class Work extends Model
                 ->join('worktransinfos','worksubs.worktransinfoid','=','worktransinfos.id')
             ->where($where)
             ->orderBy('worksubs.siteviewday','ASC');
+        } elseif ($key == 'recommendpostreport') {
+            $where1 = [
+                'created_day' => date('Y-m-d')
+            ];
+            $where2 = [
+                'poststar','>=',4
+            ];
+            $works->join('worksubs','works.workid','=','worksubs.workid') 
+                ->leftjoin('posts','worksubs.id','=','posts.worksubid')
+                ->where($where1);
         } else {
             $works->join('worksubs',function($join) {
                 $join->on('works.workid','=','worksubs.workid');

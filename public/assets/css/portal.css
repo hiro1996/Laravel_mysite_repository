@@ -132,6 +132,15 @@
     height: 162px;
   }
 
+  .workreviewtitlename {
+    font-size: xx-large;
+    color: black;
+  }
+
+  .workreviewtitlefurigana {
+    border-bottom: solid;
+  }
+
   .worknewdate {
     color: grey;/*文字色*/
   }
@@ -140,6 +149,41 @@
     max-width: 115px;
     height: 162px;
   }
+
+  
+.star5_rating{
+	position: relative;
+	z-index: 0;
+	display: inline-block;
+	white-space: nowrap;
+	color: #CCCCCC;
+}
+
+.star5_rating:before, .star5_rating:after{
+    content: '★★★★★★★★★★';
+}
+
+.star5_rating:after{
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #ffcf32;
+}
+
+.star5_rating[data-rate="10"]:after{ width: 100%; }
+.star5_rating[data-rate="9"]:after{ width: 90%; }
+.star5_rating[data-rate="8"]:after{ width: 80%; }
+.star5_rating[data-rate="7"]:after{ width: 70%; }
+.star5_rating[data-rate="6"]:after{ width: 60%; }
+.star5_rating[data-rate="5"]:after{ width: 50%; }
+.star5_rating[data-rate="4"]:after{ width: 40%; }
+.star5_rating[data-rate="3"]:after{ width: 30%; }
+.star5_rating[data-rate="2"]:after{ width: 20%; }
+.star5_rating[data-rate="1"]:after{ width: 10%; }
+.star5_rating[data-rate="0"]:after{ width: 0%; }
 
   /* Footer */
 #footerwrap {

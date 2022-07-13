@@ -8,18 +8,18 @@ use Illuminate\Support\Facades\DB;
 
 class Post extends Model
 {
-    public function postModelGet($workid) {
+    public function postModelGet($worksubid) {
         $where = [
-            'workid' => $workid
+            'worksubid' => $worksubid
         ];
         $posts = DB::table('posts')->where($where)->get();
         return $posts;
     }
 
-    public function postModelInsert($loginid,$workid,$poststar,$postbody) {
+    public function postModelInsert($loginid,$worksubid,$poststar,$postbody) {
         $insert = [
             'loginid' => $loginid,
-            'workid' => $workid,
+            'worksubid' => $worksubid,
             'poststar' => $poststar,
             'postbody' => $postbody,
         ];

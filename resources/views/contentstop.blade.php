@@ -283,28 +283,39 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
             </div>
         </section>
 
+        @if ($contentstop['recommendpostreport_img'])
         <section class="article-shadow review">
             <div class="contentstop-container">
                 <div class="p-3 contentstoptitle" id="contentstopreview"><span class="contentstopbigtitle">今日のレビューレポート</span></div>
                 <div class="contentstop-container">
-                    <article class="check">
-                        <div class="p-3">
-                            <div class="d-flex justify-content-around">
-                                @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++)
-                                    <div class="worknewdate">
-                                        {{ $contentstop['worknew_date'][$i] }}
-                                        <img class="newimg" src="{{ $contentstop['worknew_img'][$i] }}">
-                                        <div class="worktitlename">
-                                            <b>{{ $contentstop['worknew_title'][$i] }}</b>
-                                        </div>
-                                    </div>
-                                @endfor
+                    <article class="columns p-4 m-0">
+                        <div class="submenu column is-3">
+                            <a href="{{ $contentstop['recommendpostreport_url'][0] }}">
+                                <img class="reviewimg" src="{{ $contentstop['recommendpostreport_img'][0] }}">
+                            </a>
+                        </div>
+                        <div class="column">
+                            <div class="worknewdate">
+                                <div class="workreviewtitlename">
+                                    <b>{{ $contentstop['recommendpostreport_title'][0] }}</b>
+                                </div>
+                                <div class="workreviewtitlefurigana">
+                                    <span>{{ $contentstop['recommendpostreport_furigana'][0] }}</span>
+                                </div>
+                                <p class="result-rating-rate">
+                                    <span class="star5_rating" data-rate="{{ $contentstop['recommendpostreport_poststar'][0] }}"></span>
+                                    <span class="number_rating">{{ $contentstop['recommendpostreport_poststar'][0] }}</span>
+                                </p>
+                                <div class="workreviewpostbody">
+                                    <span>{{ $contentstop['recommendpostreport_postbody'][0] }}</span>
+                                </div>
                             </div>
                         </div>
                     </article>
                 </div>
             </div>
         </section>
+        @endif
 
         <section class="article-shadow campaign">
             <div class="contentstop-container">

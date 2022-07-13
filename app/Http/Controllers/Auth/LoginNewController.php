@@ -338,7 +338,7 @@ class LoginNewController extends Controller
         }
 
         /**
-         * 新着作品
+         * 新着作品、作品タイトルが6文字以上なら、6文字目以降を...に変換
          */
         $workdatas = $work->workModelGet('reserve',NULL,NULL,NULL);
         $i = 0;
@@ -353,6 +353,21 @@ class LoginNewController extends Controller
             $contentstop['worknew_url'][$i] = $workd->url;
             $contentstop['worknew_date'][$i] = $workd->siteviewday.'発売';
             $i++;
+        }
+
+        /**
+         * 今日のレビューレポート(トップページには星評価7以上を1件表示)
+         */
+        $contentstop['recommendpostreport_img'] = FALSE;
+        $workreviewreports = $work->workModelGet('recommendpostreport',NULL,NULL,NULL);
+        $i = 0;
+        foreach ($workreviewreports as $workreview) {
+            $contentstop['recommendpostreport_title'][$i] = $workreview->title;
+            $contentstop['recommendpostreport_furigana'][$i] = $workreview->furigana;
+            $contentstop['recommendpostreport_url'][$i] = $workreview->url;
+            $contentstop['recommendpostreport_img'][$i] = asset($workreview->img);
+            $contentstop['recommendpostreport_poststar'][$i] = $workreview->poststar;
+            $contentstop['recommendpostreport_postbody'][$i] = $workreview->postbody;
         }
 
         return view('contentstop',compact('contentstop'));
