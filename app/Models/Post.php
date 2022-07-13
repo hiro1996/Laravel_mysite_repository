@@ -8,11 +8,15 @@ use Illuminate\Support\Facades\DB;
 
 class Post extends Model
 {
-    public function postModelGet($worksubid) {
-        $where = [
-            'worksubid' => $worksubid
+    public function postModelGet($wherecolumn1,$wheredata1,$wherecolumn2,$formula,$wheredata2) {
+        $where1 = [
+            $wherecolumn1 => $wheredata1
         ];
-        $posts = DB::table('posts')->where($where)->get();
+        $posts = DB::table('posts')->where($where1);
+        if ($wherecolumn2 != NULL) {
+            $posts = $posts->where($wherecolumn2,$formula,$wheredata2);
+        }
+        $posts = $posts->get();
         return $posts;
     }
 

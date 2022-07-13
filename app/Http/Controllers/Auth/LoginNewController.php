@@ -11,6 +11,7 @@ use App\Models\Work;
 use App\Models\Attribute;
 use App\Models\Browsehistory;
 use App\Models\Notification;
+use App\Models\Post;
 use App\Models\Printorderjsid;
 use App\Models\Rankingtitlesetting;
 use App\Models\Record;
@@ -142,7 +143,7 @@ class LoginNewController extends Controller
         return redirect('/top');
     }
 
-    public function contentstop(Request $request, Work $work, Worktype $worktype, User $user, Attribute $attribute, Printorderjsid $printorderjsid, Rankingtitlesetting $rankingtitlesetting, Rankingtablesetting $rankingtablesetting, Browsehistory $browsehistory, Notification $notification) {
+    public function contentstop(Request $request, Work $work, Worktype $worktype, User $user, Post $post, Attribute $attribute, Printorderjsid $printorderjsid, Rankingtitlesetting $rankingtitlesetting, Rankingtablesetting $rankingtablesetting, Browsehistory $browsehistory, Notification $notification) {
         /**
          * パスワード設定画面から遷移
          * new_password 新しいパスワード
@@ -356,14 +357,17 @@ class LoginNewController extends Controller
          * 今日のレビューレポート(トップページには星評価7以上を1件表示)
          */
         $contentstop['recommendpostreport_img'] = FALSE;
-        $workreviewreports = $work->workModelGet('recommendpostreport',NULL,NULL,NULL);
-        foreach ($workreviewreports as $workreview) {
-            $contentstop['recommendpostreport_title'] = $workreview->title;
-            $contentstop['recommendpostreport_furigana'] = $workreview->furigana;
-            $contentstop['recommendpostreport_url'] = $workreview->url;
-            $contentstop['recommendpostreport_img'] = asset($workreview->img);
-            $contentstop['recommendpostreport_poststar'] = $workreview->poststar;
-            $contentstop['recommendpostreport_postbody'] = $workreview->postbody;
+        $posts = $post->postModelGet('created_day',date('Y-m-d'),'poststar','>=',7);
+        if (count($posts) != 0) {
+            $workreviewreports = $work->workModelGet('recommendpostreport',NULL,NULL,NULL);
+            foreach ($workreviewreports as $workreview) {
+                $contentstop['recommendpostreport_title'] = $workreview->title;
+                $contentstop['recommendpostreport_furigana'] = $workreview->furigana;
+                $contentstop['recommendpostreport_url'] = $workreview->url;
+                $contentstop['recommendpostreport_img'] = asset($workreview->img);
+                $contentstop['recommendpostreport_poststar'] = $workreview->poststar;
+                $contentstop['recommendpostreport_postbody'] = $workreview->postbody;
+            }
         }
 
         return view('contentstop',compact('contentstop'));

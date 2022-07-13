@@ -76,7 +76,7 @@ class WorkController extends Controller
                 }
             }
         }
-        
+
         /**
          * 閲覧履歴テーブル(browsehistories)に作品IDとログインしているユーザーIDもしくは未ログイン時のユーザーを登録
          * すでに登録されている作品IDとユーザーIDの組み合わせがある場合、閲覧日を更新
@@ -130,7 +130,7 @@ class WorkController extends Controller
         /**
          * 投稿テーブル(posts)から作品詳細を開こうとしている作品IDに紐づく投稿を取得
          */
-        $workdata['posts'] = $post->postModelGet($workdata['worksubid']);
+        $workdata['posts'] = $post->postModelGet('worksubid',$workdata['worksubid'],NULL,NULL,NULL);
 
         /**
          * ジャンル投票用のデータを取得
