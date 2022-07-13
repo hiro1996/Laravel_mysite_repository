@@ -329,12 +329,14 @@ class LoginNewController extends Controller
          */
         $contentstop['recentcheck_img'] = FALSE;
         $browsehistories = $browsehistory->browsehistoryModelGet(5);
-        $i = 0;
-        foreach ($browsehistories as $browsehist) {
-            $contentstop['recentcheck_title'][$i] = $work->worktitleConvert($browsehist->title,5);
-            $contentstop['recentcheck_img'][$i] = asset($browsehist->img);
-            $contentstop['recentcheck_historydate'][$i] = $browsehist->history_time;
-            $i++;
+        if (count($browsehistories) != 0) {
+            $i = 0;
+            foreach ($browsehistories as $browsehist) {
+                $contentstop['recentcheck_title'][$i] = $work->worktitleConvert($browsehist->title,5);
+                $contentstop['recentcheck_img'][$i] = asset($browsehist->img);
+                $contentstop['recentcheck_historydate'][$i] = $browsehist->history_time;
+                $i++;
+            }
         }
 
         /**
