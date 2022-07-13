@@ -9,10 +9,13 @@ use Illuminate\Support\Facades\DB;
 class Browsehistory extends Model
 {
     public function browsehistoryModelGet($getcount) {
+        $where = [
+            'loginid' => session('loginid')
+        ];
         $browsehistories = DB::table('browsehistories')
             ->join('worksubs','browsehistories.worksubid','=','worksubs.id') 
             ->join('works','worksubs.workid','=','works.workid') 
-            ->where('browsehistories.loginid','=',session('loginid'))
+            ->where($where)
             ->orderBy('history_time','DESC')->limit($getcount)->get();
         return $browsehistories;
     }

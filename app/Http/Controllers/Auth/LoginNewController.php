@@ -318,7 +318,7 @@ class LoginNewController extends Controller
         $workdatas = $work->workModelGet('sum',NULL,NULL,NULL);
         $i = 0;
         foreach ($workdatas as $workd) {
-            $contentstop['workall_title'][$i] = $workd->title;
+            $contentstop['workall_title'][$i] = $work->worktitleConvert($workd->title,5);
             $contentstop['workall_img'][$i] = asset($workd->img);
             $contentstop['workall_url'][$i] = $workd->url;
             $i++;
@@ -331,7 +331,7 @@ class LoginNewController extends Controller
         $browsehistories = $browsehistory->browsehistoryModelGet(5);
         $i = 0;
         foreach ($browsehistories as $browsehist) {
-            $contentstop['recentcheck_title'][$i] = $browsehist->title;
+            $contentstop['recentcheck_title'][$i] = $work->worktitleConvert($browsehist->title,5);
             $contentstop['recentcheck_img'][$i] = asset($browsehist->img);
             $contentstop['recentcheck_historydate'][$i] = $browsehist->history_time;
             $i++;
@@ -343,12 +343,7 @@ class LoginNewController extends Controller
         $workdatas = $work->workModelGet('reserve',NULL,NULL,NULL);
         $i = 0;
         foreach ($workdatas as $workd) {
-            if (mb_strlen($workd->title) > 5) {
-                $tmp = strstr($workd->title,mb_substr($workd->title,5),TRUE);
-                $contentstop['worknew_title'][$i] = $tmp.'...';
-            } else {
-                $contentstop['worknew_title'][$i] = $workd->title;
-            }
+            $contentstop['worknew_title'][$i] = $work->worktitleConvert($workd->title,5);
             $contentstop['worknew_img'][$i] = asset($workd->img);
             $contentstop['worknew_url'][$i] = $workd->url;
             $contentstop['worknew_date'][$i] = $workd->siteviewday.'発売';

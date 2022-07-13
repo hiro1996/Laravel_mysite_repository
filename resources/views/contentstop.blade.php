@@ -220,10 +220,9 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                             <div class="d-flex justify-content-around">
                                 @for ($i = 0;$i < count($contentstop["recentcheck_img"]);$i++) 
                                     <div class="worknewdate">
-                                        {{ $contentstop['worknew_date'][$i] }}
                                         <img class="recentimg" src="{{ $contentstop['recentcheck_img'][$i] }}">
                                         <div class="worktitlename">
-                                            <b>{{ $contentstop['worknew_title'][$i] }}</b>
+                                            <b>{{ $contentstop['recentcheck_title'][$i] }}</b>
                                         </div>
                                     </div>
                                 @endfor
@@ -237,15 +236,14 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
 
         <section class="article-shadow ninki">
             <div class="contentstop-container">
-                <div class="p-3 contentstoptitle" id="contentstopreserve"><span class="contentstopbigtitle">人気急上昇</span></div>
+                <div class="p-3 contentstoptitle" id="contentstopninki"><span class="contentstopbigtitle">人気急上昇</span></div>
                 <div class="contentstop-container">
                     <article class="check">
                         <div class="p-3">
                             <div class="d-flex justify-content-around">
                                 @for ($i = 0;$i < count($contentstop["worknew_img"]);$i++)
-                                    <div class="worknewdate">
-                                        {{ $contentstop['worknew_date'][$i] }}
-                                        <img class="reserveimg" src="{{ $contentstop['worknew_img'][$i] }}">
+                                    <div class="workninki">
+                                        <img class="ninkiimg" src="{{ $contentstop['worknew_img'][$i] }}">
                                         <div class="worktitlename">
                                             <b>{{ $contentstop['worknew_title'][$i] }}</b>
                                         </div>

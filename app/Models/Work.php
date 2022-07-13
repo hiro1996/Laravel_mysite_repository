@@ -77,4 +77,13 @@ class Work extends Model
         return $works;
     }
 
+    public function worktitleConvert($title,$titlelength) {
+        $titleconvert = $title;
+        if (mb_strlen($title) > $titlelength) {
+            $tmp = strstr($title,mb_substr($title,$titlelength),TRUE);
+            $titleconvert = $tmp.'...';
+        } 
+        return $titleconvert;
+    }
+
 }

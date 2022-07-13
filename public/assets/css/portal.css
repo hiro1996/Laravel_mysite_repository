@@ -145,6 +145,21 @@
     color: grey;/*文字色*/
   }
 
+  .recentimg {
+    max-width: 115px;
+    height: 162px;
+  }
+
+  .ninkiimg {
+    max-width: 115px;
+    height: 162px;
+  }
+
+  .reserveimg {
+    max-width: 115px;
+    height: 162px;
+  }
+
   .newimg {
     max-width: 115px;
     height: 162px;
