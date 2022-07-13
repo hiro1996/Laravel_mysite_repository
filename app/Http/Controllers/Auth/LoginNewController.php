@@ -360,14 +360,13 @@ class LoginNewController extends Controller
          */
         $contentstop['recommendpostreport_img'] = FALSE;
         $workreviewreports = $work->workModelGet('recommendpostreport',NULL,NULL,NULL);
-        $i = 0;
         foreach ($workreviewreports as $workreview) {
-            $contentstop['recommendpostreport_title'][$i] = $workreview->title;
-            $contentstop['recommendpostreport_furigana'][$i] = $workreview->furigana;
-            $contentstop['recommendpostreport_url'][$i] = $workreview->url;
-            $contentstop['recommendpostreport_img'][$i] = asset($workreview->img);
-            $contentstop['recommendpostreport_poststar'][$i] = $workreview->poststar;
-            $contentstop['recommendpostreport_postbody'][$i] = $workreview->postbody;
+            $contentstop['recommendpostreport_title'] = $workreview->title;
+            $contentstop['recommendpostreport_furigana'] = $workreview->furigana;
+            $contentstop['recommendpostreport_url'] = $workreview->url;
+            $contentstop['recommendpostreport_img'] = asset($workreview->img);
+            $contentstop['recommendpostreport_poststar'] = $workreview->poststar;
+            $contentstop['recommendpostreport_postbody'] = $workreview->postbody;
         }
 
         return view('contentstop',compact('contentstop'));
