@@ -70,7 +70,7 @@ class WorkController extends Controller
             $workdata['auther'] = $workd->auther;
             $workdata['newtag'] = FALSE;
             if ($workd->worktransinfoid == 2) {
-                $newtagviewmax = date('Y-m-d',strtotime($workd->siteviewday.'+ '.$workd->setvalue.'days'));
+                $newtagviewmax = date('Y-m-d',strtotime($workd->siteviewday_1.'+ '.$workd->setvalue.'days'));
                 if (date('Y-m-d') < $newtagviewmax) {
                     $workdata['newtag'] = TRUE;
                 }

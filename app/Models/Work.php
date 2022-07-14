@@ -52,12 +52,12 @@ class Work extends Model
             })->select(DB::raw('works.title,worksubs.url,worksubs.img,worksubs.browse_record * worksubs.notificate_record  AS record_times'));
         } elseif ($key == 'reserve') {
             $where = [
-                'worktransinfoid' => 1
+                $wherecolumn => $wheredata
             ];
             $works->join('worksubs','works.workid','=','worksubs.workid') 
                 ->join('worktransinfos','worksubs.worktransinfoid','=','worktransinfos.id')
             ->where($where)
-            ->orderBy('worksubs.siteviewday','ASC');
+            ->orderBy('worksubs.siteviewday_1','ASC');
         } elseif ($key == 'recommendpostreport') {
             $where = [
                 'created_day' => date('Y-m-d')
