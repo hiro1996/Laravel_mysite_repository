@@ -283,6 +283,12 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                                 </div>
                             @endfor
 
+                            <div class="d-flex justify-content-around">
+                                @for ($i = 1;$i <= count($contentstop["worknew_genre"]);$i++)
+                                    <button class="button" id="{{ $contentstop['worknew_genre'][$i] }}">{{ $contentstop['worknew_genre'][$i] }}<button>
+                                @endfor
+                            </div>
+
                         </div>
                     </article>
                 </div>

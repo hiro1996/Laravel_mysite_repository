@@ -347,10 +347,13 @@ class LoginNewController extends Controller
         $workdatas = $work->workModelGet('reserve',NULL,'worktransinfoid',1);
         if (count($workdatas) != 0) {
             for ($i = 1;$i <= $worktype->worktypecountModelGet();$i++) {
+                $worktypes = $worktype->worktypeModelGet('id',$i);
+                foreach ($worktypes as $workt) {
+                    $contentstop['worknew_genre'][$i] = $workt->worktype_eng.'worknew';
+                }
                 $j = 0;
                 foreach ($workdatas as $workd) {
                     if ($workd->work_type == '0'.$i) {
-                        $contentstop['worknew_genre'][$i] = $worktype->worktype_eng.'worknew';
                         $contentstop['worknew_title'][$i][$j] = $work->worktitleConvert($workd->title,5);
                         $contentstop['worknew_img'][$i][$j] = asset($workd->img);
                         $contentstop['worknew_url'][$i][$j] = $workd->url;
@@ -364,18 +367,16 @@ class LoginNewController extends Controller
         /**
          * 新着作品 本日のNEW作品を取得
          */
-        $workdatas = $work->workModelGet('reserve',NULL,'worktransinfoid',2);
+        $workdatas = $work->workModelGet('reserve',NULL,'siteviewday_1',date('Y-m-d'));
         if (count($workdatas) != 0) {
             $k = 0;
             foreach ($workdatas as $workd) {
-                if ($workd->siteviewday_1 == date('Y-m-d')) {
-                    $contentstop['worknew_genre'][$worktype->worktypecountModelGet()+1] = 'todayworknew';
-                    $contentstop['worknew_title'][$worktype->worktypecountModelGet()+1][$k] = $work->worktitleConvert($workd->title,5);
-                    $contentstop['worknew_img'][$worktype->worktypecountModelGet()+1][$k] = asset($workd->img);
-                    $contentstop['worknew_url'][$worktype->worktypecountModelGet()+1][$k] = $workd->url;
-                    $contentstop['worknew_date'][$worktype->worktypecountModelGet()+1][$k] = '';
-                    $k++;
-                }
+                $contentstop['worknew_genre'][$worktype->worktypecountModelGet()+1] = 'todayworknew';
+                $contentstop['worknew_title'][$worktype->worktypecountModelGet()+1][$k] = $work->worktitleConvert($workd->title,5);
+                $contentstop['worknew_img'][$worktype->worktypecountModelGet()+1][$k] = asset($workd->img);
+                $contentstop['worknew_url'][$worktype->worktypecountModelGet()+1][$k] = $workd->url;
+                $contentstop['worknew_date'][$worktype->worktypecountModelGet()+1][$k] = '';
+                $k++;
             }
         }
 
@@ -395,7 +396,6 @@ class LoginNewController extends Controller
                 $contentstop['recommendpostreport_postbody'] = $workreview->postbody;
             }
         }
-        //dd($contentstop);
 
         return view('contentstop',compact('contentstop'));
     }
