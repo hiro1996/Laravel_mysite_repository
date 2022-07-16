@@ -347,7 +347,7 @@ class LoginNewController extends Controller
         $workdatas = $work->workModelGet('reserve',NULL,'worktransinfoid',1);
         if (count($workdatas) != 0) {
             for ($i = 1;$i <= $worktype->worktypecountModelGet();$i++) {
-                $worktypes = $worktype->worktypeModelGet('id',$i);
+                $worktypes = $worktype->worktypeModelGet('worktypeid','0'.$i);
                 foreach ($worktypes as $workt) {
                     $contentstop['worknew_genre'][$i] = $workt->worktype_eng.'worknew';
                 }

@@ -39,9 +39,10 @@ $title = 'トップページ';
                     <div class="modal-footer">
                         @include('modal.rankingconfigfooter')
                     </div>
+                </div>
+                <input type="hidden" id="count" value="{{ count($contentstop['attributes']['q_explain']) }}">
+                @endfor
             </div>
-            <input type="hidden" id="count" value="{{ count($contentstop['attributes']['q_explain']) }}">
-            @endfor
         </div>
     </div>
 
@@ -265,8 +266,9 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                     <article class="check">
                         <div class="p-3">
 
-                            @for ($i = 1;$i <= count($contentstop["worknew_genre"]);$i++)
-                                <div class="{{ $contentstop['worknew_genre'][$i] }}">
+                            <div class="selectgenrebigarea">
+                            @for ($i = 1;$i <= count($contentstop["worknew_img"]);$i++)
+                                <div class="selectgenrearea" id="workgenre{{ $i }}">
                                     <div class="d-flex justify-content-around">
                                         @for ($j = 0;$j < count($contentstop["worknew_img"][$i]);$j++)
                                             <div class="worknew">
@@ -282,11 +284,14 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                                     </div>
                                 </div>
                             @endfor
+                            </div>
+
 
                             <div class="d-flex justify-content-around">
-                                @for ($i = 1;$i <= count($contentstop["worknew_genre"]);$i++)
-                                    <button class="button" id="{{ $contentstop['worknew_genre'][$i] }}">{{ $contentstop['worknew_genre'][$i] }}<button>
+                                @for ($i = 1;$i <= count($contentstop["worknew_img"]);$i++)
+                                    <button class="button selectgenre" id="workgenrebutton{{ $i }}">{{ $contentstop['worknew_genre'][$i] }}</button>
                                 @endfor
+                                <input type="hidden" class="workgenrecount" value="{{ count($contentstop['worknew_img']) }}">
                             </div>
 
                         </div>
@@ -351,6 +356,22 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
     $('.tabsjsclass').click(function() {
         $('.contentsjs').not($('.tabsjsclass').attr('id')).hide();
     })
+</script>
+
+<script>
+    let workgenrecount = document.getElementsByClassName('workgenrecount');
+
+    $('#workgenre1').show();
+    for (let i = 2; i <= workgenrecount[0].value;i++) {
+        $('#workgenre' + i).hide();
+    }
+
+    for (let i = 1; i <= workgenrecount[0].value;i++) {
+        $('#workgenrebutton' + i + '').click(function() {
+            $('.selectgenrearea').not($(this).attr('id')).hide();
+        })
+    }
+
 </script>
 
 
