@@ -60,7 +60,11 @@ class WorkController extends Controller
         $workdata = $work->workModelGet('where','worksubs','url',$urlstr);
         foreach ($workdata as $workd) {
             $workdata['img'] = $workd->img;
-            $workdata['title'] = $workd->title;
+            if ($workd->volume != NULL) {
+                $workdata['title'] = $workd->title.''.$workd->volume;
+            } else {
+                $workdata['title'] = $workd->title;
+            }
             $workdata['furigana'] = $workd->furigana;
             $workdata['explaining'] = $workd->explaining;
             $workdata['publisher'] = $workd->publisher;
