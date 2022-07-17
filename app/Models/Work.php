@@ -75,6 +75,14 @@ class Work extends Model
         return $works;
     }
 
+    public function workidModelGet($url) {
+        $where = [
+            'url' => $url
+        ];
+        $workdatas = DB::table('worksubs')->where($where)->get();
+        return $workdatas;
+    }
+
     public function worktitleConvert($title,$titlelength) {
         $titleconvert = $title;
         if (mb_strlen($title) > $titlelength) {

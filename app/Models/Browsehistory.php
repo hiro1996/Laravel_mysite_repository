@@ -20,10 +20,10 @@ class Browsehistory extends Model
         return $browsehistories;
     }
 
-    public function browsehistoryModelInsert($loginid,$workid) {
+    public function browsehistoryModelInsert($loginid,$worksubid) {
         $insert = [
             'loginid' => $loginid,
-            'worksubid' => $workid,
+            'worksubid' => $worksubid,
             'history_time' => now()
         ];
         DB::table('browsehistories')->insert($insert);
@@ -42,12 +42,12 @@ class Browsehistory extends Model
         DB::table('browsehistories')->where($where1)->where($where2)->update($update);
     }
 
-    public function browsehistoryModelExist($loginid,$workid) {
+    public function browsehistoryModelExist($loginid,$worksubid) {
         $where1 = [
             'loginid' => $loginid,
         ];
         $where2 = [
-            'worksubid' => $workid,
+            'worksubid' => $worksubid,
         ];
         $exist = DB::table('browsehistories')->where($where1)->where($where2)->exists();
         return $exist;

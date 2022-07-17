@@ -58,9 +58,7 @@ class WorkController extends Controller
          * どの作品DBから参照するかとクリックした作品のURLをキーとして、作品詳細画面で表示する作品情報を取得
          */
         $workdata = $work->workModelGet('where','worksubs','url',$urlstr);
-
         foreach ($workdata as $workd) {
-            $workdata['worksubid'] = $workd->id;
             $workdata['img'] = $workd->img;
             $workdata['title'] = $workd->title;
             $workdata['furigana'] = $workd->furigana;
@@ -81,6 +79,11 @@ class WorkController extends Controller
          * 閲覧履歴テーブル(browsehistories)に作品IDとログインしているユーザーIDもしくは未ログイン時のユーザーを登録
          * すでに登録されている作品IDとユーザーIDの組み合わせがある場合、閲覧日を更新
          */
+        $workids = $work->workidModelGet($urlstr);
+        foreach ($workids as $id) {
+            $workdata['worksubid'] = $id->id;
+        }
+ 
         $loginid = 'Guest';
         if (session('loginid')) {
             $loginid = session('loginid');
