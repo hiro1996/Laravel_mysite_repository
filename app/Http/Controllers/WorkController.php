@@ -57,7 +57,8 @@ class WorkController extends Controller
         /**
          * どの作品DBから参照するかとクリックした作品のURLをキーとして、作品詳細画面で表示する作品情報を取得
          */
-        $workdata = $work->workModelGet('where','worksubs','url',$urlstr);
+        $workdata = $work->workModelGet('workindetail','worksubs','url',$urlstr);
+
         foreach ($workdata as $workd) {
             $workdata['img'] = $workd->img;
             if ($workd->volume != NULL) {
@@ -67,6 +68,7 @@ class WorkController extends Controller
             }
             $workdata['furigana'] = $workd->furigana;
             $workdata['explaining'] = $workd->explaining;
+            $workdata['workgenre'] = $workd->worktype_name;
             $workdata['publisher'] = $workd->publisher;
             $workdata['publicationmagazine_label'] = $workd->publicationmagazine_label;
             $workdata['auther'] = $workd->auther;
