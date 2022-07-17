@@ -360,6 +360,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
 
 <script>
     let workgenrecount = document.getElementsByClassName('workgenrecount');
+    $('#workgenre1').trigger('focus');
 
     $('#workgenre1').show();
     for (let i = 2; i <= workgenrecount[0].value;i++) {
@@ -373,7 +374,20 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         })
     }
 
+    for (let i = 1; i <= workgenrecount[0].value;i++) {
+        let buttonbackgroundcolor = document.getElementById('workgenrebutton' + i + '');
+        buttonbackgroundcolor.addEventListener('click',function() {
+            if (i == buttonbackgroundcolor) {
+                this.style.backgroundColor = "orange";
+                this.style.color = "white";
+            } else {
+                this.style.backgroundColor = "white";
+                this.style.color = "black";
+            }
+        })
+    }
 </script>
+
 
 
 <script type="text/javascript">
