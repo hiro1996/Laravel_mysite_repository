@@ -349,7 +349,7 @@ class LoginNewController extends Controller
             for ($i = 1;$i <= $worktype->worktypecountModelGet();$i++) {
                 $worktypes = $worktype->worktypeModelGet('worktypeid','0'.$i);
                 foreach ($worktypes as $workt) {
-                    $contentstop['worknew_genre'][$i] = $workt->worktype_eng.'worknew';
+                    $contentstop['worknew_genre'][$i] = $workt->worktype_name.'新着作品';
                 }
                 $j = 0;
                 foreach ($workdatas as $workd) {
@@ -371,7 +371,7 @@ class LoginNewController extends Controller
         if (count($workdatas) != 0) {
             $k = 0;
             foreach ($workdatas as $workd) {
-                $contentstop['worknew_genre'][$worktype->worktypecountModelGet()+1] = 'todayworknew';
+                $contentstop['worknew_genre'][$worktype->worktypecountModelGet()+1] = '本日の新着作品';
                 $contentstop['worknew_title'][$worktype->worktypecountModelGet()+1][$k] = $work->worktitleConvert($workd->title,5);
                 $contentstop['worknew_img'][$worktype->worktypecountModelGet()+1][$k] = asset($workd->img);
                 $contentstop['worknew_url'][$worktype->worktypecountModelGet()+1][$k] = $workd->url;

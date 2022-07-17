@@ -368,7 +368,8 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
 
     for (let i = 1; i <= workgenrecount[0].value;i++) {
         $('#workgenrebutton' + i + '').click(function() {
-            $('.selectgenrearea').not($(this).attr('id')).hide();
+            $('.selectgenrearea').not($('#workgenre' + i + '')).hide();
+            $('#workgenre' + i + '').show();
         })
     }
 
