@@ -9,15 +9,29 @@ use Illuminate\Support\Facades\DB;
 class Worktype extends Model
 {
     public function worktypeModelGet($wherecolumn,$wheredata) {
-        $where = [
-            $wherecolumn => $wheredata
-        ];
-        $worksubs = DB::table('worktypes')->where($where)->get();
+        $worksubs = DB::table('worktypes');
+        if ($wherecolumn != NULL) {
+            $where = [
+                $wherecolumn => $wheredata
+            ];
+            $worksubs = $worksubs->where($where);
+        }
+        $worksubs = $worksubs->get();
         return $worksubs;
     }
 
     public function worktypecountModelGet() {
         $worksubcounts = DB::table('worktypes')->count();
         return $worksubcounts;
+    }
+
+    public function worktypemenuModelGet() {
+        $worktypemenus = DB::table('worktypes')
+            ->join('works', function($join) {
+                $join->on('worktypes.worktypeid','=','works.work_type');
+            })->select('worktypes.worktype_name','works.category_name',DB::raw('count(works.category_name) AS category_name_count'))
+            ->groupBy('worktypes.worktype_name','works.category_name')
+            ->get();
+        return $worktypemenus;
     }
 }

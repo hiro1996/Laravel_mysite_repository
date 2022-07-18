@@ -195,6 +195,30 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         @endif
 
         @if ($contentstop["recentcheck_img"])
+        <section class="article-shadow recentcheck">
+            <div class="contentstop-container">
+                <div class="p-3 contentstoptitle" id="contentstopcheck"><span class="contentstopbigtitle">年代別注目作品</span></div>
+                <div class="contentstop-container">
+                    <article class="check">
+                        <div class="p-3">
+                            <div class="d-flex justify-content-around">
+                                @for ($i = 0;$i < count($contentstop["recentcheck_img"]);$i++) 
+                                    <div class="worknewdate">
+                                        <img class="recentimg" src="{{ $contentstop['recentcheck_img'][$i] }}">
+                                        <div class="worktitlename">
+                                            <b>{{ $contentstop['recentcheck_title'][$i] }}</b>
+                                        </div>
+                                    </div>
+                                @endfor
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+        @endif
+
+        @if ($contentstop["recentcheck_img"])
         <section class="article-shadow ninki">
             <div class="contentstop-container">
                 <div class="p-3 contentstoptitle" id="contentstopninki"><span class="contentstopbigtitle">人気急上昇</span></div>

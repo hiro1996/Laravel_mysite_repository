@@ -1,3 +1,22 @@
+<?php
+    use App\Models\Worktype;
+
+
+    $worktype = new Worktype();
+    $worktypes = $worktype->worktypeModelGet(NULL,NULL);
+
+    foreach ($worktypes as $workt) {
+        $worktypegenre[$workt->worktypeid] = $workt->worktype_name;
+    }
+
+    $worktypemenus = $worktype->worktypemenuModelGet();
+    $i = 0;
+    foreach ($worktypemenus as $menu) {
+        $worktypegenremenu[$menu->worktype_name][$menu->category_name] = $menu->category_name_count;
+    }
+?>
+
+
 <div class="submenu column is-3">
     <aside class="article-shadow notification is-info is-light">
         <div class="mb-2">
@@ -11,33 +30,16 @@
         <p class="menu-label">
             サービス
         </p>
-        <ul class="menu-list">
-            <li><a href="#">システム開発</a>
-                <ul>
-                    <li><a href="#">基幹業務システム構築</a></li>
-                    <li><a href="#">Webシステム構築</a></li>
-                    <li><a href="#">データベース設計・構築</a></li>
-                </ul>
-            </li>
-            <li><a href="#">ソリューション</a></li>
-            <li><a href="#">アウトソーシング</a></li>
-            <li><a href="#">セミナー・研修</a></li>
-        </ul>
-        <p class="menu-label">
-            パッケージ
-        </p>
-        <ul class="menu-list">
-            <li><a href="#">ERP</a></li>
-            <li><a href="#">Web決済システム</a></li>
-            <li><a href="#">AIチャットボット</a></li>
-        </ul>
-        <p class="menu-label">
-            コミュニティ
-        </p>
-        <ul class="menu-list">
-            <li><a href="#">コメント</a></li>
-            <li><a class="is-active" href="#">掲示板</a></li>
-            <li><a href="#">FAQ</a></li>
-        </ul>
+        @foreach ($worktypegenremenu as $category => $menu)
+            <ul class="menu-list">
+                <li><a href="#">{{ $category }}</a>
+                    @foreach ($menu as $categorymenu => $categorycount)
+                        <ul>
+                            <li><a href="#">{{ $categorymenu }}({{ $categorycount }})</a></li>
+                        </ul>
+                    @endforeach
+                </li>
+            </ul>
+        @endforeach
     </aside>
 </div>
