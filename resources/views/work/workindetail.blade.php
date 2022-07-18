@@ -16,7 +16,7 @@ $genre = explode('/', $url);
 $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
 ?>
 <article class="columns p-4 m-0">
-    
+
     @include('work.workmenu')
 
     <div class="column">
@@ -78,6 +78,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
             </div>
         </article>
 
+        @if ($workdata['explaining'])
         <article class="workindetailclass">
             <strong class="explain-abstract">概要</strong>
             <div class="explain-favoritebtn">
@@ -86,6 +87,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                 </div>
             </div>
         </article>
+        @endif
 
         <div class="col table-category">
             <table border="1" width="200" height="60">
