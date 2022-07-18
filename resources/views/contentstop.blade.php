@@ -179,12 +179,14 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                         <div class="p-3">
                             <div class="d-flex justify-content-around">
                                 @for ($i = 0;$i < count($contentstop["recentcheck_img"]);$i++) 
+                                    <a href="{{ $contentstop['recentcheck_url'][$i] }}">
                                     <div class="worknewdate">
                                         <img class="recentimg" src="{{ $contentstop['recentcheck_img'][$i] }}">
                                         <div class="worktitlename">
                                             <b>{{ $contentstop['recentcheck_title'][$i] }}</b>
                                         </div>
                                     </div>
+                                    </a>
                                 @endfor
                             </div>
                         </div>

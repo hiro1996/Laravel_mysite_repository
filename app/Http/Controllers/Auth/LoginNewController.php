@@ -334,6 +334,7 @@ class LoginNewController extends Controller
             $i = 0;
             foreach ($browsehistories as $browsehist) {
                 $contentstop['recentcheck_title'][$i] = $work->worktitleConvert($browsehist->title,5);
+                $contentstop['recentcheck_url'][$i] = $browsehist->url;
                 $contentstop['recentcheck_img'][$i] = asset($browsehist->img);
                 $contentstop['recentcheck_historydate'][$i] = $browsehist->history_time;
                 $i++;
