@@ -64,12 +64,14 @@ class LoginNewController extends Controller
         if ($request->register) { 
             $loginid = $request->loginid;
             $email = $request->email;
+            $birthday = $request->birthday;
             $nickname = $request->nickname;
             $password = $request->password;
 
             $request->validate([
                 'loginid' => 'required|unique:users',
                 'email' => 'required|unique:users',
+                'birthday' => 'required',
                 'nickname' => 'required',
                 'password' => 'required|min:8|confirmed',
                 'password_confirmation' => 'required',
@@ -78,6 +80,7 @@ class LoginNewController extends Controller
                 'loginid.required' => 'ログインIDは必須入力です。',
                 'loginid.unique' => '入力されたログインIDはすでに登録されています。',
                 'email.required' => 'Eメールアドレスは必須入力です。',
+                'birthday.required' => '誕生日は必須入力です。',
                 'email.unique' => '入力されたEメールアドレスはすでに登録されています。',
                 'nickname.required' => 'ニックネームは必須入力です。',
                 'password.confirmed' => 'パスワードとパスワード確認が一致しません。',
@@ -89,7 +92,7 @@ class LoginNewController extends Controller
              * usersテーブル、rankingtitlesettingtableテーブルに登録
              * 一般ユーザーで登録
              */
-            $user->userModelInsert($loginid,$nickname,$password,$email,1);
+            $user->userModelInsert($loginid,$nickname,$password,$email,$birthday,1);
             $workdigitcounts = $worktype->worktypecountModelGet();
             $digit = '';
             for ($i = 0;$i < $workdigitcounts;$i++) {

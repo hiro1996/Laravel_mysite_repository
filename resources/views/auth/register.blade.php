@@ -44,6 +44,24 @@
                     </ul>
                 </div>
             @endif
+            <strong class="text-muted">誕生日</strong>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                    </div>
+                    <input class="form-control" placeholder="誕生日" type="text" name="birthday">
+                </div> 
+            </div> 
+            @if($errors->has('birthday'))
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->get('birthday') as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <strong class="text-muted">ニックネーム</strong>
             <div class="form-group">
                 <div class="input-group">
