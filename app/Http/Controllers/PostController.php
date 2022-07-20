@@ -45,8 +45,7 @@ class PostController extends Controller
             }
         } 
 
-        $browseworks = $browsehistory->browsehistoryModelGet(10);
-
+        $browseworks = $browsehistory->browsehistoryModelGet('normal',session('loginid'),NULL,10);
         $postdisplaydata['browsehistorytime'] = FALSE;
         $postdisplaydata['browsehistorytitle'] = FALSE;
         if (count($browseworks) > 0) {

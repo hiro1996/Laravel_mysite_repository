@@ -8,15 +8,34 @@ use Illuminate\Support\Facades\DB;
 
 class Browsehistory extends Model
 {
-    public function browsehistoryModelGet($getcount) {
-        $where = [
-            'loginid' => session('loginid')
-        ];
+    public function browsehistoryModelGet($key,$wherecolumn,$wheremix,$getcount) {
+        
         $browsehistories = DB::table('browsehistories')
             ->join('worksubs','browsehistories.worksubid','=','worksubs.id') 
-            ->join('works','worksubs.workid','=','works.workid') 
-            ->where($where)
-            ->orderBy('history_time','DESC')->limit($getcount)->get();
+            ->join('works','worksubs.workid','=','works.workid');
+        if ($key == 'normal') {
+            $where = [
+                'loginid' => $wherecolumn
+            ];
+            $browsehistories = $browsehistories
+                ->where($where)
+                ->orderBy('history_time','DESC')
+                ->limit($getcount);
+        } elseif ($key == 'genderattention') {
+            if (count($wheremix) > 1) {
+                $browsehistories = $browsehistories->whereIn('loginid',$wheremix);
+            } else {
+                $where = [
+                    'loginid' => $wheremix
+                ];
+                $browsehistories = $browsehistories->where($where);
+            }
+            $browsehistories = $browsehistories
+                ->select('works.title','worksubs.img','worksubs.url','browsehistories.worksubid',DB::raw('count(browsehistories.worksubid) AS loginidOfsameworksubid_count'))
+                ->groupBy('browsehistories.worksubid')
+                ->orderBy('loginidOfsameworksubid_count','DESC');
+        }
+        $browsehistories = $browsehistories->get();
         return $browsehistories;
     }
 

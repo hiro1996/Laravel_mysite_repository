@@ -62,6 +62,15 @@
                     </ul>
                 </div>
             @endif
+            <strong class="text-muted">性別</strong>
+            <div class="setting-attribute-word">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="man" name="gender" value="1" checked>
+                    <label class="form-check-label" for="man">男性</label>
+                    <input class="form-check-input" type="radio" id="woman" name="gender" value="2">
+                    <label class="form-check-label" for="man">女性</label>
+                </div>
+            </div>
             <strong class="text-muted">ニックネーム</strong>
             <div class="form-group">
                 <div class="input-group">

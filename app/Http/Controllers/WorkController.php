@@ -37,7 +37,7 @@ class WorkController extends Controller
     }
 
     public function workhistory(Browsehistory $browsehistory) {
-        $browsehistories = $browsehistory->browsehistoryModelGet(10);
+        $browsehistories = $browsehistory->browsehistoryModelGet('normal',session('loginid'),NULL,10);
         $i = 0;
         foreach ($browsehistories as $browsehist) {
             $browsehistorydatas['title'][$i] = $browsehist->title;

@@ -58,13 +58,14 @@ class User extends Authenticatable
         DB::table('users')->where($where)->update($update);
     }
 
-    public function userModelInsert($loginid,$nickname,$password,$email,$birthday,$uservalue) {
+    public function userModelInsert($loginid,$nickname,$password,$email,$birthday,$gender,$uservalue) {
         $insert = [
             'loginid' => $loginid,
             'nickname' => $nickname,
             'password' => password_hash($password,PASSWORD_DEFAULT),
             'email' => $email,
             'birthday' => $birthday,
+            'gender' => $gender,
             'user_value_id' => $uservalue,
             'login_number_of_times' => 0,
             'last_display_login_time' => '-------',

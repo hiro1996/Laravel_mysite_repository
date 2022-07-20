@@ -10,6 +10,7 @@ use App\Models\Rankingtablesetting;
 use App\Models\Work;
 use App\Models\Attribute;
 use App\Models\Browsehistory;
+use App\Models\Genderattention;
 use App\Models\Notification;
 use App\Models\Post;
 use App\Models\Printorderjsid;
@@ -17,6 +18,7 @@ use App\Models\Rankingtitlesetting;
 use App\Models\Record;
 use App\Models\Workresult;
 use App\Models\Worktype;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -65,6 +67,7 @@ class LoginNewController extends Controller
             $loginid = $request->loginid;
             $email = $request->email;
             $birthday = $request->birthday;
+            $gender = $request->gender;
             $nickname = $request->nickname;
             $password = $request->password;
 
@@ -92,7 +95,7 @@ class LoginNewController extends Controller
              * usersテーブル、rankingtitlesettingtableテーブルに登録
              * 一般ユーザーで登録
              */
-            $user->userModelInsert($loginid,$nickname,$password,$email,$birthday,1);
+            $user->userModelInsert($loginid,$nickname,$password,$email,$birthday,$gender,1);
             $workdigitcounts = $worktype->worktypecountModelGet();
             $digit = '';
             for ($i = 0;$i < $workdigitcounts;$i++) {
@@ -146,7 +149,7 @@ class LoginNewController extends Controller
         return redirect('/top');
     }
 
-    public function contentstop(Request $request, Work $work, Worktype $worktype, User $user, Post $post, Attribute $attribute, Printorderjsid $printorderjsid, Rankingtitlesetting $rankingtitlesetting, Rankingtablesetting $rankingtablesetting, Browsehistory $browsehistory, Notification $notification) {
+    public function contentstop(Request $request, Work $work, Worktype $worktype, User $user, Post $post, Attribute $attribute, Printorderjsid $printorderjsid, Rankingtitlesetting $rankingtitlesetting, Rankingtablesetting $rankingtablesetting, Browsehistory $browsehistory, Notification $notification, Genderattention $genderattention) {
         /**
          * パスワード設定画面から遷移
          * new_password 新しいパスワード
@@ -332,7 +335,7 @@ class LoginNewController extends Controller
          * 最近チェックした作品
          */
         $contentstop['recentcheck_img'] = FALSE;
-        $browsehistories = $browsehistory->browsehistoryModelGet(5);
+        $browsehistories = $browsehistory->browsehistoryModelGet('normal',session('loginid'),NULL,5);
         if (count($browsehistories) != 0) {
             $i = 0;
             foreach ($browsehistories as $browsehist) {
@@ -341,6 +344,37 @@ class LoginNewController extends Controller
                 $contentstop['recentcheck_img'][$i] = asset($browsehist->img);
                 $contentstop['recentcheck_historydate'][$i] = $browsehist->history_time;
                 $i++;
+            }
+        }
+
+        /**
+         * 年代別注目作品
+         */
+        for ($i = 1;$i <= 5;$i++) {
+            for ($j = 1;$j <= 2;$j++) {
+                $agegenders[$i][$j] = FALSE;
+            }
+        }
+
+        $genderattentions = $genderattention->genderattentionModelGet();
+        foreach ($genderattentions as $gender) {
+            $age = (int) (($gender->age) / 10); 
+            $agegenders[$age][$gender->gender][] = $gender->loginid;
+        }
+
+        for ($i = 1;$i <= count($agegenders);$i++) {
+            for ($j = 1;$j <= 2;$j++) {
+                $agegendersworks[$i][$j] = FALSE;
+                if ($agegenders[$i][$j]) {
+                    $getdatas = $browsehistory->browsehistoryModelGet('genderattention',NULL,$agegenders[$i][$j],NULL);
+                    $k = 0;
+                    foreach ($getdatas as $get) {
+                        $contentstop['genderattention_title'][$i][$j][$k] = $get->title;
+                        $contentstop['genderattention_img'][$i][$j][$k] = $get->img;
+                        $contentstop['genderattention_url'][$i][$j][$k] = $get->url;
+                        $k++;
+                    }
+                }
             }
         }
 
