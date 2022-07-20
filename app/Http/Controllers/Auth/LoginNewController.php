@@ -348,11 +348,14 @@ class LoginNewController extends Controller
         }
 
         /**
-         * 年代別注目作品
+         * 年代別注目作品($i...年代,$j...性別,$k...該当作品)
          */
         for ($i = 1;$i <= 5;$i++) {
             for ($j = 1;$j <= 2;$j++) {
                 $agegenders[$i][$j] = FALSE;
+                $contentstop['genderattention_title'][$i][$j] = FALSE;
+                $contentstop['genderattention_img'][$i][$j] = FALSE;
+                $contentstop['genderattention_url'][$i][$j] = FALSE;
             }
         }
 
@@ -362,21 +365,28 @@ class LoginNewController extends Controller
             $agegenders[$age][$gender->gender][] = $gender->loginid;
         }
 
+        
         for ($i = 1;$i <= count($agegenders);$i++) {
             for ($j = 1;$j <= 2;$j++) {
-                $agegendersworks[$i][$j] = FALSE;
+                if ($j == 1) {
+                    $contentstop['genderattention_button'][$i][$j] = $i.'0代男性';
+                } else {
+                    $contentstop['genderattention_button'][$i][$j] = $i.'0代女性';;
+                }
                 if ($agegenders[$i][$j]) {
-                    $getdatas = $browsehistory->browsehistoryModelGet('genderattention',NULL,$agegenders[$i][$j],NULL);
+                    $getdatas = $browsehistory->browsehistoryModelGet('genderattention',NULL,$agegenders[$i][$j],5);
                     $k = 0;
                     foreach ($getdatas as $get) {
-                        $contentstop['genderattention_title'][$i][$j][$k] = $get->title;
+                        $contentstop['genderattention_title'][$i][$j][$k] = $work->worktitleConvert($get->title,5);
                         $contentstop['genderattention_img'][$i][$j][$k] = $get->img;
                         $contentstop['genderattention_url'][$i][$j][$k] = $get->url;
                         $k++;
                     }
-                }
+                } 
             }
         }
+
+        //dd($contentstop['genderattention_title']);
 
         /**
          * 新着作品 ジャンルごとに上映前、発売前の作品を取得

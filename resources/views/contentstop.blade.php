@@ -196,22 +196,50 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         </section>
         @endif
 
-        @if ($contentstop["recentcheck_img"])
+        @if ($contentstop['genderattention_img'])
         <section class="article-shadow recentcheck">
             <div class="contentstop-container">
                 <div class="p-3 contentstoptitle" id="contentstopcheck"><span class="contentstopbigtitle">年代別注目作品</span></div>
                 <div class="contentstop-container">
                     <article class="check">
                         <div class="p-3">
-                            <div class="d-flex justify-content-around">
-                                @for ($i = 0;$i < count($contentstop["recentcheck_img"]);$i++) 
-                                    <div class="worknewdate">
-                                        <img class="recentimg" src="{{ $contentstop['recentcheck_img'][$i] }}">
-                                        <div class="worktitlename">
-                                            <b>{{ $contentstop['recentcheck_title'][$i] }}</b>
-                                        </div>
+
+                            <div class="selectgenreattentionbigarea">
+                            @for ($i = 1;$i <= count($contentstop["genderattention_img"]);$i++)
+                                @for ($j = 1;$j <= count($contentstop["genderattention_img"][$i]);$j++)
+                                <div class="selectattentiongenrearea" id="workgenreattentionarea{{ $i }}{{ $j }}">
+                                    <div class="d-flex justify-content-around">
+                                        @if ($contentstop["genderattention_img"][$i][$j])
+                                            @for ($k = 0;$k < count($contentstop["genderattention_img"][$i][$j]);$k++)
+                                                <div class="worknew">
+                                                    <a href="{{ $contentstop['genderattention_url'][$i][$j][$k] }}">
+                                                    <img class="newimg" src="{{ $contentstop['genderattention_img'][$i][$j][$k] }}">
+                                                    <div class="worktitlename">
+                                                        <b>{{ $contentstop['genderattention_title'][$i][$j][$k] }}</b>
+                                                    </div>
+                                                    </a>
+                                                </div>
+                                            @endfor
+                                        @else
+                                            <div class="worknew">
+                                                注目作品はありません。
+                                            </div>
+                                        @endif
                                     </div>
+                                </div>
                                 @endfor
+                            @endfor
+                            </div>
+
+                            @for ($j = 1;$j <= 2;$j++)
+                                <div class="d-flex justify-content-around">
+                                    @for ($i = 1;$i <= count($contentstop["genderattention_img"]);$i++)
+                                        <button class="button selectgenreattention" id="workgenreattentionbutton{{ $i }}{{ $j }}">{{ $contentstop['genderattention_button'][$i][$j] }}</button>
+                                        <input type="hidden" class="workgenreattentioncount" value="{{ count($contentstop['genderattention_img']) }}">
+                                    @endfor
+                                </div>  
+                            @endfor  
+
                             </div>
                         </div>
                     </article>
@@ -373,6 +401,25 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
     }
 </script>
 
+<script>
+    let workgenreattentioncount = document.getElementsByClassName('workgenreattentioncount');
+
+    for (let j = 1;j <= 2;j++) {
+        for (let i = 1;i <= workgenreattentioncount[0].value;i++) {
+            $('#workgenreattentionarea' + i + j + '').hide();
+        }
+    }
+    $('#workgenreattentionarea11').show();
+
+    for (let j = 1;j <= 2;j++) {
+        for (let i = 1;i <= workgenreattentioncount[0].value;i++) {
+            $('#workgenreattentionbutton' + i + j + '').click(function() {
+                $('.selectattentiongenrearea').not($('#workgenreattentionarea' + i + j)).hide();
+                $('#workgenreattentionarea' + i + j + '').show();
+            })
+        }
+    }
+</script>
 
 
 <script type="text/javascript">

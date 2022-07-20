@@ -33,7 +33,8 @@ class Browsehistory extends Model
             $browsehistories = $browsehistories
                 ->select('works.title','worksubs.img','worksubs.url','browsehistories.worksubid',DB::raw('count(browsehistories.worksubid) AS loginidOfsameworksubid_count'))
                 ->groupBy('browsehistories.worksubid')
-                ->orderBy('loginidOfsameworksubid_count','DESC');
+                ->orderBy('loginidOfsameworksubid_count','DESC')
+                ->limit($getcount);
         }
         $browsehistories = $browsehistories->get();
         return $browsehistories;
