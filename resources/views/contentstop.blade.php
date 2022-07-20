@@ -229,7 +229,6 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                                 </div>
                                 @endfor
                             @endfor
-                            </div>
 
                             @for ($j = 1;$j <= 2;$j++)
                                 <div class="d-flex justify-content-around">
@@ -239,8 +238,8 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                                     @endfor
                                 </div>  
                             @endfor  
-
                             </div>
+
                         </div>
                     </article>
                 </div>
@@ -361,6 +360,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         </section>
 
     </div>
+
 </article>
 
 
