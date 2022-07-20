@@ -12,4 +12,13 @@ class Genderattention extends Model
         $genderattentions = DB::table('genderattentions')->get();
         return $genderattentions;
     }
+
+    public function genderattentionModelInsert($loginid,$age,$gender) {
+        $where = [
+            'loginid' => $loginid,
+            'age' => $age,
+            'gender' => $gender
+        ];
+        DB::table('genderattentions')->insert($where);
+    }
 }

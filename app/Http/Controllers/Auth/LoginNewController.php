@@ -55,7 +55,7 @@ class LoginNewController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function login(Request $request, User $user, Work $work, Worktype $worktype, Record $record, Rankingtablesetting $rankingtablesetting) {
+    public function login(Request $request, User $user, Work $work, Worktype $worktype, Record $record, Rankingtablesetting $rankingtablesetting, Genderattention $genderattention) {
         /**
          * 新規作成画面から遷移
          * loginid ログインID
@@ -102,6 +102,14 @@ class LoginNewController extends Controller
                 $digit = $digit.'1';
             }
             $rankingtablesetting->rankingtablesettingModelInsert($loginid,$digit);
+
+            /**
+             * genderattentionsテーブルに、loginid,age,genderを登録
+             */
+            $date = new DateTime($birthday);
+            $now = new DateTime();
+            $interval = $now->diff($date);
+            $genderattention->genderattentionModelInsert($loginid,$interval->y,$gender);
 
             /**
              * 作品IDとユーザーIDをrecordsテーブルに初期化して登録
