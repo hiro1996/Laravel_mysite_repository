@@ -46,7 +46,8 @@ class Browsehistory extends Model
                 ->OrWhere($where2)
                 ->select('browsehistories.worksubid','browsehistories.history_time_date',DB::raw('count(browsehistories.worksubid) AS sameworksubid_count'))
                 ->groupBy('browsehistories.worksubid','browsehistories.history_time_date')
-                ->orderBy('browsehistories.history_time_date','ASC');
+                ->orderBy('browsehistories.history_time_date','ASC')
+                ->limit($getcount);
         }
         $browsehistories = $browsehistories->get();
         return $browsehistories;

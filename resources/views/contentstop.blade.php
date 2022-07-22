@@ -247,31 +247,45 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         </section>
         @endif
 
-        @if ($contentstop['ninkitodayyesterday'])
-        <section class="article-shadow ninki">
-            <div class="contentstop-container">
-                <div class="p-3 contentstoptitle" id="contentstopninki"><span class="contentstopbigtitle">人気急上昇</span></div>
-                <div class="contentstop-container">
-                    <article class="check">
-                        <div class="p-3">
-                            @for ($i = 1;$i <= count($contentstop["ninkitodayyesterday"]['img']);$i++)
-                            <div class="d-flex justify-content-around">
-                                @for ($j = 0;$j < count($contentstop["ninkitodayyesterday"]['img'][$i]);$j++)
-                                    <div class="workninki">
-                                        <img class="ninkiimg" src="{{ $contentstop['ninkitodayyesterday']['img'][$i][0] }}">
-                                        <div class="worktitlename">
-                                            <b>{{ $contentstop['ninkitodayyesterday']['title'][$i][0] }}</b>
+            @if ($contentstop['ninkitodayyesterday'])
+                <section class="article-shadow ninki">
+                    <div class="contentstop-container">
+                        <div class="p-3 contentstoptitle" id="contentstopninki"><span class="contentstopbigtitle">人気急上昇</span></div>
+                            <div class="contentstop-container">
+                                <article class="check">
+                                    <div class="p-3">
+
+                                        <div class="ninkigenrebigarea">
+                                            @for ($i = 1;$i <= count($contentstop["ninkitodayyesterday"]['img']);$i++) 
+                                                <div class="ninkigenrearea" id="ninkigenre{{ $i }}">
+                                                    <div class="d-flex justify-content-around">
+                                                        @for ($j = 0;$j < count($contentstop["ninkitodayyesterday"]['img'][$i]);$j++) 
+                                                            <div class="workninki">
+                                                                <img class="ninkiimg" src="{{ $contentstop['ninkitodayyesterday']['img'][$i][$j] }}">
+                                                                <div class="worktitlename">
+                                                                    <b>{{ $contentstop['ninkitodayyesterday']['title'][$i][$j] }}</b>
+                                                                </div>
+                                                            </div>
+                                                        @endfor
+                                                    </div>
+                                                </div>
+                                            @endfor
                                         </div>
+
+                                        <div class="d-flex justify-content-around">
+                                            @for ($i = 1;$i <= count($contentstop["ninkitodayyesterday_button"]);$i++) 
+                                                <button class="button ninkigenre" id="ninkigenrebutton{{ $i }}">{{ $contentstop['ninkitodayyesterday_button'][$i] }}</button>
+                                            @endfor
+                                            <input type="hidden" class="ninkigenrecount" value="{{ count($contentstop['ninkitodayyesterday_button']) }}">
+                                        </div>
+
                                     </div>
-                                @endfor
+                                </article>
                             </div>
-                            @endfor
                         </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-        @endif
+                    </div>
+                </section>
+            @endif
 
         <section class="article-shadow reservation">
             <div class="contentstop-container">
@@ -399,6 +413,22 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                 this.style.backgroundColor = "white";
                 this.style.color = "black";
             }
+        })
+    }
+</script>
+
+<script>
+    let ninkigenrecount = document.getElementsByClassName('ninkigenrecount');
+
+    $('#ninkigenre1').show();
+    for (let i = 2; i <= ninkigenrecount[0].value; i++) {
+        $('#ninkigenre' + i).hide();
+    }
+
+    for (let i = 1; i <= ninkigenrecount[0].value; i++) {
+        $('#ninkigenrebutton' + i + '').click(function() {
+            $('.ninkigenrearea').not($('#ninkigenre' + i + '')).hide();
+            $('#ninkigenre' + i + '').show();
         })
     }
 </script>

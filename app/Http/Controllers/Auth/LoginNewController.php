@@ -401,18 +401,21 @@ class LoginNewController extends Controller
             if ($date == 1) {
                 $startdate = date('Y-m-d');
                 $findate = date('Y-m-d', strtotime('-1 day'));
+                $contentstop['ninkitodayyesterday_button'][$date] = '本日の人気急上昇作品';
             } elseif ($date == 2) {
                 $weekno = date('w',strtotime(date('Y-m-d')));
                 $startdate = date('Y-m-d',strtotime("-{$weekno} day",strtotime(date('Y-m-d'))));
                 $daysleft = 6 - $weekno;
                 $findate = date('Y-m-d',strtotime("+{$daysleft} day",strtotime(date('Y-m-d'))));
+                $contentstop['ninkitodayyesterday_button'][$date] = '今週の人気急上昇作品';
             } else {
                 $startdate = date('Y-m-01');
                 $findate = date('Y-m-t');
+                $contentstop['ninkitodayyesterday_button'][$date] = '今月の人気急上昇作品';
             }
 
             $worksubids = [];
-            $ninkistodayyesterday = $browsehistory->browsehistoryModelGet(NULL,'history_time_date',$findate,'history_time_date',$startdate,NULL);
+            $ninkistodayyesterday = $browsehistory->browsehistoryModelGet(NULL,'history_time_date',$findate,'history_time_date',$startdate,4);
             foreach ($ninkistodayyesterday as $ninkity) {
                 $ninki1[$ninkity->worksubid][0] = 0; //昨日の作品閲覧数
                 $ninki1[$ninkity->worksubid][1] = 0; //今日の作品閲覧数
