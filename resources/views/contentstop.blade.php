@@ -254,16 +254,18 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                 <div class="contentstop-container">
                     <article class="check">
                         <div class="p-3">
+                            @for ($i = 1;$i <= count($contentstop["ninkitodayyesterday"]['img']);$i++)
                             <div class="d-flex justify-content-around">
-                                @for ($i = 0;$i < count($contentstop["ninkitodayyesterday"]['img']);$i++)
+                                @for ($j = 0;$j < count($contentstop["ninkitodayyesterday"]['img'][$i]);$j++)
                                     <div class="workninki">
-                                        <img class="ninkiimg" src="{{ $contentstop['ninkitodayyesterday']['img'][$i] }}">
+                                        <img class="ninkiimg" src="{{ $contentstop['ninkitodayyesterday']['img'][$i][0] }}">
                                         <div class="worktitlename">
-                                            <b>{{ $contentstop['ninkitodayyesterday']['title'][$i] }}</b>
+                                            <b>{{ $contentstop['ninkitodayyesterday']['title'][$i][0] }}</b>
                                         </div>
                                     </div>
                                 @endfor
                             </div>
+                            @endfor
                         </div>
                     </article>
                 </div>
