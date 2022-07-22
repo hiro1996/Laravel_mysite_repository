@@ -8,25 +8,24 @@ use Illuminate\Support\Facades\DB;
 
 class Browsehistory extends Model
 {
-    public function browsehistoryModelGet($key,$wherecolumn,$wheremix,$getcount) {
-        
+    public function browsehistoryModelGet($key,$wherecolumn1,$wheredata1,$wherecolumn2,$wheredata2,$getcount) {
         $browsehistories = DB::table('browsehistories')
             ->join('worksubs','browsehistories.worksubid','=','worksubs.id') 
             ->join('works','worksubs.workid','=','works.workid');
         if ($key == 'normal') {
             $where = [
-                'loginid' => $wherecolumn
+                $wherecolumn1 => $wheredata1
             ];
             $browsehistories = $browsehistories
                 ->where($where)
                 ->orderBy('history_time','DESC')
                 ->limit($getcount);
         } elseif ($key == 'genderattention') {
-            if (count($wheremix) > 1) {
-                $browsehistories = $browsehistories->whereIn('loginid',$wheremix);
+            if (count($wheredata1) > 1) {
+                $browsehistories = $browsehistories->whereIn($wherecolumn1,$wheredata1);
             } else {
                 $where = [
-                    'loginid' => $wheremix
+                    $wherecolumn1 => $wheredata1
                 ];
                 $browsehistories = $browsehistories->where($where);
             }
@@ -35,16 +34,35 @@ class Browsehistory extends Model
                 ->groupBy('browsehistories.worksubid')
                 ->orderBy('loginidOfsameworksubid_count','DESC')
                 ->limit($getcount);
+        } else {
+            $where1 = [
+                $wherecolumn1 => $wheredata1
+            ];
+            $where2 = [
+                $wherecolumn2 => $wheredata2
+            ];
+            $browsehistories = $browsehistories
+                ->where($where1)
+                ->OrWhere($where2)
+                ->select('browsehistories.worksubid','browsehistories.history_time_date',DB::raw('count(browsehistories.worksubid) AS sameworksubid_count'))
+                ->groupBy('browsehistories.worksubid','browsehistories.history_time_date')
+                ->orderBy('browsehistories.history_time_date','ASC');
         }
         $browsehistories = $browsehistories->get();
         return $browsehistories;
+    }
+
+    public function browsehistorycountModelGet() {
+        $browsehistoriescount = DB::table('browsehistories')->max('worksubid');
+        return $browsehistoriescount;
     }
 
     public function browsehistoryModelInsert($loginid,$worksubid) {
         $insert = [
             'loginid' => $loginid,
             'worksubid' => $worksubid,
-            'history_time' => now()
+            'history_time' => now(),
+            'history_time_date' => date('Y-m-d')
         ];
         DB::table('browsehistories')->insert($insert);
     }

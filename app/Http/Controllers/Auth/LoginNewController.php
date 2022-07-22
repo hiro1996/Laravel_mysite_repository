@@ -343,7 +343,7 @@ class LoginNewController extends Controller
          * 最近チェックした作品
          */
         $contentstop['recentcheck_img'] = FALSE;
-        $browsehistories = $browsehistory->browsehistoryModelGet('normal',session('loginid'),NULL,5);
+        $browsehistories = $browsehistory->browsehistoryModelGet('normal','loginid',session('loginid'),NULL,NULL,5);
         if (count($browsehistories) != 0) {
             $i = 0;
             foreach ($browsehistories as $browsehist) {
@@ -382,7 +382,7 @@ class LoginNewController extends Controller
                     $contentstop['genderattention_button'][$i][$j] = $i.'0代女性';;
                 }
                 if ($agegenders[$i][$j]) {
-                    $getdatas = $browsehistory->browsehistoryModelGet('genderattention',NULL,$agegenders[$i][$j],5);
+                    $getdatas = $browsehistory->browsehistoryModelGet('genderattention','loginid',$agegenders[$i][$j],NULL,NULL,5);
                     $k = 0;
                     foreach ($getdatas as $get) {
                         $contentstop['genderattention_title'][$i][$j][$k] = $work->worktitleConvert($get->title,5);
@@ -394,7 +394,51 @@ class LoginNewController extends Controller
             }
         }
 
-        //dd($contentstop['genderattention_title']);
+        /**
+         * 人気急上昇(本日、今日と昨日の増加率取得)
+         */
+        $worksubids = [];
+        $ninkistodayyesterday = $browsehistory->browsehistoryModelGet(NULL,'history_time_date',date('Y-m-d'),'history_time_date',date('Y-m-d', strtotime('-1 day')),NULL);
+        foreach ($ninkistodayyesterday as $ninkity) {
+            $ninki1[$ninkity->worksubid][0] = 0; //昨日の作品閲覧数
+            $ninki1[$ninkity->worksubid][1] = 0; //今日の作品閲覧数
+        }
+
+        foreach ($ninkistodayyesterday as $ninkity) {
+            if ($ninki1[$ninkity->worksubid][0] == 0) {
+                $ninki1[$ninkity->worksubid][0] = $ninkity->sameworksubid_count;
+            } else {
+                $ninki1[$ninkity->worksubid][1] = $ninkity->sameworksubid_count;
+            }
+        }
+
+        arsort($ninki1);
+
+        foreach ($ninkistodayyesterday as $ninkity) {
+            $contentstop['ninkitodayyesterday_wariai'][$ninkity->worksubid] = ($ninki1[$ninkity->worksubid][1] / $ninki1[$ninkity->worksubid][0]) * 100;
+            $ninkidata = $work->workModelGet('where','worksubs','id',$ninkity->worksubid);
+            foreach ($ninkidata as $ninki) {
+                $tmp['title'][$ninkity->worksubid] = $work->worktitleConvert($ninki->title,5);
+                $tmp['img'][$ninkity->worksubid] = $ninki->img;
+                $tmp['url'][$ninkity->worksubid] = $ninki->url;
+            }
+        }
+
+        $i = 0;
+        foreach ($tmp['title'] as $data) {
+            $contentstop['ninkitodayyesterday']['title'][$i] = $data;
+            $i++;
+        }
+        $j = 0;
+        foreach ($tmp['img'] as $data) {
+            $contentstop['ninkitodayyesterday']['img'][$j] = $data;
+            $j++;
+        }
+        $k = 0;
+        foreach ($tmp['url'] as $data) {
+            $contentstop['ninkitodayyesterday']['url'][$k] = $data;
+            $k++;
+        }
 
         /**
          * 新着作品 ジャンルごとに上映前、発売前の作品を取得

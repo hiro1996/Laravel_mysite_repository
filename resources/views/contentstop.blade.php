@@ -247,7 +247,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         </section>
         @endif
 
-        @if ($contentstop["recentcheck_img"])
+        @if ($contentstop['ninkitodayyesterday'])
         <section class="article-shadow ninki">
             <div class="contentstop-container">
                 <div class="p-3 contentstoptitle" id="contentstopninki"><span class="contentstopbigtitle">人気急上昇</span></div>
@@ -255,11 +255,11 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                     <article class="check">
                         <div class="p-3">
                             <div class="d-flex justify-content-around">
-                                @for ($i = 0;$i < count($contentstop["recentcheck_img"]);$i++)
+                                @for ($i = 0;$i < count($contentstop["ninkitodayyesterday"]['img']);$i++)
                                     <div class="workninki">
-                                        <img class="ninkiimg" src="{{ $contentstop['recentcheck_img'][$i] }}">
+                                        <img class="ninkiimg" src="{{ $contentstop['ninkitodayyesterday']['img'][$i] }}">
                                         <div class="worktitlename">
-                                            <b>{{ $contentstop['recentcheck_title'][$i] }}</b>
+                                            <b>{{ $contentstop['ninkitodayyesterday']['title'][$i] }}</b>
                                         </div>
                                     </div>
                                 @endfor
