@@ -27,16 +27,12 @@
         </div>
     </aside>
     <aside class="article-shadow menu">
-        <p class="menu-label">
-            サービス
-        </p>
         @foreach ($worktypegenremenu as $category => $menu)
-            <ul class="menu-list">
-                <li><a href="#">{{ $category }}</a>
+            <ul class="workmenu">
+                <li class="workmenu-list">
+                    <a href="#">{{ $category }}</a>
                     @foreach ($menu as $categorymenu => $categorycount)
-                        <ul>
-                            <li><a href="#">{{ $categorymenu }}({{ $categorycount }})</a></li>
-                        </ul>
+                        <li class="workmenu-sublist"><a href="#" class="workmenu-sublistlink">{{ $categorymenu }}({{ $categorycount }})</a></li>
                     @endforeach
                 </li>
             </ul>

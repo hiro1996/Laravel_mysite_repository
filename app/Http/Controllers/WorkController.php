@@ -37,7 +37,7 @@ class WorkController extends Controller
     }
 
     public function workhistory(Browsehistory $browsehistory) {
-        $browsehistories = $browsehistory->browsehistoryModelGet('normal',session('loginid'),NULL,10);
+        $browsehistories = $browsehistory->browsehistoryModelGet('normal','loginid',session('loginid'),NULL,NULL,10);
         $i = 0;
         foreach ($browsehistories as $browsehist) {
             $browsehistorydatas['title'][$i] = $browsehist->title;
@@ -53,6 +53,33 @@ class WorkController extends Controller
          * コンテンツトップでどの作品をクリックしたかを判別するURLを取得し、urlからどの作品DBのデータを参照するか確認
          */
         $urlstr = $url.'/'.$url2.'/'.$url3;
+
+        /**
+         * 人気急上昇タグを表示
+         */
+        $ninkitag = [];
+        for ($date = 1;$date <= 3;$date++) {
+            if ($date == 1) {
+                $startdate = date('Y-m-d');
+                $findate = date('Y-m-d', strtotime('-1 day'));
+                $contentstop['ninkitodayyesterday_button'][$date] = '本日の人気急上昇作品';
+            } elseif ($date == 2) {
+                $weekno = date('w',strtotime(date('Y-m-d')));
+                $startdate = date('Y-m-d',strtotime("-{$weekno} day",strtotime(date('Y-m-d'))));
+                $daysleft = 6 - $weekno;
+                $findate = date('Y-m-d',strtotime("+{$daysleft} day",strtotime(date('Y-m-d'))));
+                $contentstop['ninkitodayyesterday_button'][$date] = '今週の人気急上昇作品';
+            } else {
+                $startdate = date('Y-m-01');
+                $findate = date('Y-m-t');
+                $contentstop['ninkitodayyesterday_button'][$date] = '今月の人気急上昇作品';
+            }
+
+            $ninkistodayyesterday = $browsehistory->browsehistoryModelGet(NULL,'history_time_date',$findate,'history_time_date',$startdate,4);
+            foreach ($ninkistodayyesterday as $ninkity) {
+                array_push($ninkitag,$ninkity->worksubid);
+            }
+        }
 
         /**
          * どの作品DBから参照するかとクリックした作品のURLをキーとして、作品詳細画面で表示する作品情報を取得
@@ -86,8 +113,10 @@ class WorkController extends Controller
          * すでに登録されている作品IDとユーザーIDの組み合わせがある場合、閲覧日を更新
          */
         $workids = $work->workidModelGet($urlstr);
+        $workdata['ninkitag'] = FALSE;
         foreach ($workids as $id) {
             $workdata['worksubid'] = $id->id;
+            if (in_array($workdata['worksubid'],$ninkitag)) $workdata['ninkitag'] = TRUE;
         }
  
         $loginid = 'Guest';

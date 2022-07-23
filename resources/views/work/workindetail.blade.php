@@ -20,7 +20,9 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
     @include('work.workmenu')
 
     <div class="column">
-        <div class="ninkitag">人気急上昇↑↑</div>
+        @if ($workdata['ninkitag'])
+            <div class="ninkitag">人気急上昇↑↑</div>
+        @endif
         <strong class="worktitle">
             {{ $workdata['title'] }}
         </strong>

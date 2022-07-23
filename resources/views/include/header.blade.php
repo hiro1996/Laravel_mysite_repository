@@ -2,6 +2,21 @@
 
     use Illuminate\Support\Facades\DB;
     use App\Models\Notification;
+    use App\Models\Worktype;
+
+
+    $worktype = new Worktype();
+    $worktypes = $worktype->worktypeModelGet(NULL,NULL);
+
+    foreach ($worktypes as $workt) {
+        $worktypegenre[$workt->worktypeid] = $workt->worktype_name;
+    }
+
+    $worktypemenus = $worktype->worktypemenuModelGet();
+    $i = 0;
+    foreach ($worktypemenus as $menu) {
+        $worktypegenremenu[$menu->worktype_name][$menu->category_name] = $menu->category_name_count;
+    }
 
     if (session('loginid')) {
         $uservalue = DB::table('users')->where(['loginid' => session('loginid')])->get();
@@ -247,6 +262,28 @@
                     window.confirm('ログアウトしますか?');
                 });
             </script>
+        </nav>
+
+        <nav class="navbar workmenu-navbar" role="navigation" aria-label="main navigation">
+            <div id="targetMenu" class="workmenu-subnavbar">
+                <div class="navbar-start">
+                    @foreach ($worktypegenremenu as $category => $menu)
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                                {{ $category }}
+                            </a>
+                            <div class="navbar-dropdown">
+                                @foreach ($menu as $categorymenu => $categorycount)
+                                    <a class="navbar-item workgenremenu">
+                                        {{ $categorymenu }}
+                                    </a>
+                                    <hr class="navbar-divider">
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </nav>
     
         <style>

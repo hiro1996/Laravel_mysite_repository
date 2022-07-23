@@ -4,6 +4,8 @@ $title = 'トップページ';
 
 @include('include.header')
 
+
+
 <div class="main box carousel-bg">
     <section class="p-5 mb-2 field text-black">
         <div class="notification is-info is-light">
@@ -69,9 +71,6 @@ $title = 'トップページ';
 </div>
 
 
-<?php
-$thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
-?>
 <article class="columns p-4 m-0">
     
     @include('work.workmenu')
@@ -263,10 +262,12 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                                             <div class="d-flex justify-content-around">
                                                 @for ($j = 0;$j < count($contentstop["ninkitodayyesterday"]['img'][$i]);$j++) 
                                                     <div class="workninki">
+                                                        <a href="{{ $contentstop['ninkitodayyesterday']['url'][$i][$j] }}">
                                                         <img class="ninkiimg" src="{{ $contentstop['ninkitodayyesterday']['img'][$i][$j] }}">
                                                         <div class="worktitlename">
                                                             <b>{{ $contentstop['ninkitodayyesterday']['title'][$i][$j] }}</b>
                                                         </div>
+                                                        </a>
                                                     </div>
                                                 @endfor
                                             </div>
