@@ -1,13 +1,13 @@
 
 <div class="form-group">
-    @if ($postdisplaydata['browsehistorytitle'])
+    @if ($posts['browsehistorytitle'])
         <button type="button" class="btn btn-primary btn-block searchclass" id="#workhistory">閲覧履歴から探す</button>
     @else
         <button type="button" class="btn btn-primary btn-block searchclass disabled" id="#workhistory" disabled>閲覧履歴から探す</button>
     @endif
 </div> 
 <div class="form-group">
-    @if ($postdisplaydata['favoritetitle'])  
+    @if ($posts['favoritetitle'])  
         <button type="button" class="btn btn-primary btn-block searchclass trigger" id="#favorite">お気に入りから探す</button>
     @else
         <button type="button" class="btn btn-primary btn-block searchclass trigger" id="#favorite" disabled>お気に入りから探す</button>
@@ -20,7 +20,7 @@
     <button type="button" class="btn btn-primary btn-block searchclass" id="#allrecommend">今週のおすすめランキングから探す</button>
 </div> 
 
-@if (!empty($postdisplaydata['browsehistorytitle']))
+@if (!empty($posts['browsehistorytitle']))
     <div class="worksearch card" id="workhistory">
         <div class="workhistorymodal">
             <h4 class="card-title text-center mb-4 mt-1">閲覧履歴から探す</h4>
@@ -56,7 +56,7 @@
 
 
 
-@if (!empty($postdisplaydata['favoritetitle']))  
+@if (!empty($posts['favoritetitle']))  
     <div class="worksearch card" id="favorite">
         <div class="workhistorymodal">
             <h4 class="card-title text-center mb-4 mt-1">お気に入りから探す</h4>
@@ -67,11 +67,11 @@
                         <th scope="col">作品名</th>
                     </tr>
                 </thead>
-                @for ($i = 0;$i < count($postdisplaydata['favoritetitle']);$i++)
+                @for ($i = 0;$i < count($posts['favoritetitle']);$i++)
                     <tbody>
                         <tr>
                             <th scope="row">{{ $i+1 }}</th>
-                            <td><a href="#" data-bs-toggle="tooltip" title="Some tooltip text!">{{ $postdisplaydata['favoritetitle'][$i] }}</a></td>
+                            <td><a href="#" data-bs-toggle="tooltip" title="Some tooltip text!">{{ $posts['favoritetitle'][$i] }}</a></td>
                         </tr>
                     </tbody>
                 @endfor

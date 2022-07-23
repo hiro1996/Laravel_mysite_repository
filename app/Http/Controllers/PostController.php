@@ -17,53 +17,53 @@ class PostController extends Controller
         if (session('loginid')) { //ログインしている時
             $users = $user->userModelGet(session('loginid'));
             foreach ($users as $ur) {
-                $postdisplaydata['nickname'] = $ur->nickname;
+                $posts['nickname'] = $ur->nickname;
             };
         } else { //ログインしていない時
-            $postdisplaydata['nickname'] = 'Guest';
+            $posts['nickname'] = 'Guest';
         }
         $worktitle = $work->workModelGet('select',NULL,'title',NULL);
         $i = 0;
         foreach ($worktitle as $title) {
-            $postdisplaydata['wotkalltitle'][$i] = $title->title;
+            $posts['wotkalltitle'][$i] = $title->title;
             $i++;
         }
 
 
         $favoritetmps = $favorite->favoriteAllModelGet();
 
-        $postdisplaydata['favoritetitle'] = FALSE;
+        $posts['favoritetitle'] = FALSE;
         if (count($favoritetmps) > 0) {
             $i = 0;
             foreach ($favoritetmps as $favotmp) {
                 $favoritetmp2 = $favorite->favoriteModelGet($favotmp->workid);
 
                 foreach ($favoritetmp2 as $favo) {
-                    $postdisplaydata['favoritetitle'][$i] = $favo->title;
+                    $posts['favoritetitle'][$i] = $favo->title;
                 }
                 $i++;
             }
         } 
 
-        $browseworks = $browsehistory->browsehistoryModelGet('normal',session('loginid'),NULL,10);
-        $postdisplaydata['browsehistorytime'] = FALSE;
-        $postdisplaydata['browsehistorytitle'] = FALSE;
+        $browseworks = $browsehistory->browsehistoryModelGet('normal','loginid',session('loginid'),NULL,NULL,10);
+        $posts['browsehistorytime'] = FALSE;
+        $posts['browsehistorytitle'] = FALSE;
         if (count($browseworks) > 0) {
             $i = 0;
             foreach ($browseworks as $browse) {
                 $browsehistoriesworks = $work->workModelGet('where','worksubs','workid',$browse->workid);
-                $postdisplaydata['browsehistorytime'][$i] = $browse->history_time;
+                $posts['browsehistorytime'][$i] = $browse->history_time;
 
                 foreach ($browsehistoriesworks as $history) {
-                    $postdisplaydata['browsehistorytitle'][$i] = $history->title;
+                    $posts['browsehistorytitle'][$i] = $history->title;
                 }
                 $i++;
             }
         }
 
-        $postdisplaydata['worktitle'] = NULL;
+        $posts['worktitle'] = NULL;
         if ($request->worktitle) $postdisplaydata['worktitle'] = $request->worktitle;
-        return view('post.post',compact('postdisplaydata'));
+        return view('post.post',compact('posts'));
 
     }
 

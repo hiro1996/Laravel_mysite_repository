@@ -15,7 +15,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-user"></i></span>
                     </div>
-                    <input class="form-control" placeholder="ニックネーム" type="text" name="nickname" value="{{ $postdisplaydata['nickname'] }}" readonly>
+                    <input class="form-control" placeholder="ニックネーム" type="text" name="nickname" value="{{ $posts['nickname'] }}" readonly>
                 </div> 
             </div> 
             @if($errors->has('nickname'))
@@ -35,10 +35,10 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-user"></i></span>
                             </div>
-                            <input class="form-control" placeholder="レビュー作品名(直接入力すると予測表示します)" type="text" id="worknameid" name="workname" value="{{ $postdisplaydata['worktitle'] ?? '' }}" list="searchlist" autocomplete="on">
+                            <input class="form-control" placeholder="レビュー作品名(直接入力すると予測表示します)" type="text" id="worknameid" name="workname" value="{{ $posts['worktitle'] ?? '' }}" list="searchlist" autocomplete="on">
                             <datalist id="searchlist">
-                                @for ($i = 0;$i < count($postdisplaydata['wotkalltitle']);$i++)
-                                    <option value="{{ $postdisplaydata['wotkalltitle'][$i] }}"></option>
+                                @for ($i = 0;$i < count($posts['wotkalltitle']);$i++)
+                                    <option value="{{ $posts['wotkalltitle'][$i] }}"></option>
                                 @endfor
                             </datalist>
                         </div> 

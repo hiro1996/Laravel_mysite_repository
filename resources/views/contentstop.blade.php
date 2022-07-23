@@ -247,45 +247,46 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         </section>
         @endif
 
-            @if ($contentstop['ninkitodayyesterday'])
-                <section class="article-shadow ninki">
-                    <div class="contentstop-container">
-                        <div class="p-3 contentstoptitle" id="contentstopninki"><span class="contentstopbigtitle">人気急上昇</span></div>
-                            <div class="contentstop-container">
-                                <article class="check">
-                                    <div class="p-3">
-
-                                        <div class="ninkigenrebigarea">
-                                            @for ($i = 1;$i <= count($contentstop["ninkitodayyesterday"]['img']);$i++) 
-                                                <div class="ninkigenrearea" id="ninkigenre{{ $i }}">
-                                                    <div class="d-flex justify-content-around">
-                                                        @for ($j = 0;$j < count($contentstop["ninkitodayyesterday"]['img'][$i]);$j++) 
-                                                            <div class="workninki">
-                                                                <img class="ninkiimg" src="{{ $contentstop['ninkitodayyesterday']['img'][$i][$j] }}">
-                                                                <div class="worktitlename">
-                                                                    <b>{{ $contentstop['ninkitodayyesterday']['title'][$i][$j] }}</b>
-                                                                </div>
-                                                            </div>
-                                                        @endfor
-                                                    </div>
-                                                </div>
-                                            @endfor
-                                        </div>
-
-                                        <div class="d-flex justify-content-around">
-                                            @for ($i = 1;$i <= count($contentstop["ninkitodayyesterday_button"]);$i++) 
-                                                <button class="button ninkigenre" id="ninkigenrebutton{{ $i }}">{{ $contentstop['ninkitodayyesterday_button'][$i] }}</button>
-                                            @endfor
-                                            <input type="hidden" class="ninkigenrecount" value="{{ count($contentstop['ninkitodayyesterday_button']) }}">
-                                        </div>
-
-                                    </div>
-                                </article>
-                            </div>
-                        </div>
+        @if ($contentstop['ninkitodayyesterday'])
+            <section class="article-shadow ninki">
+                <div class="contentstop-container">
+                    <div class="p-3 contentstoptitle" id="contentstopninki">
+                        <span class="contentstopbigtitle">人気急上昇</span>
                     </div>
-                </section>
-            @endif
+                    <div class="contentstop-container">
+                        <article class="check">
+                            <div class="p-3">
+
+                                <div class="ninkigenrebigarea">
+                                    @for ($i = 1;$i <= count($contentstop["ninkitodayyesterday"]['img']);$i++) 
+                                        <div class="ninkigenrearea" id="ninkigenre{{ $i }}">
+                                            <div class="d-flex justify-content-around">
+                                                @for ($j = 0;$j < count($contentstop["ninkitodayyesterday"]['img'][$i]);$j++) 
+                                                    <div class="workninki">
+                                                        <img class="ninkiimg" src="{{ $contentstop['ninkitodayyesterday']['img'][$i][$j] }}">
+                                                        <div class="worktitlename">
+                                                            <b>{{ $contentstop['ninkitodayyesterday']['title'][$i][$j] }}</b>
+                                                        </div>
+                                                    </div>
+                                                @endfor
+                                            </div>
+                                        </div>
+                                    @endfor
+                                </div>
+
+                                <div class="d-flex justify-content-around">
+                                    @for ($i = 1;$i <= count($contentstop["ninkitodayyesterday_button"]);$i++) 
+                                        <button class="button ninkigenre" id="ninkigenrebutton{{ $i }}">{{ $contentstop['ninkitodayyesterday_button'][$i] }}</button>
+                                    @endfor
+                                    <input type="hidden" class="ninkigenrecount" value="{{ count($contentstop['ninkitodayyesterday_button']) }}">
+                                </div>
+
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        @endif
 
         <section class="article-shadow reservation">
             <div class="contentstop-container">
