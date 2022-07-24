@@ -15,6 +15,7 @@ use App\Models\Work;
 use GuzzleHttp\RetryMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\ViewErrorBag;
 
 class WorkController extends Controller
 {
@@ -116,6 +117,7 @@ class WorkController extends Controller
         $workdata['ninkitag'] = FALSE;
         foreach ($workids as $id) {
             $workdata['worksubid'] = $id->id;
+            //コンテンツトップの人気急上昇に入っている作品に対して人気急上昇タグを表示する
             if (in_array($workdata['worksubid'],$ninkitag)) $workdata['ninkitag'] = TRUE;
         }
  
@@ -338,5 +340,9 @@ class WorkController extends Controller
                 "icon" => $goodicon
             ],
         );
+    }
+
+    public function worksearchresult() {
+        return view('worksearchresult');
     }
 }

@@ -61,6 +61,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/genrepost.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/mypage.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/worksearch.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/worksearchresult.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/workindetail.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/information.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/gojuon.css') }}">

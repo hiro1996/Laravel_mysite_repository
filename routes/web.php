@@ -119,3 +119,6 @@ Route::post('/genrepostcomplete', 'App\Http\Controllers\WorkController@workgenre
 Route::post('/workindetail/goodbutton/add', 'App\Http\Controllers\WorkController@workindetailgoodiconadd');
 
 Route::post('/workindetail/goodbutton/delete', 'App\Http\Controllers\WorkController@workindetailgoodicondelete');
+
+Route::get('/worksearchresult', 'App\Http\Controllers\WorkController@worksearchresult')->name('worksearchresult');
+

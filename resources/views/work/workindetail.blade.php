@@ -29,7 +29,9 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         <div class="worktitlefurigana">
             {{ $workdata['furigana'] }}
         </div>
-        <article class="columns p-4 m-0 workindetailexplaining workindetailclass">       
+        
+        <article class="columns p-4 m-0 workindetailexplaining workindetailclass">     
+            
             <div class="column is-6">
                 <div class="thumbnailpic">
                     <img class="workdetailmainimg" src="{{ $img }}">
@@ -37,7 +39,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                 <div class="ranking">
                     <div class="monthlyranking d-flex justify-content-around">
                         <div class="monthlyrankingtitle">
-                            月間ランキング  
+                            月間人気ランキング  
                         </div>
                         <div class="monthlyrankingnum">
                             16位  
@@ -45,7 +47,7 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                     </div>
                     <div class="weeklyranking d-flex justify-content-around">
                         <div class="weeklyrankingtitle">
-                            週間ランキング    
+                            週間人気ランキング    
                         </div>
                         <div class="weeklyrankingnum">
                             16位  
@@ -71,14 +73,24 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                     <dt>著者・作者</dt>
                     <dd>{{ $workdata['auther'] }}</dd>
                     <dt class="tags categorytag">
-                        <span class="tag is-rounded is-medium is-primary">primary</span>
-                        <span class="tag is-rounded is-medium is-danger">primary</span>
-                        <span class="tag is-rounded is-medium is-warning">primary</span>
-                        <span class="tag is-rounded is-medium is-link">primary</span>
+                        <span class="tag is-rounded is-medium is-primary">かっこいい</span>
+                        <span class="tag is-rounded is-medium is-danger">面白い</span>
+                        <span class="tag is-rounded is-medium is-warning">感動</span>
+                        <span class="tag is-rounded is-medium is-link">情熱</span>
                     </dt>
                 </dl>
             </div>
         </article>
+        <br>
+        <section class="form-group">
+            <div class="text-center">
+                @if (session('loginid'))
+                    <button type="submit" class="{{ $favoriteclass }}" id="favoritebutton">{{ $favoritetext }}</button>
+                @else
+                    <button type="submit" class="{{ $favoriteclass }}" id="favoritebutton" disabled>ログインするとお気に入り登録ができます</button>
+                @endif
+            </div>
+        </section>
 
         @if ($workdata['explaining'])
         <article class="workindetailclass">
@@ -105,17 +117,6 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         </div>
 
         <div class="col eachbtn">
-            <div class="form-group">
-                <div class="text-center">
-                    @if (session('loginid'))
-                    <button type="submit" class="{{ $favoriteclass }}" id="favoritebutton">{{ $favoritetext }}</button>
-                    @else
-                    <p class="text-danger">※ログインしてください
-                        <button type="submit" class="{{ $favoriteclass }}" id="favoritebutton" disabled>{{ $favoritetext }}</button>
-                    </p>
-                    @endif
-                </div>
-            </div>
             <div class="form-group">
                 <div class="text-center">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#genrepostmodal">ジャンル投票</button>
