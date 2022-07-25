@@ -32,12 +32,12 @@
                         <th scope="col">閲覧日時</th>
                     </tr>
                 </thead>
-                @for ($i = 0;$i < count($postdisplaydata['browsehistorytitle']);$i++)
+                @for ($i = 0;$i < count($posts['browsehistorytitle']);$i++)
                     <tbody>
                         <tr>
                             <th scope="row">{{ $i+1 }}</th>
-                            <td><a class="modal-linkreturn" href="#" data-bs-toggle="tooltip{{ $i }}" data-html="true" data-dismiss="modal" data-target="{{ $postdisplaydata['browsehistorytitle'][$i] }}" title="{{ $postdisplaydata['browsehistorytitle'][$i] }}<br><img src=&quot;http://127.0.0.1:8000/assets/img/icon/workindetail/goodicon.png&quot;>">{{ $postdisplaydata['browsehistorytitle'][$i] }}</a></td>
-                            <td>{{ $postdisplaydata['browsehistorytime'][$i] }}</td>
+                            <td><a class="modal-linkreturn" href="#" data-bs-toggle="tooltip{{ $i }}" data-html="true" data-dismiss="modal" data-target="{{ $posts['browsehistorytitle'][$i] }}" title="{{ $posts['browsehistorytitle'][$i] }}<br><img src=&quot;http://127.0.0.1:8000/assets/img/icon/workindetail/goodicon.png&quot;>">{{ $posts['browsehistorytitle'][$i] }}</a></td>
+                            <td>{{ $posts['browsehistorytime'][$i] }}</td>
                         </tr>
                     </tbody>
                     <!-- Generated markup by the plugin -->
