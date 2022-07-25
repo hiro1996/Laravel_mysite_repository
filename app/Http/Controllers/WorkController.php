@@ -343,7 +343,7 @@ class WorkController extends Controller
         );
     }
 
-    public function worksearchresult(Request $request, Work $work, Worktype $worktype) {
+    public function worksearchresult(Request $request, Work $work, Worktype $worktype, Post $post) {
         $category = $request->category;
         $category_genre = $request->category_genre;
 
@@ -374,6 +374,20 @@ class WorkController extends Controller
             $worksearchresult['worksearchresult_worktypename'][$i] = $result->worktype_name;
             $worksearchresult['worksearchresult_label'][$i] = $result->publicationmagazine_label;
             $worksearchresult['worksearchresult_auther'][$i] = $result->auther;
+            $worksubids = $work->workidModelGet($result->url);
+            foreach ($worksubids as $id) {
+                $poststars = $post->postModelGet('worksubid',$id->id,NULL,NULL,NULL);
+                if (count($poststars) != 0) {
+                    $poststarnum = 0;
+                    foreach ($poststars as $star) {
+                        $poststarnum = $poststarnum + $star->poststar;
+                    }
+                    $shosu = $poststarnum  / count($poststars) ;
+                    $worksearchresult['worksearchresult_poststaravg'][$i] = ''.(floor($shosu * 10)) / 10 .'';
+                } else {
+                    $worksearchresult['worksearchresult_poststaravg'][$i] = '0.0';
+                }
+            }
             $i++;
         }
         return view('worksearchresult',compact('worksearchresult'));

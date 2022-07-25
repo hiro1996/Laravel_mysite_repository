@@ -28,8 +28,8 @@ $title = 'トップページ';
                                         {{ $worksearchresult['worksearchresult_furigana'][$i] }}
                                     </div>
                                     <p class="result-rating-rate">
-                                        <span class="star10_rating" data-rate="4.8"></span>
-                                        <span class="number_rating">4.8</span>
+                                        <span class="star10_rating" data-rate="{{ $worksearchresult['worksearchresult_poststaravg'][$i] }}"></span>
+                                        <span class="number_rating">{{ $worksearchresult['worksearchresult_poststaravg'][$i] }}</span>
                                     </p>
                                     <div class="worksearchresultgenre">
                                         ジャンル：{{ $worksearchresult['worksearchresult_worktypename'][$i] }}
