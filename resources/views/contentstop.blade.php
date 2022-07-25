@@ -94,19 +94,21 @@ $title = 'トップページ';
                     @endif
                     <br>
                     <div class="alluser" id="alluser">
-                        <div id="filmtable" class="tab-pane active">
-                            <ul class="contenttopworklist-ul">
-                                @for ($i = 0;$i <= 2;$i++) 
-                                    <li class="contenttopworklist-li">
-                                        <a href="{{ $contentstop['workall_url'][$i] }}">
-                                            <img class="rankingimg" src="{{ $contentstop['workall_img'][$i] }}" alt="{{ $contentstop['workall_img'][$i] }}">
-                                            <div class="worktitlename">
-                                                {{ $contentstop['workall_title'][$i] }}
-                                            </div>
-                                        </a>
-                                    </li>
-                                @endfor
-                            </ul>
+                        <div class="p-3">
+                            <div id="filmtable" class="tab-pane active">
+                                <div class="d-flex justify-content-around">
+                                    @for ($i = 0;$i < 5;$i++) 
+                                        <div class="worknew">
+                                            <a href="{{ $contentstop['workall_url'][$i] }}">
+                                                <img class="rankingimg" src="{{ $contentstop['workall_img'][$i] }}" alt="{{ $contentstop['workall_img'][$i] }}">
+                                                <div class="worktitlename">
+                                                    {{ $contentstop['workall_title'][$i] }}
+                                                </div>
+                                            </a>
+                                        </div>
+                                    @endfor
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -364,25 +366,14 @@ $title = 'トップページ';
         </section>
         @endif
 
-        <section class="article-shadow campaign">
-            <div class="contentstop-container">
-                <div class="p-3 contentstoptitle" id="contentstopcampaign"><span class="contentstopbigtitle">キャンペーン等</span></div>
-                <div class="contentstop-container">
-                    <article class="check">
-                        <div class="p-3">
-                            
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-
     </div>
 
 </article>
 
 
 @include('include.footer')
+
+
 <script>
     $('.tabsjsclass').click(function() {
         $('.contentsjs').not($('.tabsjsclass').attr('id')).hide();

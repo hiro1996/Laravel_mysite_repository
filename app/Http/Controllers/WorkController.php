@@ -12,6 +12,7 @@ use App\Models\Guestrecord;
 use App\Models\Post;
 use App\Models\Record;
 use App\Models\Work;
+use App\Models\Worktype;
 use GuzzleHttp\RetryMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -342,10 +343,39 @@ class WorkController extends Controller
         );
     }
 
-    public function worksearchresult(Request $request) {
+    public function worksearchresult(Request $request, Work $work, Worktype $worktype) {
         $category = $request->category;
         $category_genre = $request->category_genre;
-        //この後クエリの文字列によって、検索するSQLを作成する
-        return view('worksearchresult');
+
+        $where_list = [];
+        if ($category) {
+            $worktypes = $worktype->worktypeModelGet('worktype_name',$category);
+            foreach ($worktypes as $workt) {
+                $category_list = $workt->worktypeid;
+            }
+            $where_list = ['work_type' => $category_list];
+        }
+        if ($category_genre) {
+            $where_list = ['category_name' => $category_genre];
+        }
+        
+        $worksearchresults = $work->worksearchresultModelGet($where_list);
+        $i = 0;
+        foreach ($worksearchresults as $result) {
+            if ($result->volume != NULL) {
+                $worksearchresult['worksearchresult_title'][$i] = $result->title.''.$result->volume;
+            } else {
+                $worksearchresult['worksearchresult_title'][$i] = $result->title;
+            }
+            $worksearchresult['worksearchresult_furigana'][$i] = $result->furigana;
+            $worksearchresult['worksearchresult_categoryname'][$i] = $result->category_name;
+            $worksearchresult['worksearchresult_url'][$i] = asset($result->url);
+            $worksearchresult['worksearchresult_img'][$i] = $result->img;
+            $worksearchresult['worksearchresult_worktypename'][$i] = $result->worktype_name;
+            $worksearchresult['worksearchresult_label'][$i] = $result->publicationmagazine_label;
+            $worksearchresult['worksearchresult_auther'][$i] = $result->auther;
+            $i++;
+        }
+        return view('worksearchresult',compact('worksearchresult'));
     }
 }

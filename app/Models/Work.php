@@ -97,4 +97,13 @@ class Work extends Model
         return $titleconvert;
     }
 
+    public function worksearchresultModelGet($where) {
+        $worksearchresults = DB::table('works')
+            ->join('worksubs','works.workid','=','worksubs.workid') 
+            ->join('worktypes','works.work_type','=','worktypes.worktypeid') 
+            ->where($where)
+            ->get();
+        return $worksearchresults;
+    }
+
 }

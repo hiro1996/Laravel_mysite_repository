@@ -121,6 +121,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/js/bulma-carousel.min.js"></script>
+
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
@@ -270,12 +272,12 @@
                 <div class="navbar-start">
                     @foreach ($worktypegenremenu as $category => $menu)
                         <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link">
+                            <a href="{{ route('worksearchresult',['category' => $category]) }}" class="navbar-link">
                                 {{ $category }}
                             </a>
                             <div class="navbar-dropdown">
                                 @foreach ($menu as $categorymenu => $categorycount)
-                                    <a class="navbar-item workgenremenu">
+                                    <a href="{{ route('worksearchresult',['category' => $category, 'category_genre' => $categorymenu]) }}" class="navbar-item workgenremenu">
                                         {{ $categorymenu }}
                                     </a>
                                     <hr class="navbar-divider">

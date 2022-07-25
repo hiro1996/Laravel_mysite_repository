@@ -224,9 +224,7 @@ class LoginNewController extends Controller
         /**
          * トップページ画面のヘッダーから遷移
          */
-        } else {
-            
-        }
+        } 
 
         /**
          * モーダル内の質問
@@ -319,7 +317,7 @@ class LoginNewController extends Controller
                 $workdatas = $work->workModelGet('where','works','work_type',$worktype_list[$i]);
                 $j = 0;
                 foreach ($workdatas as $workd) {
-                    $contentstop['work_title'][$i][$j] = $workd->title;
+                    $contentstop['work_title'][$i][$j] = $work->worktitleConvert($workd->title,5);
                     $contentstop['work_img'][$i][$j] = asset($workd->img);
                     $contentstop['work_url'][$i][$j] = $workd->url;
                     $j++;
