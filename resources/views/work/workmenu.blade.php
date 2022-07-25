@@ -14,6 +14,7 @@
     foreach ($worktypemenus as $menu) {
         $worktypegenremenu[$menu->worktype_name][$menu->category_name] = $menu->category_name_count;
     }
+
 ?>
 
 
@@ -30,9 +31,9 @@
         @foreach ($worktypegenremenu as $category => $menu)
             <ul class="workmenu">
                 <li class="workmenu-list">
-                    <a href="#">{{ $category }}</a>
+                    <a href="{{ route('worksearchresult',['category' => $category]) }}">{{ $category }}</a>
                     @foreach ($menu as $categorymenu => $categorycount)
-                        <li class="workmenu-sublist"><a href="#" class="workmenu-sublistlink">{{ $categorymenu }}({{ $categorycount }})</a></li>
+                        <li class="workmenu-sublist"><a href="{{ route('worksearchresult',['category' => $category, 'category_genre' => $categorymenu]) }}" class="workmenu-sublistlink">{{ $categorymenu }}({{ $categorycount }})</a></li>
                     @endforeach
                 </li>
             </ul>

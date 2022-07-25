@@ -342,7 +342,10 @@ class WorkController extends Controller
         );
     }
 
-    public function worksearchresult() {
+    public function worksearchresult(Request $request) {
+        $category = $request->category;
+        $category_genre = $request->category_genre;
+        //この後クエリの文字列によって、検索するSQLを作成する
         return view('worksearchresult');
     }
 }
