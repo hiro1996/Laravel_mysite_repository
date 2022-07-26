@@ -260,20 +260,28 @@ $title = 'トップページ';
 
                                 <div class="ninkigenrebigarea">
                                     @for ($i = 1;$i <= count($contentstop["ninkitodayyesterday"]['img']);$i++) 
-                                        <div class="ninkigenrearea" id="ninkigenre{{ $i }}">
-                                            <div class="d-flex justify-content-around">
-                                                @for ($j = 0;$j < count($contentstop["ninkitodayyesterday"]['img'][$i]);$j++) 
-                                                    <div class="workninki">
-                                                        <a href="{{ $contentstop['ninkitodayyesterday']['url'][$i][$j] }}">
-                                                        <img class="ninkiimg" src="{{ $contentstop['ninkitodayyesterday']['img'][$i][$j] }}">
-                                                        <div class="worktitlename">
-                                                            <b>{{ $contentstop['ninkitodayyesterday']['title'][$i][$j] }}</b>
+                                        @if ($contentstop["ninkitodayyesterday"]['img'][$i])
+                                            <div class="ninkigenrearea" id="ninkigenre{{ $i }}">
+                                                <div class="d-flex justify-content-around">
+                                                    @for ($j = 0;$j < count($contentstop["ninkitodayyesterday"]['img'][$i]);$j++) 
+                                                        <div class="workninki">
+                                                            <a href="{{ $contentstop['ninkitodayyesterday']['url'][$i][$j] }}">
+                                                            <img class="ninkiimg" src="{{ $contentstop['ninkitodayyesterday']['img'][$i][$j] }}">
+                                                            <div class="worktitlename">
+                                                                <b>{{ $contentstop['ninkitodayyesterday']['title'][$i][$j] }}</b>
+                                                            </div>
+                                                            </a>
                                                         </div>
-                                                        </a>
-                                                    </div>
-                                                @endfor
+                                                    @endfor
+                                                </div>
                                             </div>
-                                        </div>
+                                        @else
+                                            <div class="ninkigenrearea" id="ninkigenre{{ $i }}">
+                                                <div class="d-flex justify-content-around"> 
+                                                    人気急上昇作品は存在しません
+                                                </div>
+                                            </div>
+                                        @endif
                                     @endfor
                                 </div>
 

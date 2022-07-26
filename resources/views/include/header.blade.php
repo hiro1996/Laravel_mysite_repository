@@ -40,6 +40,8 @@
         $contentstop['notification_img'][$i] = asset($noti->img);
         $i++;
     }
+
+    $currenturl = url()->current();
 ?>
 
 
@@ -267,6 +269,7 @@
             </script>
         </nav>
 
+        @if (strstr($currenturl,'worksearchresult'))
         <nav class="navbar workmenu-navbar" role="navigation" aria-label="main navigation">
             <div id="targetMenu" class="workmenu-subnavbar">
                 <div class="navbar-start">
@@ -288,6 +291,7 @@
                 </div>
             </div>
         </nav>
+        @endif
     
         <style>
             .dropdown-menu {

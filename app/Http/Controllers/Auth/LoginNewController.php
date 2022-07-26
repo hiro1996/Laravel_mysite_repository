@@ -414,45 +414,51 @@ class LoginNewController extends Controller
 
             $worksubids = [];
             $ninkistodayyesterday = $browsehistory->browsehistoryModelGet(NULL,'history_time_date',$findate,'history_time_date',$startdate,4);
-            foreach ($ninkistodayyesterday as $ninkity) {
-                $ninki1[$ninkity->worksubid][0] = 0; //昨日の作品閲覧数
-                $ninki1[$ninkity->worksubid][1] = 0; //今日の作品閲覧数
-            }
 
-            foreach ($ninkistodayyesterday as $ninkity) {
-                if ($ninki1[$ninkity->worksubid][0] == 0) {
-                    $ninki1[$ninkity->worksubid][0] = $ninkity->sameworksubid_count;
-                } else {
-                    $ninki1[$ninkity->worksubid][1] = $ninkity->sameworksubid_count;
+            $contentstop['ninkitodayyesterday']['title'][$date] = FALSE;
+            $contentstop['ninkitodayyesterday']['img'][$date] = FALSE;
+            $contentstop['ninkitodayyesterday']['url'][$date] = FALSE;
+            if (count($ninkistodayyesterday) != 0) {
+                foreach ($ninkistodayyesterday as $ninkity) {
+                    $ninki1[$ninkity->worksubid][0] = 0; //昨日の作品閲覧数
+                    $ninki1[$ninkity->worksubid][1] = 0; //今日の作品閲覧数
                 }
-            }
 
-            arsort($ninki1);
-
-            foreach ($ninkistodayyesterday as $ninkity) {
-                $contentstop['ninkitodayyesterday_wariai'][$date][$ninkity->worksubid] = ($ninki1[$ninkity->worksubid][1] / $ninki1[$ninkity->worksubid][0]) * 100;
-                $ninkidata = $work->workModelGet('where','worksubs','id',$ninkity->worksubid);
-                foreach ($ninkidata as $ninki) {
-                    $tmp['title'][$ninkity->worksubid] = $work->worktitleConvert($ninki->title,5);
-                    $tmp['img'][$ninkity->worksubid] = $ninki->img;
-                    $tmp['url'][$ninkity->worksubid] = $ninki->url;
+                foreach ($ninkistodayyesterday as $ninkity) {
+                    if ($ninki1[$ninkity->worksubid][0] == 0) {
+                        $ninki1[$ninkity->worksubid][0] = $ninkity->sameworksubid_count;
+                    } else {
+                        $ninki1[$ninkity->worksubid][1] = $ninkity->sameworksubid_count;
+                    }
                 }
-            }
 
-            $i = 0;
-            foreach ($tmp['title'] as $data) {
-                $contentstop['ninkitodayyesterday']['title'][$date][$i] = $data;
-                $i++;
-            }
-            $j = 0;
-            foreach ($tmp['img'] as $data) {
-                $contentstop['ninkitodayyesterday']['img'][$date][$j] = $data;
-                $j++;
-            }
-            $k = 0;
-            foreach ($tmp['url'] as $data) {
-                $contentstop['ninkitodayyesterday']['url'][$date][$k] = $data;
-                $k++;
+                arsort($ninki1);
+
+                foreach ($ninkistodayyesterday as $ninkity) {
+                    $contentstop['ninkitodayyesterday_wariai'][$date][$ninkity->worksubid] = ($ninki1[$ninkity->worksubid][1] / $ninki1[$ninkity->worksubid][0]) * 100;
+                    $ninkidata = $work->workModelGet('where','worksubs','id',$ninkity->worksubid);
+                    foreach ($ninkidata as $ninki) {
+                        $tmp['title'][$ninkity->worksubid] = $work->worktitleConvert($ninki->title,5);
+                        $tmp['img'][$ninkity->worksubid] = $ninki->img;
+                        $tmp['url'][$ninkity->worksubid] = $ninki->url;
+                    }
+                }
+
+                $i = 0;
+                foreach ($tmp['title'] as $data) {
+                    $contentstop['ninkitodayyesterday']['title'][$date][$i] = $data;
+                    $i++;
+                }
+                $j = 0;
+                foreach ($tmp['img'] as $data) {
+                    $contentstop['ninkitodayyesterday']['img'][$date][$j] = $data;
+                    $j++;
+                }
+                $k = 0;
+                foreach ($tmp['url'] as $data) {
+                    $contentstop['ninkitodayyesterday']['url'][$date][$k] = $data;
+                    $k++;
+                }
             }
         }
 
