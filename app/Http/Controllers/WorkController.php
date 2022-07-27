@@ -114,7 +114,7 @@ class WorkController extends Controller
          * 閲覧履歴テーブル(browsehistories)に作品IDとログインしているユーザーIDもしくは未ログイン時のユーザーを登録
          * すでに登録されている作品IDとユーザーIDの組み合わせがある場合、閲覧日を更新
          */
-        $workids = $work->workidModelGet($urlstr);
+        $workids = $work->workidModelGet('worksubs','url',$urlstr);
         $workdata['ninkitag'] = FALSE;
         foreach ($workids as $id) {
             $workdata['worksubid'] = $id->id;
@@ -344,19 +344,19 @@ class WorkController extends Controller
     }
 
     public function worksearchresult(Request $request, Work $work, Worktype $worktype, Post $post) {
-        $category = $request->category;
         $category_genre = $request->category_genre;
+        $category = $request->category;
 
         $where_list = [];
-        if ($category) {
-            $worktypes = $worktype->worktypeModelGet('worktype_name',$category);
+        if ($category_genre) {
+            $worktypes = $worktype->worktypeModelGet('worktype_name',$category_genre);
             foreach ($worktypes as $workt) {
                 $category_list = $workt->worktypeid;
             }
             $where_list = ['work_type' => $category_list];
         }
-        if ($category_genre) {
-            $where_list = ['category_name' => $category_genre];
+        if ($category) {
+            $where_list = ['category_name' => $category];
         }
         
         $worksearchresults = $work->worksearchresultModelGet($where_list);
@@ -372,9 +372,10 @@ class WorkController extends Controller
             $worksearchresult['worksearchresult_url'][$i] = asset($result->url);
             $worksearchresult['worksearchresult_img'][$i] = $result->img;
             $worksearchresult['worksearchresult_worktypename'][$i] = $result->worktype_name;
+            $worksearchresult['worksearchresult_publisher'][$i] = $result->publisher;
             $worksearchresult['worksearchresult_label'][$i] = $result->publicationmagazine_label;
             $worksearchresult['worksearchresult_auther'][$i] = $result->auther;
-            $worksubids = $work->workidModelGet($result->url);
+            $worksubids = $work->workidModelGet('worksubs','url',$result->url);
             foreach ($worksubids as $id) {
                 $poststars = $post->postModelGet('worksubid',$id->id,NULL,NULL,NULL);
                 if (count($poststars) != 0) {
@@ -382,8 +383,12 @@ class WorkController extends Controller
                     foreach ($poststars as $star) {
                         $poststarnum = $poststarnum + $star->poststar;
                     }
-                    $shosu = $poststarnum  / count($poststars) ;
-                    $worksearchresult['worksearchresult_poststaravg'][$i] = ''.(floor($shosu * 10)) / 10 .'';
+                    $shosu = $poststarnum / count($poststars);
+                    if (!is_int($shosu)) {
+                        $worksearchresult['worksearchresult_poststaravg'][$i] = ''.(floor($shosu * 10) / 10).'';
+                    } else {
+                        $worksearchresult['worksearchresult_poststaravg'][$i] = ''.$shosu.'.0';
+                    }
                 } else {
                     $worksearchresult['worksearchresult_poststaravg'][$i] = '0.0';
                 }

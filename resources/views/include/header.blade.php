@@ -12,7 +12,7 @@
         $worktypegenre[$workt->worktypeid] = $workt->worktype_name;
     }
 
-    $worktypemenus = $worktype->worktypemenuModelGet();
+    $worktypemenus = $worktype->worktypemenuModelGet(NULL);
     $i = 0;
     foreach ($worktypemenus as $menu) {
         $worktypegenremenu[$menu->worktype_name][$menu->category_name] = $menu->category_name_count;
@@ -273,14 +273,14 @@
         <nav class="navbar workmenu-navbar" role="navigation" aria-label="main navigation">
             <div id="targetMenu" class="workmenu-subnavbar">
                 <div class="navbar-start">
-                    @foreach ($worktypegenremenu as $category => $menu)
+                    @foreach ($worktypegenremenu as $genre => $menu)
                         <div class="navbar-item has-dropdown is-hoverable">
-                            <a href="{{ route('worksearchresult',['category' => $category]) }}" class="navbar-link">
-                                {{ $category }}
+                            <a href="{{ route('worksearchresult',['category_genre' => $genre]) }}" class="navbar-link">
+                                {{ $genre }}
                             </a>
                             <div class="navbar-dropdown">
                                 @foreach ($menu as $categorymenu => $categorycount)
-                                    <a href="{{ route('worksearchresult',['category' => $category, 'category_genre' => $categorymenu]) }}" class="navbar-item workgenremenu">
+                                    <a href="{{ route('worksearchresult',['category_genre' => $genre, 'category' => $categorymenu]) }}" class="navbar-item workgenremenu">
                                         {{ $categorymenu }}
                                     </a>
                                     <hr class="navbar-divider">

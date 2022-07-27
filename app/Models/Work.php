@@ -80,11 +80,11 @@ class Work extends Model
         return $works;
     }
 
-    public function workidModelGet($url) {
+    public function workidModelGet($table,$wherecolumn,$wheredata) {
         $where = [
-            'url' => $url
+            $wherecolumn => $wheredata
         ];
-        $workdatas = DB::table('worksubs')->where($where)->get();
+        $workdatas = DB::table($table)->where($where)->get();
         return $workdatas;
     }
 

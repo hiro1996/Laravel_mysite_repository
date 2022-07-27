@@ -32,10 +32,13 @@ $title = 'トップページ';
                                         <span class="number_rating">{{ $worksearchresult['worksearchresult_poststaravg'][$i] }}</span>
                                     </p>
                                     <div class="worksearchresultgenre">
-                                        ジャンル：{{ $worksearchresult['worksearchresult_worktypename'][$i] }}
+                                        ジャンル：<a href="{{ route('worksearchresult',['category_genre' => $worksearchresult['worksearchresult_worktypename'][$i]] ) }}">{{ $worksearchresult['worksearchresult_worktypename'][$i] }}</a>
                                     </div>
-                                    <div class="worksearchresultgenre">
-                                        カテゴリー：{{ $worksearchresult['worksearchresult_categoryname'][$i] }}
+                                    <div class="worksearchresultcategory">
+                                        カテゴリー：<a href="{{ route('worksearchresult',['category' => $worksearchresult['worksearchresult_categoryname'][$i]] ) }}">{{ $worksearchresult['worksearchresult_categoryname'][$i] }}</a>
+                                    </div>
+                                    <div class="worksearchresultpublisher">
+                                        出版社：{{ $worksearchresult['worksearchresult_publisher'][$i] }}
                                     </div>
                                     <div class="worksearchresultlabel">
                                         掲載誌・レーベル：{{ $worksearchresult['worksearchresult_label'][$i] }}

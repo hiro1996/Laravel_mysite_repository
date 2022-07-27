@@ -25,13 +25,24 @@ class Worktype extends Model
         return $worksubcounts;
     }
 
-    public function worktypemenuModelGet() {
+    public function worktypemenuModelGet($where) {
         $worktypemenus = DB::table('worktypes')
             ->join('works', function($join) {
                 $join->on('worktypes.worktypeid','=','works.work_type');
             })->select('worktypes.worktype_name','works.category_name',DB::raw('count(works.category_name) AS category_name_count'))
-            ->groupBy('worktypes.worktype_name','works.category_name')
-            ->get();
+            ->groupBy('worktypes.worktype_name','works.category_name');
+            if ($where) {
+                $worktypemenus = $worktypemenus->where($where);
+            }
+            $worktypemenus = $worktypemenus->get();
         return $worktypemenus;
+    }
+
+    public function worktypemenusideModelGet() {
+        $worktypesidemenus = DB::table('worktypes')
+            ->join('works','worktypes.worktypeid','=','works.work_type')
+            ->select('worktypes.worktypeid','worktypes.worktype_name','works.category_name')
+            ->get();
+        return $worktypesidemenus;
     }
 }
