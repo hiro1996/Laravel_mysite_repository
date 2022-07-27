@@ -16,7 +16,6 @@
 
     $workmenuside_list = [];
     $worktypesidemenus = $worktype->worktypemenusideModelGet();
-    //dd($worktypesidemenus);
     foreach ($worktypesidemenus as $workts) {
         if (strstr($queryurl,$workts->worktype_name)) {
             $workids = $work->workidModelGet('worktypes','worktype_name',$workts->worktype_name);
