@@ -36,7 +36,7 @@ class Work extends Model
         return $works;
     }
 
-    public function workModelGet($key,$table,$wherecolumn,$wheredata) {
+    public function workModelGet($key,$table,$wherecolumn,$wheredata,$select,$column,$groupname) {
         $works = DB::table('works');
         if ($key == 'where') {
             $works->join('worksubs','works.workid','=','worksubs.workid') 
@@ -71,6 +71,11 @@ class Work extends Model
                 ->join('posts','worksubs.id','=','posts.worksubid')
                 ->where($where)
                 ->where('poststar','>=',7);
+        } elseif ($key == 'workmenuname') {
+            $works = $works->join('worksubs','works.workid','=','worksubs.workid')
+            ->select($select,DB::raw('count('.$table.'.'.$column.') AS '.$groupname.''))
+            ->groupBy($select)
+            ->orderBy($select,'ASC');
         } else {
             $works->join('worksubs',function($join) {
                 $join->on('works.workid','=','worksubs.workid');

@@ -38,13 +38,25 @@ $title = 'トップページ';
                                         カテゴリー：<a href="{{ route('worksearchresult',['category' => $worksearchresult['worksearchresult_categoryname'][$i]] ) }}">{{ $worksearchresult['worksearchresult_categoryname'][$i] }}</a>
                                     </div>
                                     <div class="worksearchresultpublisher">
-                                        出版社：{{ $worksearchresult['worksearchresult_publisher'][$i] }}
+                                        @if ($worksearchresult['worksearchresult_publisher'][$i] == '-')
+                                            出版社：{{ $worksearchresult['worksearchresult_publisher'][$i] }}
+                                        @else
+                                            出版社：<a href="{{ route('worksearchresult',['publisher' => $worksearchresult['worksearchresult_publisher'][$i]] ) }}">{{ $worksearchresult['worksearchresult_publisher'][$i] }}</a>
+                                        @endif
                                     </div>
                                     <div class="worksearchresultlabel">
-                                        掲載誌・レーベル：{{ $worksearchresult['worksearchresult_label'][$i] }}
+                                        @if ($worksearchresult['worksearchresult_label'][$i] == '-')
+                                            掲載誌・レーベル：{{ $worksearchresult['worksearchresult_label'][$i] }}
+                                        @else
+                                            掲載誌・レーベル：<a href="{{ route('worksearchresult',['label' => $worksearchresult['worksearchresult_label'][$i]] ) }}">{{ $worksearchresult['worksearchresult_label'][$i] }}</a>
+                                        @endif
                                     </div>
                                     <div class="worksearchresultauther">
-                                        著者・作者：{{ $worksearchresult['worksearchresult_auther'][$i] }}
+                                        @if ($worksearchresult['worksearchresult_auther'][$i] == '-')
+                                            著者・作者：{{ $worksearchresult['worksearchresult_auther'][$i] }}
+                                        @else
+                                            著者・作者：<a href="{{ route('worksearchresult',['auther' => $worksearchresult['worksearchresult_auther'][$i]] ) }}">{{ $worksearchresult['worksearchresult_auther'][$i] }}</a>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="column">

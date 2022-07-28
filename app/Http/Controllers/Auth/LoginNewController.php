@@ -114,7 +114,7 @@ class LoginNewController extends Controller
             /**
              * 作品IDとユーザーIDをrecordsテーブルに初期化して登録
              */
-            $workids = $work->workModelGet('select',NULL,'workid',NULL);
+            $workids = $work->workModelGet('select',NULL,'workid',NULL,NULL,NULL,NULL);
             foreach ($workids as $id) {
                 $record->recordModelInsert($loginid,$id->workid,0);
             }
@@ -314,7 +314,7 @@ class LoginNewController extends Controller
 
 
             for ($i = 0;$i < count($worktype_list);$i++) {
-                $workdatas = $work->workModelGet('where','works','work_type',$worktype_list[$i]);
+                $workdatas = $work->workModelGet('where','works','work_type',$worktype_list[$i],NULL,NULL,NULL);
                 $j = 0;
                 foreach ($workdatas as $workd) {
                     $contentstop['work_title'][$i][$j] = $work->worktitleConvert($workd->title,5);
@@ -328,7 +328,7 @@ class LoginNewController extends Controller
         /**
          * 全ユーザーランキング表示用、全ユーザーで表示される作品は同じ、ただし1日ごとに表示される作品は変わる
          */
-        $workdatas = $work->workModelGet('sum',NULL,NULL,NULL);
+        $workdatas = $work->workModelGet('sum',NULL,NULL,NULL,NULL,NULL,NULL);
         $i = 0;
         foreach ($workdatas as $workd) {
             $contentstop['workall_title'][$i] = $work->worktitleConvert($workd->title,5);
@@ -436,7 +436,7 @@ class LoginNewController extends Controller
 
                 foreach ($ninkistodayyesterday as $ninkity) {
                     $contentstop['ninkitodayyesterday_wariai'][$date][$ninkity->worksubid] = ($ninki1[$ninkity->worksubid][1] / $ninki1[$ninkity->worksubid][0]) * 100;
-                    $ninkidata = $work->workModelGet('where','worksubs','id',$ninkity->worksubid);
+                    $ninkidata = $work->workModelGet('where','worksubs','id',$ninkity->worksubid,NULL,NULL,NULL);
                     foreach ($ninkidata as $ninki) {
                         $tmp['title'][$ninkity->worksubid] = $work->worktitleConvert($ninki->title,5);
                         $tmp['img'][$ninkity->worksubid] = $ninki->img;
@@ -466,7 +466,7 @@ class LoginNewController extends Controller
          * 新着作品 ジャンルごとに上映前、発売前の作品を取得
          */
         $contentstop['worknew_img'] = FALSE;
-        $workdatas = $work->workModelGet('reserve',NULL,'worktransinfoid',1);
+        $workdatas = $work->workModelGet('reserve',NULL,'worktransinfoid',1,NULL,NULL,NULL);
         if (count($workdatas) != 0) {
             for ($i = 1;$i <= $worktype->worktypecountModelGet();$i++) {
                 $worktypes = $worktype->worktypeModelGet('worktypeid','0'.$i);
@@ -489,7 +489,7 @@ class LoginNewController extends Controller
         /**
          * 新着作品 本日のNEW作品を取得
          */
-        $workdatas = $work->workModelGet('reserve',NULL,'siteviewday_1',date('Y-m-d'));
+        $workdatas = $work->workModelGet('reserve',NULL,'siteviewday_1',date('Y-m-d'),NULL,NULL,NULL);
         if (count($workdatas) != 0) {
             $k = 0;
             foreach ($workdatas as $workd) {
@@ -508,7 +508,7 @@ class LoginNewController extends Controller
         $contentstop['recommendpostreport_img'] = FALSE;
         $posts = $post->postModelGet('created_day',date('Y-m-d'),'poststar','>=',7);
         if (count($posts) != 0) {
-            $workreviewreports = $work->workModelGet('recommendpostreport',NULL,NULL,NULL);
+            $workreviewreports = $work->workModelGet('recommendpostreport',NULL,NULL,NULL,NULL,NULL,NULL);
             foreach ($workreviewreports as $workreview) {
                 $contentstop['recommendpostreport_title'] = $workreview->title;
                 $contentstop['recommendpostreport_furigana'] = $workreview->furigana;

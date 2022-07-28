@@ -86,7 +86,7 @@ class WorkController extends Controller
         /**
          * どの作品DBから参照するかとクリックした作品のURLをキーとして、作品詳細画面で表示する作品情報を取得
          */
-        $workdata = $work->workModelGet('workindetail','worksubs','url',$urlstr);
+        $workdata = $work->workModelGet('workindetail','worksubs','url',$urlstr,NULL,NULL,NULL);
 
         foreach ($workdata as $workd) {
             $workdata['img'] = $workd->img;
@@ -244,7 +244,7 @@ class WorkController extends Controller
         $url = explode("/",$workindetails["url"]);
         $urlstr = str_replace("/work_indetail/","",$workindetails["url"]);
         
-        $works = $work->workModelGet('where','worksubs','url',$urlstr);
+        $works = $work->workModelGet('where','worksubs','url',$urlstr,NULL,NULL,NULL);
 
         foreach ($works as $work) {
             $workid = $work->workid;
@@ -265,7 +265,7 @@ class WorkController extends Controller
         $url = explode("/",$workindetails["url"]);
         $urlstr = str_replace("/work_indetail/","",$workindetails["url"]);
         
-        $works = $work->workModelGet('where','worksubs','url',$urlstr);
+        $works = $work->workModelGet('where','worksubs','url',$urlstr,NULL,NULL,NULL);
 
         foreach ($works as $work) {
             $workid = $work->workid;
@@ -346,6 +346,9 @@ class WorkController extends Controller
     public function worksearchresult(Request $request, Work $work, Worktype $worktype, Post $post) {
         $category_genre = $request->category_genre;
         $category = $request->category;
+        $publisher = $request->publisher;
+        $label = $request->label;
+        $auther = $request->auther;
 
         $where_list = [];
         if ($category_genre) {
@@ -357,6 +360,15 @@ class WorkController extends Controller
         }
         if ($category) {
             $where_list = ['category_name' => $category];
+        }
+        if ($publisher) {
+            $where_list = ['publisher' => $publisher];
+        }
+        if ($label) {
+            $where_list = ['publicationmagazine_label' => $label];
+        }
+        if ($auther) {
+            $where_list = ['auther' => $auther];
         }
         
         $worksearchresults = $work->worksearchresultModelGet($where_list);
@@ -372,9 +384,21 @@ class WorkController extends Controller
             $worksearchresult['worksearchresult_url'][$i] = asset($result->url);
             $worksearchresult['worksearchresult_img'][$i] = $result->img;
             $worksearchresult['worksearchresult_worktypename'][$i] = $result->worktype_name;
-            $worksearchresult['worksearchresult_publisher'][$i] = $result->publisher;
-            $worksearchresult['worksearchresult_label'][$i] = $result->publicationmagazine_label;
-            $worksearchresult['worksearchresult_auther'][$i] = $result->auther;
+            if ($result->publisher != NULL) {
+                $worksearchresult['worksearchresult_publisher'][$i] = $result->publisher;
+            } else {
+                $worksearchresult['worksearchresult_publisher'][$i] = '-';
+            }
+            if ($result->publicationmagazine_label != NULL) {
+                $worksearchresult['worksearchresult_label'][$i] = $result->publicationmagazine_label;
+            } else {
+                $worksearchresult['worksearchresult_label'][$i] = '-';
+            }
+            if ($result->auther != NULL) {
+                $worksearchresult['worksearchresult_auther'][$i] = $result->auther;
+            } else {
+                $worksearchresult['worksearchresult_auther'][$i] = '-';
+            }
             $worksubids = $work->workidModelGet('worksubs','url',$result->url);
             foreach ($worksubids as $id) {
                 $poststars = $post->postModelGet('worksubid',$id->id,NULL,NULL,NULL);
