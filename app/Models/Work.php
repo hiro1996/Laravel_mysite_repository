@@ -65,7 +65,7 @@ class Work extends Model
             ->orderBy('worksubs.siteviewday_1','ASC');
         } elseif ($key == 'recommendpostreport') {
             $where = [
-                'created_day' => date('Y-m-d')
+                'created_at' => date('Y-m-d')
             ];
             $works->join('worksubs','works.workid','=','worksubs.workid') 
                 ->join('posts','worksubs.id','=','posts.worksubid')
@@ -77,9 +77,12 @@ class Work extends Model
             ->groupBy($select)
             ->orderBy($select,'ASC');
         } else {
+            $where = [
+                $wherecolumn => $wheredata
+            ];
             $works->join('worksubs',function($join) {
                 $join->on('works.workid','=','worksubs.workid');
-            });
+            })->where($where);
         }
         $works = $works->get();
         return $works;

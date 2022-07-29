@@ -506,7 +506,7 @@ class LoginNewController extends Controller
          * 今日のレビューレポート(トップページには星評価7以上を1件表示)
          */
         $contentstop['recommendpostreport_img'] = FALSE;
-        $posts = $post->postModelGet('created_day',date('Y-m-d'),'poststar','>=',7);
+        $posts = $post->postModelGet('created_at',date('Y-m-d'),'poststar','>=',7);
         if (count($posts) != 0) {
             $workreviewreports = $work->workModelGet('recommendpostreport',NULL,NULL,NULL,NULL,NULL,NULL);
             foreach ($workreviewreports as $workreview) {

@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\Work;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Null_;
 
 class PostController extends Controller
 {
@@ -68,10 +69,10 @@ class PostController extends Controller
     }
 
     public function postconf(Request $request) {
-        $nickname = $request->nickname;
-        $workname = $request->workname;
-        $poststar = $request->poststar;
-        $postbody = $request->postbody;
+        $postconf['nickname'] = $request->nickname;
+        $postconf['workname'] = $request->workname;
+        $postconf['poststar'] = $request->poststar;
+        $postconf['postbody'] = $request->postbody;
 
         $request->validate([
             'workname' => 'required|exists:works,title',
@@ -85,20 +86,25 @@ class PostController extends Controller
             'postbody.required' => 'レビュー内容は必須入力です。',
         ]);
 
-        return view('post.postconfirmation',compact('nickname','workname','poststar','postbody'));
+        return view('post.postconfirmation',compact('postconf'));
     }
 
     public function postcomplete(Request $request, User $user, Work $work, Post $post) {
-        $name = $request->name;
-        $workname = $request->workname;
-        $poststar = $request->poststar;
-        $postbody = $request->postbody;
+        $postconf['nickname'] = $request->nickname;
+        $postconf['workname'] = $request->workname;
+        $postconf['poststar'] = $request->poststar;
+        $postconf['postbody'] = $request->postbody;
 
         $loginid = 'Guest';
-        if ($name !== 'Guest') $loginid = $user->userModelSearch('nickname',$name,'loginid'); //ログインしていれば、そのユーザーのユーザーIDを取得。まだテストしてない
-        $workid = $work->workModelSearch('works',$workname,'workid'); //投稿した作品のIDを取得
+        if ($postconf['nickname'] !== 'Guest') $loginid = $user->userModelSearch('nickname',$postconf['nickname'],'loginid'); //ログインしていれば、そのユーザーのユーザーIDを取得。まだテストしてない
+        $worksdata = $work->workidModelGet('works','title',$postconf['workname']); //投稿した作品のIDを取得
+        foreach ($worksdata as $workd) {
+            $workssubdata = $work->workidModelGet('worksubs','workid',$workd->workid); //投稿した作品のsubIDを取得
+            foreach ($workssubdata as $worksd) {
+                $post->postModelInsert($loginid,$worksd->id,$postconf['poststar'],$postconf['postbody']); //ユーザーIDと作品IDとレビュー内容を登録
+            }
+        }
 
-        $post->postModelInsert($loginid,$workid,$poststar,$postbody); //ユーザーIDと作品IDとレビュー内容を登録
         return view('post.postcomplete');
     }
 

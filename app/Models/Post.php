@@ -26,6 +26,7 @@ class Post extends Model
             'worksubid' => $worksubid,
             'poststar' => $poststar,
             'postbody' => $postbody,
+            'created_at' => date('Y-m-d')
         ];
         DB::table('posts')->insert($insert);
     }

@@ -20,8 +20,8 @@
                 <div class="col">
                     <div class="form-group">
                         <div class="input-group">
-                            <p class="text-center">{{ $name }}</p>
-                            <input type="hidden" name="name" value="{{ $name }}">
+                            <p class="text-center">{{ $postconf['nickname'] }}</p>
+                            <input type="hidden" name="nickname" value="{{ $postconf['nickname']  }}">
                         </div>
                     </div>
                 </div> 
@@ -37,8 +37,8 @@
                 <div class="col">
                     <div class="form-group">
                         <div class="input-group">
-                            <p class="text-center">{{ $workname }}</p>
-                            <input type="hidden" name="workname" value="{{ $workname }}">
+                            <p class="text-center">{{ $postconf['workname'] }}</p>
+                            <input type="hidden" name="workname" value="{{ $postconf['workname'] }}">
                         </div>
                     </div>
                 </div> 
@@ -54,8 +54,8 @@
                 <div class="col">
                     <div class="form-group">
                         <div class="input-group">
-                            <p class="text-center">{{ $poststar }}</p>
-                            <input type="hidden" name="poststar" value="{{ $poststar }}">
+                            <p class="text-center">{{ $postconf['poststar'] }}</p>
+                            <input type="hidden" name="poststar" value="{{ $postconf['poststar'] }}">
                         </div>
                     </div>
                 </div> 
@@ -71,8 +71,8 @@
                 <div class="col">
                     <div class="form-group">
                         <div class="input-group">
-                            <p class="text-center">{{ $postbody }}</p>
-                            <input type="hidden" name="postbody" value="{{ $postbody }}">
+                            <p class="text-center">{{ $postconf['postbody'] }}</p>
+                            <input type="hidden" name="postbody" value="{{ $postconf['postbody'] }}">
                         </div>
                     </div>
                 </div> 
