@@ -9,7 +9,6 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\Work;
 use Illuminate\Http\Request;
-use phpDocumentor\Reflection\Types\Null_;
 
 class PostController extends Controller
 {
