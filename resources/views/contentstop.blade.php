@@ -182,6 +182,7 @@ $title = 'トップページ';
                                 @for ($i = 0;$i < count($contentstop["recentcheck_img"]);$i++) 
                                     <a href="{{ $contentstop['recentcheck_url'][$i] }}">
                                     <div class="worknewdate">
+                                        {{ $contentstop['recentcheck_tag'][$i] }}
                                         <img class="recentimg" src="{{ $contentstop['recentcheck_img'][$i] }}">
                                         <div class="worktitlename">
                                             <b>{{ $contentstop['recentcheck_title'][$i] }}</b>
@@ -213,6 +214,7 @@ $title = 'トップページ';
                                         @if ($contentstop["genderattention_img"][$i][$j])
                                             @for ($k = 0;$k < count($contentstop["genderattention_img"][$i][$j]);$k++)
                                                 <div class="worknew">
+                                                    {{ $contentstop['genderattention_tag'][$i][$j][$k] }}
                                                     <a href="{{ $contentstop['genderattention_url'][$i][$j][$k] }}">
                                                     <img class="newimg" src="{{ $contentstop['genderattention_img'][$i][$j][$k] }}">
                                                     <div class="worktitlename">
@@ -265,6 +267,7 @@ $title = 'トップページ';
                                                 <div class="d-flex justify-content-around">
                                                     @for ($j = 0;$j < count($contentstop["ninkitodayyesterday"]['img'][$i]);$j++) 
                                                         <div class="workninki">
+                                                            {{ $contentstop['ninkitodayyesterday']['tag'][$i][$j] }}
                                                             <a href="{{ $contentstop['ninkitodayyesterday']['url'][$i][$j] }}">
                                                             <img class="ninkiimg" src="{{ $contentstop['ninkitodayyesterday']['img'][$i][$j] }}">
                                                             <div class="worktitlename">

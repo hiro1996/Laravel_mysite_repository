@@ -11,7 +11,8 @@ class Browsehistory extends Model
     public function browsehistoryModelGet($key,$wherecolumn1,$wheredata1,$wherecolumn2,$wheredata2,$getcount) {
         $browsehistories = DB::table('browsehistories')
             ->join('worksubs','browsehistories.worksubid','=','worksubs.id') 
-            ->join('works','worksubs.workid','=','works.workid');
+            ->join('works','worksubs.workid','=','works.workid')
+            ->join('worktypes','works.work_type','=','worktypes.worktypeid');
         if ($key == 'normal') {
             $where = [
                 $wherecolumn1 => $wheredata1
@@ -30,8 +31,8 @@ class Browsehistory extends Model
                 $browsehistories = $browsehistories->where($where);
             }
             $browsehistories = $browsehistories
-                ->select('works.title','worksubs.img','worksubs.url','browsehistories.worksubid',DB::raw('count(browsehistories.worksubid) AS loginidOfsameworksubid_count'))
-                ->groupBy('browsehistories.worksubid')
+                ->select('works.title','worktypes.worktype_name','worksubs.img','worksubs.url','browsehistories.worksubid',DB::raw('count(browsehistories.worksubid) AS loginidOfsameworksubid_count'))
+                ->groupBy('browsehistories.worksubid','worktypes.worktype_name')
                 ->orderBy('loginidOfsameworksubid_count','DESC')
                 ->limit($getcount);
         } else {
@@ -82,13 +83,18 @@ class Browsehistory extends Model
     }
 
     public function browsehistoryModelExist($loginid,$worksubid) {
+        $exist = DB::table('browsehistories');
         $where1 = [
             'loginid' => $loginid,
         ];
-        $where2 = [
-            'worksubid' => $worksubid,
-        ];
-        $exist = DB::table('browsehistories')->where($where1)->where($where2)->exists();
+        $exist = $exist->where($where1);
+        if ($worksubid != NULL) {
+            $where2 = [
+                'worksubid' => $worksubid,
+            ];
+            $exist = $exist->where($where2);
+        }
+        $exist = $exist->exists();
         return $exist;
     }
 }

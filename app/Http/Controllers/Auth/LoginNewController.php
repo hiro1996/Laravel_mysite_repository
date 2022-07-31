@@ -317,6 +317,23 @@ class LoginNewController extends Controller
                     $j++;
                 }
             }
+
+            /**
+             * 最近チェックした作品
+             */
+            $contentstop['recentcheck_img'] = FALSE;
+            $browsehistories = $browsehistory->browsehistoryModelGet('normal','loginid',session('loginid'),NULL,NULL,5);
+            if (count($browsehistories) != 0) {
+                $i = 0;
+                foreach ($browsehistories as $browsehist) {
+                    $contentstop['recentcheck_title'][$i] = $work->worktitleConvert($browsehist->title,5);
+                    $contentstop['recentcheck_tag'][$i] = $browsehist->worktype_name;
+                    $contentstop['recentcheck_url'][$i] = $browsehist->url;
+                    $contentstop['recentcheck_img'][$i] = asset($browsehist->img);
+                    $contentstop['recentcheck_historydate'][$i] = $browsehist->history_time;
+                    $i++;
+                }
+            }
         } 
     
         /**
@@ -331,21 +348,6 @@ class LoginNewController extends Controller
             $i++;
         }
 
-        /**
-         * 最近チェックした作品
-         */
-        $contentstop['recentcheck_img'] = FALSE;
-        $browsehistories = $browsehistory->browsehistoryModelGet('normal','loginid',session('loginid'),NULL,NULL,5);
-        if (count($browsehistories) != 0) {
-            $i = 0;
-            foreach ($browsehistories as $browsehist) {
-                $contentstop['recentcheck_title'][$i] = $work->worktitleConvert($browsehist->title,5);
-                $contentstop['recentcheck_url'][$i] = $browsehist->url;
-                $contentstop['recentcheck_img'][$i] = asset($browsehist->img);
-                $contentstop['recentcheck_historydate'][$i] = $browsehist->history_time;
-                $i++;
-            }
-        }
 
         /**
          * 年代別注目作品($i...年代,$j...性別,$k...該当作品)
@@ -354,6 +356,7 @@ class LoginNewController extends Controller
             for ($j = 1;$j <= 2;$j++) {
                 $agegenders[$i][$j] = FALSE;
                 $contentstop['genderattention_title'][$i][$j] = FALSE;
+                $contentstop['genderattention_tag'][$i][$j] = FALSE;
                 $contentstop['genderattention_img'][$i][$j] = FALSE;
                 $contentstop['genderattention_url'][$i][$j] = FALSE;
             }
@@ -361,11 +364,12 @@ class LoginNewController extends Controller
 
         $users = $user->userModelGet(NULL);
         foreach ($users as $user) {
-            $age = (int) (($user->age) / 10); 
-            if ($age >= 5) $age = 5;
-            $agegenders[$age][$user->gender][] = $user->loginid;
+            if ($browsehistory->browsehistoryModelExist($user->loginid,NULL)) {
+                $age = (int) (($user->age) / 10); 
+                if ($age >= 5) $age = 5;
+                $agegenders[$age][$user->gender][] = $user->loginid;
+            }
         }
-
         
         for ($i = 1;$i <= count($agegenders);$i++) {
             for ($j = 1;$j <= 2;$j++) {
@@ -387,6 +391,7 @@ class LoginNewController extends Controller
                     $k = 0;
                     foreach ($getdatas as $get) {
                         $contentstop['genderattention_title'][$i][$j][$k] = $work->worktitleConvert($get->title,5);
+                        $contentstop['genderattention_tag'][$i][$j][$k] = $get->worktype_name;
                         $contentstop['genderattention_img'][$i][$j][$k] = $get->img;
                         $contentstop['genderattention_url'][$i][$j][$k] = $get->url;
                         $k++;
@@ -419,6 +424,7 @@ class LoginNewController extends Controller
             $ninkistodayyesterday = $browsehistory->browsehistoryModelGet(NULL,'history_time_date',$findate,'history_time_date',$startdate,4);
 
             $contentstop['ninkitodayyesterday']['title'][$date] = FALSE;
+            $contentstop['ninkitodayyesterday']['tag'][$date] = FALSE;
             $contentstop['ninkitodayyesterday']['img'][$date] = FALSE;
             $contentstop['ninkitodayyesterday']['url'][$date] = FALSE;
             if (count($ninkistodayyesterday) != 0) {
@@ -442,6 +448,7 @@ class LoginNewController extends Controller
                     $ninkidata = $work->workModelGet('where','worksubs','id',$ninkity->worksubid,NULL,NULL,NULL);
                     foreach ($ninkidata as $ninki) {
                         $tmp['title'][$ninkity->worksubid] = $work->worktitleConvert($ninki->title,5);
+                        $tmp['tag'][$ninkity->worksubid] = $ninki->worktype_name;
                         $tmp['img'][$ninkity->worksubid] = $ninki->img;
                         $tmp['url'][$ninkity->worksubid] = $ninki->url;
                     }
@@ -453,14 +460,19 @@ class LoginNewController extends Controller
                     $i++;
                 }
                 $j = 0;
-                foreach ($tmp['img'] as $data) {
-                    $contentstop['ninkitodayyesterday']['img'][$date][$j] = $data;
+                foreach ($tmp['tag'] as $data) {
+                    $contentstop['ninkitodayyesterday']['tag'][$date][$j] = $data;
                     $j++;
                 }
                 $k = 0;
-                foreach ($tmp['url'] as $data) {
-                    $contentstop['ninkitodayyesterday']['url'][$date][$k] = $data;
+                foreach ($tmp['img'] as $data) {
+                    $contentstop['ninkitodayyesterday']['img'][$date][$k] = $data;
                     $k++;
+                }
+                $l = 0;
+                foreach ($tmp['url'] as $data) {
+                    $contentstop['ninkitodayyesterday']['url'][$date][$l] = $data;
+                    $l++;
                 }
             }
         }
