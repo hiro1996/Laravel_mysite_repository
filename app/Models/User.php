@@ -33,10 +33,14 @@ class User extends Authenticatable
     ];
 
     public function userModelGet($user) {
-        $where = [
-            'loginid' => $user,
-        ];
-        $users = DB::table('users')->where($where)->get();
+        $users = DB::table('users');
+        if ($user != NULL) {
+            $where = [
+                'loginid' => $user,
+            ];
+            $users = $users->where($where);
+        }
+        $users = $users->get();
         return $users;
     }
 
@@ -58,13 +62,14 @@ class User extends Authenticatable
         DB::table('users')->where($where)->update($update);
     }
 
-    public function userModelInsert($loginid,$nickname,$password,$email,$birthday,$gender,$uservalue) {
+    public function userModelInsert($loginid,$nickname,$password,$email,$birthday,$age,$gender,$uservalue) {
         $insert = [
             'loginid' => $loginid,
             'nickname' => $nickname,
             'password' => password_hash($password,PASSWORD_DEFAULT),
             'email' => $email,
             'birthday' => $birthday,
+            'age' => $age,
             'gender' => $gender,
             'user_value_id' => $uservalue,
             'login_number_of_times' => 0,

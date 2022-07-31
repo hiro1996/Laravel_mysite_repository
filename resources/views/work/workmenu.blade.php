@@ -28,7 +28,17 @@
         if (strstr($queryurl,$workts->category_name)) {
             $workmenugenrecategory_list = ['category_name' => $workts->category_name];
         }
+        if (strstr($queryurl,$workts->publisher) && ($workts->publisher != NULL)) {
+            $workmenugenrecategory_list = ['publisher' => $workts->publisher];
+        }
+        if (strstr($queryurl,$workts->publicationmagazine_label) && ($workts->publicationmagazine_label != NULL)) {
+            $workmenugenrecategory_list = ['publicationmagazine_label' => $workts->publicationmagazine_label];
+        }
+        if (strstr($queryurl,$workts->auther) && ($workts->auther != NULL)) {
+            $workmenugenrecategory_list = ['auther' => $workts->auther];
+        }
     }
+
     $workmenus = $work->worksearchresultModelGet($workmenugenrecategory_list);
     foreach ($workmenus as $workm) {
         $worktypemenus = $worktype->worktypemenuModelGet(['work_type' => $workm->work_type]);

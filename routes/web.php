@@ -122,3 +122,7 @@ Route::post('/workindetail/goodbutton/delete', 'App\Http\Controllers\WorkControl
 
 Route::get('/worksearchresult', 'App\Http\Controllers\WorkController@worksearchresult')->name('worksearchresult');
 
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

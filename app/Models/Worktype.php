@@ -41,7 +41,8 @@ class Worktype extends Model
     public function worktypemenusideModelGet() {
         $worktypesidemenus = DB::table('worktypes')
             ->join('works','worktypes.worktypeid','=','works.work_type')
-            ->select('worktypes.worktypeid','worktypes.worktype_name','works.category_name')
+            ->join('worksubs','works.workid','=','worksubs.workid') 
+            ->select('worktypes.worktypeid','worktypes.worktype_name','works.category_name','worksubs.publisher','worksubs.publicationmagazine_label','worksubs.auther')
             ->get();
         return $worktypesidemenus;
     }
