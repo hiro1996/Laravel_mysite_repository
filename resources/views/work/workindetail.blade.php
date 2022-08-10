@@ -75,33 +75,56 @@
         <br>
         <section class="icon-group">
             <ul class="icon-banner">
-                <li>
-                    <a href="#"><img class="amazonprime" src="{{ $workdata['amazonprime'] }}" width="50" height="35" alt="amazon prime"></a>
-                </li>
-                <li>
-                    <a href="#"><img class="yahoocalender" src="{{ $workdata['yahoocalender'] }}" width="50" height="35" alt="yahoo calender"></a>
-                </li>
-                <li>
-                    <a href="#"><img class="hulu" src="{{ $workdata['hulu'] }}" width="50" height="35" alt="hulu"></a>
-                </li>
+                @if ($workdata['LINE'])
                 <li>
                     <a href="#"><img class="LINE" src="{{ $workdata['LINE'] }}" width="50" height="35" alt="LINE"></a>
                 </li>
+                @endif
+                @if ($workdata['twitter'])
                 <li>
                     <a href="#"><img class="twitter" src="{{ $workdata['twitter'] }}" width="50" height="35" alt="twitter"></a>
                 </li>
+                @endif
+                @if ($workdata['facebook'])
                 <li>
                     <a href="#"><img class="facebook" src="{{ $workdata['facebook'] }}" width="50" height="35" alt="facebook"></a>
                 </li>
+                @endif
+                @if ($workdata['instagram'])
                 <li>
                     <a href="#"><img class="instagram" src="{{ $workdata['instagram'] }}" width="50" height="35" alt="instagram"></a>
                 </li>
+                @endif
+                @if ($workdata['amazonprime'])
+                <li>
+                    <a href="#"><img class="amazonprime" src="{{ $workdata['amazonprime'] }}" width="50" height="35" alt="amazon prime"></a>
+                </li>
+                @endif
+                @if ($workdata['hulu'])
+                <li>
+                    <a href="#"><img class="hulu" src="{{ $workdata['hulu'] }}" width="50" height="35" alt="hulu"></a>
+                </li>
+                @endif
+                @if ($workdata['yahoocalender'])
+                <li>
+                    <a href="#"><img class="yahoocalender" src="{{ $workdata['yahoocalender'] }}" width="50" height="35" alt="yahoo calender"></a>
+                </li>
+                @endif
+                @if ($workdata['book'])
                 <li>
                     <a href="#"><img class="booksite" src="{{ $workdata['book'] }}" width="50" height="35" alt="book site"></a>
                 </li>
+                @endif
+                @if ($workdata['film'])
                 <li>
                     <a href="#"><img class="filmsite" src="{{ $workdata['film'] }}" width="50" height="35" alt="film site"></a>
                 </li>
+                @endif
+                @if ($workdata['music'])
+                <li>
+                    <a href="#"><img class="musicsite" src="{{ $workdata['music'] }}" width="50" height="35" alt="film site"></a>
+                </li>
+                @endif
             </ul>
                        
             <div class="text-center">

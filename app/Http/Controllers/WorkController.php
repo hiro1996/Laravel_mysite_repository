@@ -50,7 +50,7 @@ class WorkController extends Controller
         return view('work.workhistory',compact('browsehistorydatas'));
     }
 
-    public function workindetail(Work $work, $url, $url2, $url3, Favorite $favorite, Post $post, Record $record, Guestrecord $guestrecord, Genrepost $genrepost, Genrepostanswer $genrepostanswer, Browsehistory $browsehistory, Goodiconhistory $goodiconhistory) {
+    public function workindetail(Work $work, $url, $url2, $url3, Worktype $worktype, Favorite $favorite, Post $post, Record $record, Guestrecord $guestrecord, Genrepost $genrepost, Genrepostanswer $genrepostanswer, Browsehistory $browsehistory, Goodiconhistory $goodiconhistory) {
         /**
          * コンテンツトップでどの作品をクリックしたかを判別するURLを取得し、urlからどの作品DBのデータを参照するか確認
          */
@@ -82,6 +82,17 @@ class WorkController extends Controller
                 array_push($ninkitag,$ninkity->worksubid);
             }
         }
+        
+        /**
+         * アイコン一覧
+         */
+        $workdata['amazonprime'] = FALSE;
+        $workdata['yahoocalender'] = FALSE;
+        $workdata['hulu'] = FALSE;
+        
+        $workdata['book'] = FALSE;
+        $workdata['film'] = FALSE;
+        $workdata['music'] = FALSE;
 
         /**
          * どの作品DBから参照するかとクリックした作品のURLをキーとして、作品詳細画面で表示する作品情報を取得
@@ -89,6 +100,31 @@ class WorkController extends Controller
         $workdatas = $work->workModelGet('workindetail','worksubs','url',$urlstr,NULL,NULL,NULL);
 
         foreach ($workdatas as $workd) {
+            $workdata['worktype'] = $workd->worktypeid;
+            //アニメ
+            if ($workdata['worktype'] == '01') {
+                if ($workd->siteviewday_2 >= date('Y-m-d')) {
+                    $workdata['amazonprime'] = asset('assets/img/icon/workindetail/amazon_prime.png');
+                    $workdata['hulu'] = asset('assets/img/icon/workindetail/hulu.png');
+                }
+            //映画
+            } elseif ($workdata['worktype'] == '02') {
+                if ($workd->siteviewday_1 >= date('Y-m-d') && $workd->siteviewday_2 <= date('Y-m-d')) {
+                    $workdata['yahoocalender'] = asset('assets/img/icon/workindetail/yahoo_calender.png');
+                    $workdata['film'] = asset('assets/img/icon/workindetail/filmsite.png');
+                } elseif ($workd->siteviewday_2 >= date('Y-m-d')) {
+                    $workdata['amazonprime'] = asset('assets/img/icon/workindetail/amazon_prime.png');
+                    $workdata['hulu'] = asset('assets/img/icon/workindetail/hulu.png');
+                }
+            //漫画
+            } elseif ($workdata['worktype'] == '03') {
+                $workdata['book'] = asset('assets/img/icon/workindetail/booksite.png');
+            //雑誌
+            } else {
+                $workdata['book'] = asset('assets/img/icon/workindetail/booksite.png');
+            }
+
+
             $workdata['img'] = asset($workd->img);
             if ($workd->volume != NULL) {
                 $workdata['title'] = $workd->title.''.$workd->volume;
@@ -110,18 +146,15 @@ class WorkController extends Controller
             }
         }
 
+        $workdata['music'] = asset('assets/img/icon/workindetail/musicsite.png');
+        
         /**
-         * アイコン一覧
+         * インスタグラム、フェイスブック、LINE、ツイッター
          */
-        $workdata['amazonprime'] = asset('assets/img/icon/workindetail/amazon_prime.png');
-        $workdata['yahoocalender'] = asset('assets/img/icon/workindetail/yahoo_calender.png');
-        $workdata['hulu'] = asset('assets/img/icon/workindetail/hulu.png');
         $workdata['LINE'] = asset('assets/img/icon/workindetail/LINE.png');
         $workdata['twitter'] = asset('assets/img/icon/workindetail/twitter.png');
         $workdata['facebook'] = asset('assets/img/icon/workindetail/facebook.png');
         $workdata['instagram'] = asset('assets/img/icon/workindetail/instagram.png');
-        $workdata['book'] = asset('assets/img/icon/workindetail/booksite.png');
-        $workdata['film'] = asset('assets/img/icon/workindetail/filmsite.png');
 
         /**
          * 閲覧履歴テーブル(browsehistories)に作品IDとログインしているユーザーIDもしくは未ログイン時のユーザーを登録

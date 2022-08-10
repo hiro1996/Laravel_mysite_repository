@@ -243,6 +243,7 @@ class LoginNewController extends Controller
          * おすすめのランキング用作品を取得
          * ユーザーにより表示する作品ジャンルとその内容が変化
          */
+        $contentstop['recentcheck_img'] = FALSE;
         if (session('loginid')) {
             $genre_list = [];
             $tab_list = [];
@@ -321,7 +322,7 @@ class LoginNewController extends Controller
             /**
              * 最近チェックした作品
              */
-            $contentstop['recentcheck_img'] = FALSE;
+            
             $browsehistories = $browsehistory->browsehistoryModelGet('normal','loginid',session('loginid'),NULL,NULL,5);
             if (count($browsehistories) != 0) {
                 $i = 0;
