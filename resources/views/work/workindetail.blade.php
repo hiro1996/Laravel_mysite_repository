@@ -74,16 +74,35 @@
         </article>
         <br>
         <section class="icon-group">
-            <table border="0">
-                <tr>
-                    <td>
-                    <a href="#"><img src="{{ $workdata['amazonprime'] }}" width="50" height="35" alt="amazon prime"></a>
-                    </td>
-                    <td>
-                    <a href="#"><img src="{{ $workdata['yahoocalender'] }}" width="50" height="35" alt="yahoo calender"></a>
-                    </td>
-                </tr>
-            </table>
+            <ul class="icon-banner">
+                <li>
+                    <a href="#"><img class="amazonprime" src="{{ $workdata['amazonprime'] }}" width="50" height="35" alt="amazon prime"></a>
+                </li>
+                <li>
+                    <a href="#"><img class="yahoocalender" src="{{ $workdata['yahoocalender'] }}" width="50" height="35" alt="yahoo calender"></a>
+                </li>
+                <li>
+                    <a href="#"><img class="hulu" src="{{ $workdata['hulu'] }}" width="50" height="35" alt="hulu"></a>
+                </li>
+                <li>
+                    <a href="#"><img class="LINE" src="{{ $workdata['LINE'] }}" width="50" height="35" alt="LINE"></a>
+                </li>
+                <li>
+                    <a href="#"><img class="twitter" src="{{ $workdata['twitter'] }}" width="50" height="35" alt="twitter"></a>
+                </li>
+                <li>
+                    <a href="#"><img class="facebook" src="{{ $workdata['facebook'] }}" width="50" height="35" alt="facebook"></a>
+                </li>
+                <li>
+                    <a href="#"><img class="instagram" src="{{ $workdata['instagram'] }}" width="50" height="35" alt="instagram"></a>
+                </li>
+                <li>
+                    <a href="#"><img class="booksite" src="{{ $workdata['book'] }}" width="50" height="35" alt="book site"></a>
+                </li>
+                <li>
+                    <a href="#"><img class="filmsite" src="{{ $workdata['film'] }}" width="50" height="35" alt="film site"></a>
+                </li>
+            </ul>
                        
             <div class="text-center">
                 @if (session('loginid'))

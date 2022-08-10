@@ -113,8 +113,15 @@ class WorkController extends Controller
         /**
          * アイコン一覧
          */
-        $workdata['amazonprime'] = asset('assets/img/icon/workindetail/amazonprime.png');
-        $workdata['yahoocalender'] = asset('assets/img/icon/workindetail/yahoo.png');
+        $workdata['amazonprime'] = asset('assets/img/icon/workindetail/amazon_prime.png');
+        $workdata['yahoocalender'] = asset('assets/img/icon/workindetail/yahoo_calender.png');
+        $workdata['hulu'] = asset('assets/img/icon/workindetail/hulu.png');
+        $workdata['LINE'] = asset('assets/img/icon/workindetail/LINE.png');
+        $workdata['twitter'] = asset('assets/img/icon/workindetail/twitter.png');
+        $workdata['facebook'] = asset('assets/img/icon/workindetail/facebook.png');
+        $workdata['instagram'] = asset('assets/img/icon/workindetail/instagram.png');
+        $workdata['book'] = asset('assets/img/icon/workindetail/booksite.png');
+        $workdata['film'] = asset('assets/img/icon/workindetail/filmsite.png');
 
         /**
          * 閲覧履歴テーブル(browsehistories)に作品IDとログインしているユーザーIDもしくは未ログイン時のユーザーを登録

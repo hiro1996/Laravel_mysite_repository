@@ -1,8 +1,20 @@
 /**
  *workindetail
  */
-.row {
-    background-color: white;
+.icon-banner {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.icon-banner li {
+    width: calc(100%/9);
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+.icon-banner li img {
+    max-width: 100%;
+    height: auto;
 }
 
 .workindetailpost {
