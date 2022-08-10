@@ -1,6 +1,22 @@
 /**
  *workindetail
  */
+.row {
+    background-color: white;
+}
+
+.workindetailpost {
+    border-top: 2px dotted #000;
+}
+
+.workindetailposttitle {
+    color: black;
+}
+
+.workreviewpostbody {
+    font-size: small;
+}
+
 .workindetailclass {
     margin-top: 1.5em;
     margin-bottom: 1.5rem;

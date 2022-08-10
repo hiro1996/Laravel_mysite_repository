@@ -1,20 +1,9 @@
 <?php
-$title = '作品詳細';
-$img = asset($workdata['img']);
-
-/**
- * get genre from url
- */
-$url = url()->current();
-$genre = explode('/', $url);
-//$genre = $genre[4];
+    $title = '作品詳細';
 ?>
 
 @include('include.header')
 
-<?php
-$thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
-?>
 <article class="columns p-4 m-0">
 
     @include('work.workmenu')
@@ -30,11 +19,13 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
             {{ $workdata['furigana'] }}
         </div>
         
-        <article class="columns p-4 m-0 workindetailexplaining workindetailclass">     
+        <article class="columns p-4 m-0 workindetailexplaining workindetailclass">    
+            
             
             <div class="column is-6">
+            
                 <div class="thumbnailpic">
-                    <img class="workdetailmainimg" src="{{ $img }}">
+                    <img class="workdetailmainimg" src="{{ $workdata['img'] }}">
                 </div>
                 <div class="ranking">
                     <div class="monthlyranking d-flex justify-content-around">
@@ -82,7 +73,18 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
             </div>
         </article>
         <br>
-        <section class="form-group">
+        <section class="icon-group">
+            <table border="0">
+                <tr>
+                    <td>
+                    <a href="#"><img src="{{ $workdata['amazonprime'] }}" width="50" height="35" alt="amazon prime"></a>
+                    </td>
+                    <td>
+                    <a href="#"><img src="{{ $workdata['yahoocalender'] }}" width="50" height="35" alt="yahoo calender"></a>
+                    </td>
+                </tr>
+            </table>
+                       
             <div class="text-center">
                 @if (session('loginid'))
                     <button type="submit" class="{{ $favoriteclass }}" id="favoritebutton">{{ $favoritetext }}</button>
@@ -103,19 +105,6 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
         </article>
         @endif
 
-        <div class="col table-category">
-            <table border="1" width="200" height="60">
-                <tr>
-                    <td id="category1">{{ $workdata["genrepostanswers"][1][0] ?? '-' }}</td>
-                    <td id="category2">{{ $workdata["genrepostanswers"][1][1] ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td id="image1">{{ $workdata["genrepostanswers"][2][0] ?? '-' }}</td>
-                    <td id="image2">{{ $workdata["genrepostanswers"][2][1] ?? '-' }}</td>
-                </tr>
-            </table>
-        </div>
-
         <div class="col eachbtn">
             <div class="form-group">
                 <div class="text-center">
@@ -124,69 +113,27 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
             </div>
         </div>
 
+        
 
-        <div class="card">
-            <div class="card-body">
-                <canvas id="goodtimescanvas"></canvas>
-            </div>
-        </div>
-        <br>
-        <?php
-        $amazon = asset('assets/img/icon/workindetail/amazonprime.png');
-        $yahoo = asset('assets/img/icon/workindetail/yahoo.png');
-        ?>
-        <div class="row">
-            <div class="col icon-otherpage">
-                <a href="#"><img src="{{ $amazon }}" width="75" height="50" alt="amazon prime"></a>
-                <span class="icontitle">Amazon Prime</span>
-            </div>
-            <div class="col icon-otherpage">
-                <a href="#"><img src="{{ $yahoo }}" width="75" height="50" alt="yahoo calender"></a>
-                <span class="icontitle">Yahoo Calender</span>
-            </div>
-        </div>
-
-
-        @if (count($workdata['posts']) != 0)
-        <?php $count = 1; ?>
-        @foreach ($workdata['posts'] as $post)
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                        {{ $post->loginid }}
-                    </div>
-                    <div class="col">
-                        レビュータイトル
+        @if ($workdata['postbody'])
+            @for ($i = 0;$i < count($workdata['postdate']);$i++)
+                <div class="workindetailpost">
+                    <div class="worknewdate">
+                        投稿日：<span class="workindetailpostdate">{{ $workdata['postdate'][$i] }}</span>
+                        <div class="posttitle">
+                            <span class="workindetailposttitle">タイトルタイトルタイトルタイトルタイトルタイトルタイトル</span>
+                        </div>
+                        <p class="result-rating-rate">
+                            <span class="star5_rating" data-rate="{{ $workdata['poststar'][$i] }}"></span>
+                            <span class="number_rating">{{ $workdata['poststar'][$i] }}</span>
+                        </p>
+                        <div class="workreviewpostbody">
+                            <span>{{ $workdata['postbody'][$i] }}</span>
+                        </div>
                     </div>
                 </div>
-                <br>
-                <br>
-                <br>
-                <div class="row">
-                    <div class="col">
-                        {{ $post->poststar }}
-                    </div>
-                    <div class="col">
-                        {{ $post->postbody }}
-                    </div>
-                    <div class="col">
-                        <button type="submit" id="goodid{{ $count }}" class="{{ $workdata['forurljudgeclass'][$count] }}"><img src="{{ $workdata['goodiconurl'][$count] }}" id="goodurlid{{ $count }}" class="goodurlclass{{ $count }}" width="20" height="20"></button><span id="countid{{ $count }}" class="countclass{{ $count }}">{{ $workdata["count"][$count] }}</span>
-                        <input type="hidden" class="reviewclass{{ $count }}" id="reviewid{{ $count }}" value="{{ $count }}">
-                        <input type="hidden" class="maxclass{{ $count }}" id="maxid" value="{{ count($workdata['posts']) }}">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <?php $count++; ?>
-        @endforeach
-        @else
-        <div class="nopost">
-            レビューはありません。
-        </div>
+            @endfor
         @endif
-    </div>
     </div>
 
 
@@ -303,64 +250,6 @@ $thumbnail_top = asset('assets/img/icon/top/thumbnail_top.png');
                     chgbutton.innerText = 'お気に入りに登録';
                 }).fail(function(failresponse) {})
             }
-        })
-    </script>
-
-    <script>
-        var goodtimescanvas = document.getElementById('goodtimescanvas').getContext('2d');
-        var myChart = new Chart(goodtimescanvas, {
-            type: 'bar',
-            data: {
-                labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-                datasets: [{
-                    label: 'ログイン回数',
-                    data: [12, 19, 3, 17, 6, 3, 7, 8, 1, 2, 3],
-                    backgroundColor: "rgba(23,15,151,0.4)"
-                }]
-            }
-        });
-    </script>
-
-    <script>
-        $("#closeid").click(function() {
-            let checkbox = document.getElementsByClassName("checkclass");
-            for (i = 0; i < checkbox.length; i++) {
-                checkbox[i].checked = false;
-            }
-        });
-
-        $('#genrepost').click(function() {
-            let genrepost = document.getElementsByName("genre");
-            let workid = document.getElementById("worksubid");
-            genrepostcount = [];
-            for (let i = 0; i < genrepost.length; i++) {
-                if (genrepost[i].checked) {
-                    genrepostcount.push(genrepost[i].value);
-                }
-            }
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                //DBから検索結果を取得
-                url: "/genrepostcomplete",
-                type: "post",
-                data: {
-                    genrepost: genrepostcount,
-                    workid: workid.value,
-                },
-                dataType: "json",
-            }).done(function(response) {
-                let category1 = document.getElementById("category1");
-                let category2 = document.getElementById("category2");
-                let image1 = document.getElementById("image1");
-                let image2 = document.getElementById("image2");
-                category1.innerText = response["genrepostdata"][1][0];
-                category2.innerText = response["genrepostdata"][1][1];
-                image1.innerText = response["genrepostdata"][2][0];
-                image2.innerText = response["genrepostdata"][2][1];
-            }).fail(function() {})
-            console.log("エラ〜");
         })
     </script>
 

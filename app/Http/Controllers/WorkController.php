@@ -86,10 +86,10 @@ class WorkController extends Controller
         /**
          * どの作品DBから参照するかとクリックした作品のURLをキーとして、作品詳細画面で表示する作品情報を取得
          */
-        $workdata = $work->workModelGet('workindetail','worksubs','url',$urlstr,NULL,NULL,NULL);
+        $workdatas = $work->workModelGet('workindetail','worksubs','url',$urlstr,NULL,NULL,NULL);
 
-        foreach ($workdata as $workd) {
-            $workdata['img'] = $workd->img;
+        foreach ($workdatas as $workd) {
+            $workdata['img'] = asset($workd->img);
             if ($workd->volume != NULL) {
                 $workdata['title'] = $workd->title.''.$workd->volume;
             } else {
@@ -109,6 +109,12 @@ class WorkController extends Controller
                 }
             }
         }
+
+        /**
+         * アイコン一覧
+         */
+        $workdata['amazonprime'] = asset('assets/img/icon/workindetail/amazonprime.png');
+        $workdata['yahoocalender'] = asset('assets/img/icon/workindetail/yahoo.png');
 
         /**
          * 閲覧履歴テーブル(browsehistories)に作品IDとログインしているユーザーIDもしくは未ログイン時のユーザーを登録
@@ -171,7 +177,18 @@ class WorkController extends Controller
         /**
          * 投稿テーブル(posts)から作品詳細を開こうとしている作品IDに紐づく投稿を取得
          */
-        $workdata['posts'] = $post->postModelGet('worksubid',$workdata['worksubid'],NULL,NULL,NULL);
+        $workdata['postbody'] = FALSE;
+        $postdatas = $post->postModelGet('worksubid',$workdata['worksubid'],NULL,NULL,NULL);
+        if (count($postdatas) != 0) {
+            $i = 0;
+            foreach ($postdatas as $pos) {
+                $workdata['poststar'][$i] = $pos->poststar;
+                $workdata['postbody'][$i] = $pos->postbody;
+                $workdata['postdate'][$i] = str_replace('-','/',$pos->created_at);
+                $i++;
+            }
+        }
+        
 
         /**
          * ジャンル投票用のデータを取得
@@ -208,9 +225,9 @@ class WorkController extends Controller
          * 未ログインユーザーが当画面にログインした場合、デフォルト表示は必ず白goodアイコン
          * 各作品IDとレビューIDから各レビューを取得
          */
-        if (count($workdata["posts"]) != 0) {
+        if ($workdata['postbody']) {
             if (session('loginid')) {
-                for ($i = 1;$i <= count($workdata["posts"]);$i++) {
+                for ($i = 1;$i <= count($workdata['postbody']);$i++) {
                     $goodiconurl[$i] = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodicon.png';
                     $forurljudge[$i] = 'beforeclick'.$i;
                     $login_iconcount = $goodiconhistory->goodiconhistoryModelGet('login_iconcount',$loginid,$workdata['worksubid'],$i);
@@ -221,7 +238,7 @@ class WorkController extends Controller
                     $counts[$i] = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$workdata['worksubid'],$i);
                 }
             } else {
-                for ($i = 1;$i <= count($workdata["posts"]);$i++) {
+                for ($i = 1;$i <= count($workdata['postbody']);$i++) {
                     $goodiconurl[$i] = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodicon.png';
                     $forurljudge[$i] = 'beforeclick'.$i;
                     $counts[$i] = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$workdata['worksubid'],$i);
