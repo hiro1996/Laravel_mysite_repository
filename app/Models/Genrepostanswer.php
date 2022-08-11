@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class Genrepostanswer extends Model
 {
-    public function genrepostanswerModelInsert($loginid,$workid,$genrepostid,$genrepostselectid) {
+    public function genrepostanswerModelInsert($loginid,$worksubid,$genrepostid,$genrepostselectid) {
         $insert = [
             'loginid' => $loginid,
-            'workid' => $workid,
+            'worksubid' => $worksubid,
             'genrepostid' => $genrepostid,
             'genrepostselectid' => $genrepostselectid
         ];
@@ -19,20 +18,24 @@ class Genrepostanswer extends Model
     }
 
     // limitで上位何データかを取得できる
-    public function genrepostanswerModelGet($workid,$genrepostselectid) {
-        $where1 = [
-            'workid' => $workid
-        ];
-        $where2 = [
-            'genrepostselectid' => $genrepostselectid
-        ];
+    public function genrepostanswerModelGet($worksubid,$genrepostselectid) {
         $genrepostanswers = DB::table('genrepostanswers')
-        ->join('genreposts',function($join) use ($where1,$where2) {
-            $join->on('genrepostanswers.genrepostid','=','genreposts.genrepostid')
-                ->where($where1)->where($where2);
-        })->select('genreposts.genre',DB::raw('count(genrepostanswers.genrepostid) AS genrepost_count'))
-        ->groupBy('genreposts.genre')
-        ->orderBy('genrepost_count','DESC')->limit(2)->get();
+        ->join('genreposts','genrepostanswers.genrepostid','=','genreposts.genrepostid');
+        if ($worksubid != NULL) {
+            $where1 = [
+                'worksubid' => $worksubid
+            ];
+            $genrepostanswers = $genrepostanswers->where($where1);
+        }
+        if ($genrepostselectid != NULL) {
+            $where2 = [
+                'genrepostselectid' => $genrepostselectid
+            ];
+            $genrepostanswers = $genrepostanswers->where($where2);
+        }
+        $genrepostanswers = $genrepostanswers->select('genreposts.genre','genreposts.background_color',DB::raw('count(genrepostanswers.genrepostid) AS genrepost_count'))
+        ->groupBy('genreposts.genre','genreposts.background_color')
+        ->orderBy('genrepost_count','DESC')->get();
         return $genrepostanswers;
     }
 
@@ -57,9 +60,9 @@ class Genrepostanswer extends Model
         DB::table('genrepostanswers')->where($where1)->where($where2)->delete();
     }
 
-    public function genrepostanswerModelSearch($workid) {
+    public function genrepostanswerModelSearch($worksubid) {
         $where = [
-            'workid' => $workid
+            'worksubid' => $worksubid
         ];
         $genrepostanswers = DB::table('genrepostanswers')->where($where)->exists();
         return $genrepostanswers;

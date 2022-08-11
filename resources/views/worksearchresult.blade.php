@@ -21,6 +21,13 @@ $title = 'トップページ';
                             <div class="worksearchresult"> 
                             <article class="columns p-4 m-0 worksearchresultarea">   
                                 <div class="column is-6">
+                                    <div class="thumbnailpic">
+                                        <a href="{{ $worksearchresult['worksearchresult_url'][$i] }}">
+                                            <img class="worksearchresultimg" src="{{ $worksearchresult['worksearchresult_img'][$i] }}" alt="{{ $worksearchresult['worksearchresult_title'][$i] }}">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="column">
                                     <strong class="worksearchresulttitle">
                                         {{ $worksearchresult['worksearchresult_title'][$i] }}
                                     </strong>
@@ -57,13 +64,6 @@ $title = 'トップページ';
                                         @else
                                             著者・作者：<a href="{{ route('worksearchresult',['auther' => $worksearchresult['worksearchresult_auther'][$i]] ) }}">{{ $worksearchresult['worksearchresult_auther'][$i] }}</a>
                                         @endif
-                                    </div>
-                                </div>
-                                <div class="column">
-                                    <div class="thumbnailpic">
-                                        <a href="{{ $worksearchresult['worksearchresult_url'][$i] }}">
-                                            <img class="worksearchresultimg" src="{{ $worksearchresult['worksearchresult_img'][$i] }}" alt="{{ $worksearchresult['worksearchresult_title'][$i] }}">
-                                        </a>
                                     </div>
                                 </div>
                             </article>

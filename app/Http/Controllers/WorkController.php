@@ -147,7 +147,7 @@ class WorkController extends Controller
         }
 
         $workdata['music'] = asset('assets/img/icon/workindetail/musicsite.png');
-        
+
         /**
          * インスタグラム、フェイスブック、LINE、ツイッター
          */
@@ -190,6 +190,19 @@ class WorkController extends Controller
             $guestrecords = $guestrecord->guestrecordModelGet();
             foreach ($guestrecords as $guestreco) {
                 $guestrecord->guestrecordModelUpdate('workid',$workdata['worksubid'],'browsehistory_sum',$guestreco->browsehistory_sum + 1); //閲覧回数が更新されない
+            }
+        }
+
+        /**
+         * 作品のイメージ取得
+         */
+        $images = $genrepostanswer->genrepostanswerModelGet($workdata['worksubid'],NULL);
+        if (count($images) != 0) {
+            $i = 0;
+            foreach ($images as $img) {
+                $workdata['genre'][$i] = $img->genre;
+                $workdata['color'][$i] = $img->background_color;
+                $i++;
             }
         }
 
@@ -336,22 +349,22 @@ class WorkController extends Controller
     }
 
     public function workgenrepostcomplete(Request $request, Genrepost $genrepost, Genrepostanswer $genrepostanswer) {
-        $genrepostsreq = $request->only('genrepost','workid');
+        $genrepostsreq = $request->only('genrepost','worksubid');
 
         $loginid = 'Guest';
         if (session('loginid')) {
             $loginid = session('loginid'); 
-            if ($genrepostanswer->genrepostanswerModelExist($loginid,$genrepostsreq['workid'])) {
-                $genrepostanswer->genrepostanswerModelDelete($loginid,$genrepostsreq['workid']);
+            if ($genrepostanswer->genrepostanswerModelExist($loginid,$genrepostsreq['worksubid'])) {
+                $genrepostanswer->genrepostanswerModelDelete($loginid,$genrepostsreq['worksubid']);
             }
         }
         for ($i = 0;$i < count($genrepostsreq['genrepost']);$i++) {
             $genrepostid = $genrepost->genrepostModelSearch('genre',$genrepostsreq['genrepost'][$i],'genrepostid');
             $genrepostselectid = $genrepost->genrepostModelSearch('genre',$genrepostsreq['genrepost'][$i],'genrepostselectid');
-            $genrepostanswer->genrepostanswerModelInsert($loginid,$genrepostsreq['workid'],$genrepostid,$genrepostselectid);
+            $genrepostanswer->genrepostanswerModelInsert($loginid,$genrepostsreq['worksubid'],$genrepostid,$genrepostselectid);
         }
         for ($i = 1;$i < 3;$i++) {
-            $genrepostanswers[$i] = $genrepostanswer->genrepostanswerModelGet($genrepostsreq['workid'],$i);
+            $genrepostanswers[$i] = $genrepostanswer->genrepostanswerModelGet($genrepostsreq['worksubid'],$i);
             $j = 0;
             foreach ($genrepostanswers[$i] as $genre) {
                 $genrepostanswersdata[$i][$j] = $genre->genre;

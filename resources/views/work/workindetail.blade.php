@@ -64,10 +64,9 @@
                     <dt>著者・作者</dt>
                     <dd>{{ $workdata['auther'] }}</dd>
                     <dt class="tags categorytag">
-                        <span class="tag is-rounded is-medium is-primary">かっこいい</span>
-                        <span class="tag is-rounded is-medium is-danger">面白い</span>
-                        <span class="tag is-rounded is-medium is-warning">感動</span>
-                        <span class="tag is-rounded is-medium is-link">情熱</span>
+                        @for ($i = 0;$i < count($workdata['genre']);$i++)
+                            <span class="tag is-rounded is-medium is-{{ $workdata['color'][$i] }}">{{ $workdata['genre'][$i] }}</span>
+                        @endfor
                     </dt>
                 </dl>
             </div>
