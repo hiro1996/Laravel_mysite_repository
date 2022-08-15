@@ -25,7 +25,7 @@
             <div class="column is-6">
             
                 <div class="thumbnailpic">
-                    <img class="workdetailmainimg" src="{{ $workdata['img'] }}">
+                    <img class="workdetailmainimg-{{ $workdata['workgenre_eng'] }}" src="{{ $workdata['img'] }}">
                 </div>
                 <div class="ranking">
                     <div class="monthlyranking d-flex justify-content-around">
@@ -63,11 +63,13 @@
                     <dd>{{ $workdata['publicationmagazine_label'] }}</dd>
                     <dt>著者・作者</dt>
                     <dd>{{ $workdata['auther'] }}</dd>
+                    @if ($workdata['genre'])
                     <dt class="tags categorytag">
                         @for ($i = 0;$i < count($workdata['genre']);$i++)
                             <span class="tag is-rounded is-medium is-{{ $workdata['color'][$i] }}">{{ $workdata['genre'][$i] }}</span>
                         @endfor
                     </dt>
+                    @endif
                 </dl>
             </div>
         </article>

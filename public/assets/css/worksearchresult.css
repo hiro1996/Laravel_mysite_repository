@@ -27,8 +27,8 @@
 }
 
 .worksearchresultimg {
-    width: 200px;
-    height: 230px;
+    max-width: 260px;
+    max-height: 230px;
 }
 
 .star10_rating{

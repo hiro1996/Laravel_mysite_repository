@@ -34,8 +34,23 @@
     margin-bottom: 1.5rem;
 }
 
-.workdetailmainimg {
+.workdetailmainimg-anime {
+    max-width: 311px;
+}
+
+.workdetailmainimg-comic {
     max-width: 411px;
+    max-height: 311px;
+}
+
+.workdetailmainimg-film {
+    max-width: 300px;
+    max-height: 311px;
+}
+
+.workdetailmainimg-magazine {
+    max-width: 300px;
+    max-height: 311px;
 }
 
 .workindetailexplaining {

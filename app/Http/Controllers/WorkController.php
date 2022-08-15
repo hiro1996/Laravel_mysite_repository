@@ -98,12 +98,12 @@ class WorkController extends Controller
          * どの作品DBから参照するかとクリックした作品のURLをキーとして、作品詳細画面で表示する作品情報を取得
          */
         $workdatas = $work->workModelGet('workindetail','worksubs','url',$urlstr,NULL,NULL,NULL);
-
         foreach ($workdatas as $workd) {
             $workdata['worktype'] = $workd->worktypeid;
+            $workdata['workgenre_eng'] = $workd->worktype_eng;
             //アニメ
             if ($workdata['worktype'] == '01') {
-                if ($workd->siteviewday_2 >= date('Y-m-d')) {
+                if ($workd->siteviewday_2 > date('Y-m-d')) {
                     $workdata['amazonprime'] = asset('assets/img/icon/workindetail/amazon_prime.png');
                     $workdata['hulu'] = asset('assets/img/icon/workindetail/hulu.png');
                 }
@@ -112,7 +112,7 @@ class WorkController extends Controller
                 if ($workd->siteviewday_1 >= date('Y-m-d') && $workd->siteviewday_2 <= date('Y-m-d')) {
                     $workdata['yahoocalender'] = asset('assets/img/icon/workindetail/yahoo_calender.png');
                     $workdata['film'] = asset('assets/img/icon/workindetail/filmsite.png');
-                } elseif ($workd->siteviewday_2 >= date('Y-m-d')) {
+                } elseif ($workd->siteviewday_2 > date('Y-m-d')) {
                     $workdata['amazonprime'] = asset('assets/img/icon/workindetail/amazon_prime.png');
                     $workdata['hulu'] = asset('assets/img/icon/workindetail/hulu.png');
                 }
@@ -120,8 +120,10 @@ class WorkController extends Controller
             } elseif ($workdata['worktype'] == '03') {
                 $workdata['book'] = asset('assets/img/icon/workindetail/booksite.png');
             //雑誌
-            } else {
+            } elseif ($workdata['worktype'] == '04') {
                 $workdata['book'] = asset('assets/img/icon/workindetail/booksite.png');
+            } else {
+                $workdata['music'] = asset('assets/img/icon/workindetail/musicsite.png');
             }
 
 
@@ -146,7 +148,6 @@ class WorkController extends Controller
             }
         }
 
-        $workdata['music'] = asset('assets/img/icon/workindetail/musicsite.png');
 
         /**
          * インスタグラム、フェイスブック、LINE、ツイッター
@@ -196,6 +197,7 @@ class WorkController extends Controller
         /**
          * 作品のイメージ取得
          */
+        $workdata['genre'] = FALSE;
         $images = $genrepostanswer->genrepostanswerModelGet($workdata['worksubid'],NULL);
         if (count($images) != 0) {
             $i = 0;
@@ -301,7 +303,6 @@ class WorkController extends Controller
             $workdata["goodiconurl"] = $goodiconurl;
             $workdata["forurljudgeclass"] = $forurljudge;
         } 
-        
 
         return view('work.workindetail',compact('workdata','favoriteclass','favoritetext'));
     }
