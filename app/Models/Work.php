@@ -40,6 +40,7 @@ class Work extends Model
         $works = DB::table('works');
         if ($key == 'where') {
             $works->join('worksubs','works.workid','=','worksubs.workid') 
+                ->join('worktypes','works.work_type','=','worktypes.worktypeid')
                 ->leftjoin('worktransinfos','worksubs.worktransinfoid','=','worktransinfos.id')
             ->where(''.$table.'.'.$wherecolumn,'=',$wheredata);
         } elseif ($key == 'workindetail') {

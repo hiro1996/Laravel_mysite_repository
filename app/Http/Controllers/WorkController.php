@@ -100,6 +100,7 @@ class WorkController extends Controller
         $workdatas = $work->workModelGet('workindetail','worksubs','url',$urlstr,NULL,NULL,NULL);
         foreach ($workdatas as $workd) {
             $workdata['worktype'] = $workd->worktypeid;
+            $workdata['workgenrne_category_name'] = $workd->category_name;
             $workdata['workgenre_eng'] = $workd->worktype_eng;
             //アニメ
             if ($workdata['worktype'] == '01') {
@@ -124,6 +125,7 @@ class WorkController extends Controller
                 $workdata['book'] = asset('assets/img/icon/workindetail/booksite.png');
             } else {
                 $workdata['music'] = asset('assets/img/icon/workindetail/musicsite.png');
+                $workdata['music_url'] = 'https://recochoku.jp/search/all?q='.$workd->category_name.'+'.$workd->title;
             }
 
 
@@ -303,7 +305,6 @@ class WorkController extends Controller
             $workdata["goodiconurl"] = $goodiconurl;
             $workdata["forurljudgeclass"] = $forurljudge;
         } 
-
         return view('work.workindetail',compact('workdata','favoriteclass','favoritetext'));
     }
 

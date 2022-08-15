@@ -55,14 +55,32 @@
                 <dl>                
                     <dt>カテゴリ</dt>
                     <dd>{{ $workdata['workgenre'] }}</dd>
-                    <dt>ジャンル</dt>
-                    <dd>青年マンガ</dd>
-                    <dt>出版社</dt>
-                    <dd>{{ $workdata['publisher'] }}</dd>
-                    <dt>掲載誌・レーベル</dt>
-                    <dd>{{ $workdata['publicationmagazine_label'] }}</dd>
-                    <dt>著者・作者</dt>
-                    <dd>{{ $workdata['auther'] }}</dd>
+                    @if ($workdata['music'])
+                        <dt>アーティスト</dt>
+                    @else
+                        <dt>ジャンル</dt>
+                    @endif
+                    <dd>{{ $workdata['workgenrne_category_name'] }}</dd>
+                    @if (!$workdata['music'])
+                        <dt>出版社</dt>
+                        @if ($workdata['publisher'] == NULL)
+                            <dd>-</dd>
+                        @else
+                            <dd>{{ $workdata['publisher'] }}</dd>
+                        @endif
+                        <dt>掲載誌・レーベル</dt>
+                        @if ($workdata['publicationmagazine_label'] == NULL)
+                            <dd>-</dd>
+                        @else
+                            <dd>{{ $workdata['publicationmagazine_label'] }}</dd>
+                        @endif
+                        <dt>著者・作者</dt>
+                        @if ($workdata['auther'] == NULL)
+                            <dd>-</dd>
+                        @else
+                            <dd>{{ $workdata['auther'] }}</dd>
+                        @endif
+                    @endif
                     @if ($workdata['genre'])
                     <dt class="tags categorytag">
                         @for ($i = 0;$i < count($workdata['genre']);$i++)
@@ -123,7 +141,7 @@
                 @endif
                 @if ($workdata['music'])
                 <li>
-                    <a href="#"><img class="musicsite" src="{{ $workdata['music'] }}" width="50" height="35" alt="film site"></a>
+                    <a href="{{ $workdata['music_url'] }}" target="_blank"><img class="musicsite" src="{{ $workdata['music'] }}" width="50" height="35" alt="film site"></a>
                 </li>
                 @endif
             </ul>
