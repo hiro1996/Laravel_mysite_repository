@@ -36,58 +36,35 @@ class Work extends Model
         return $works;
     }
 
-    public function workModelGet($key,$table,$wherecolumn,$wheredata,$select,$column,$groupname) {
+    public function workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit) {
         $works = DB::table('works');
-        if ($key == 'where') {
-            $works->join('worksubs','works.workid','=','worksubs.workid') 
-                ->join('worktypes','works.work_type','=','worktypes.worktypeid')
-                ->leftjoin('worktransinfos','worksubs.worktransinfoid','=','worktransinfos.id')
-            ->where(''.$table.'.'.$wherecolumn,'=',$wheredata);
-        } elseif ($key == 'workindetail') {
-            $works->join('worksubs','works.workid','=','worksubs.workid') 
-                ->join('worktypes','works.work_type','=','worktypes.worktypeid')
-                ->leftjoin('worktransinfos','worksubs.worktransinfoid','=','worktransinfos.id')
-            ->where(''.$table.'.'.$wherecolumn,'=',$wheredata);
-        } elseif ($key == 'select') {
-            $works->join('worksubs',function($join) {
-                $join->on('works.workid','=','worksubs.workid');
-            })->select($wherecolumn);
-        } elseif ($key == 'sum') {
-            $works->join('worksubs',function($join) {
-                $join->on('works.workid','=','worksubs.workid');
-            })->select(DB::raw('works.title,worksubs.url,worksubs.img,worksubs.browse_record * worksubs.notificate_record  AS record_times'));
-        } elseif ($key == 'reserve') {
-            $where = [
-                $wherecolumn => $wheredata
-            ];
-            $works->join('worksubs','works.workid','=','worksubs.workid') 
-                ->join('worktransinfos','worksubs.worktransinfoid','=','worktransinfos.id')
-            ->where($where)
-            ->orderBy('worksubs.siteviewday_1','ASC');
-        } elseif ($key == 'recommendpostreport') {
-            $where = [
-                'created_at' => date('Y-m-d')
-            ];
-            $works->join('worksubs','works.workid','=','worksubs.workid') 
-                ->join('posts','worksubs.id','=','posts.worksubid')
-                ->where($where)
-                ->where('poststar','>=',7);
-        } elseif ($key == 'workmenuname') {
-            $works = $works->join('worksubs','works.workid','=','worksubs.workid')
-            ->select($select,DB::raw('count('.$table.'.'.$column.') AS '.$groupname.''))
-            ->groupBy($select)
-            ->orderBy($select,'ASC');
-        } else {
-            $where = [
-                $wherecolumn => $wheredata
-            ];
-            $works->join('worksubs',function($join) {
-                $join->on('works.workid','=','worksubs.workid');
-            })->where($where);
-        }
-        $works = $works->get();
+            if (in_array('worksubs',$needDB)) {
+                $works = $works->join('worksubs','works.workid','=','worksubs.workid');
+            }
+            if (in_array('posts',$needDB)) {
+                $works = $works->join('posts','worksubs.id','=','posts.worksubid');
+            }
+            if (in_array('worktypes',$needDB)) {
+                $works = $works->join('worktypes','works.work_type','=','worktypes.worktypeid');
+            }
+            if (in_array('worktransinfos',$needDB)) {
+                $works = $works->leftjoin('worktransinfos','worksubs.worktransinfoid','=','worktransinfos.id');
+            }
+            $works = $works->where($where)
+            ->select($select);
+            if ($groupby != NULL) {
+                $works = $works->groupBy($groupby);
+            }
+            if ($orderby != NULL) {
+                $works = $works->orderBy($orderby,$orderbyascdesc);
+            }
+            if ($limit != NULL) {
+                $works = $works->limit($limit);
+            }
+            $works = $works->get();
         return $works;
     }
+
 
     public function workidModelGet($table,$wherecolumn,$wheredata) {
         $where = [
@@ -106,11 +83,12 @@ class Work extends Model
         return $titleconvert;
     }
 
-    public function worksearchresultModelGet($where) {
+    public function worksearchresultModelGet($where,$select) {
         $worksearchresults = DB::table('works')
             ->join('worksubs','works.workid','=','worksubs.workid') 
             ->join('worktypes','works.work_type','=','worktypes.worktypeid') 
             ->where($where)
+            ->select($select)
             ->get();
         return $worksearchresults;
     }

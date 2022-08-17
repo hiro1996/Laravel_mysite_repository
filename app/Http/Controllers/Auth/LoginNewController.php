@@ -108,7 +108,22 @@ class LoginNewController extends Controller
             /**
              * 作品IDとユーザーIDをrecordsテーブルに初期化して登録
              */
-            $workids = $work->workModelGet('select',NULL,'workid',NULL,NULL,NULL,NULL);
+            //新規ページから遷移できないので確認
+            $workid = $work->workModelGet('select',NULL,'workid',NULL,NULL,NULL,NULL);
+
+            $needDB = [
+                'worksubs',
+                'worktypes',
+                'worktransinfos',
+            ];
+            $where = NULL;
+            $select = ['workid'];
+            $groupby = NULL;
+            $orderby = NULL;
+            $orderbyascdesc = NULL;
+            $limit = NULL;
+            $workids = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+            dd($workid,$workids);
             foreach ($workids as $id) {
                 $record->recordModelInsert($loginid,$id->workid,0);
             }
@@ -309,7 +324,22 @@ class LoginNewController extends Controller
 
 
             for ($i = 0;$i < count($worktype_list);$i++) {
-                $workdatas = $work->workModelGet('where','works','work_type',$worktype_list[$i],NULL,NULL,NULL);
+                $needDB = [
+                    'worksubs',
+                    'worktypes',
+                    'worktransinfos',
+                ];
+                $where = [['works.work_type','=',$worktype_list[$i]]];
+                $select = [
+                    'title',
+                    'img',
+                    'url',
+                ];
+                $groupby = NULL;
+                $orderby = NULL;
+                $orderbyascdesc = NULL;
+                $limit = NULL;
+                $workdatas = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
                 $j = 0;
                 foreach ($workdatas as $workd) {
                     $contentstop['work_title'][$i][$j] = $work->worktitleConvert($workd->title,5);
@@ -340,7 +370,21 @@ class LoginNewController extends Controller
         /**
          * 全ユーザーランキング表示用、全ユーザーで表示される作品は同じ、ただし1日ごとに表示される作品は変わる
          */
-        $workdatas = $work->workModelGet('sum',NULL,NULL,NULL,NULL,NULL,NULL);
+        $needDB = [
+            'worksubs',
+        ];
+        $where = NULL;
+        $select = [
+            'title',
+            'img',
+            'url',
+            DB::raw('worksubs.browse_record * worksubs.notificate_record  AS record_times'),
+        ];
+        $groupby = NULL;
+        $orderby = NULL;
+        $orderbyascdesc = NULL;
+        $limit = NULL;
+        $workdatas = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
         $i = 0;
         foreach ($workdatas as $workd) {
             $contentstop['workall_title'][$i] = $work->worktitleConvert($workd->title,5);
@@ -348,7 +392,6 @@ class LoginNewController extends Controller
             $contentstop['workall_url'][$i] = $workd->url;
             $i++;
         }
-
 
         /**
          * 年代別注目作品($i...年代,$j...性別,$k...該当作品)
@@ -446,8 +489,24 @@ class LoginNewController extends Controller
 
                 foreach ($ninkistodayyesterday as $ninkity) {
                     $contentstop['ninkitodayyesterday_wariai'][$date][$ninkity->worksubid] = ($ninki1[$ninkity->worksubid][1] / $ninki1[$ninkity->worksubid][0]) * 100;
-                    $ninkidata = $work->workModelGet('where','worksubs','id',$ninkity->worksubid,NULL,NULL,NULL);
-                    foreach ($ninkidata as $ninki) {
+
+                    $needDB = [
+                        'worksubs',
+                        'worktypes',
+                    ];
+                    $where = [['worksubs.id','=',$ninkity->worksubid]];
+                    $select = [
+                        'title',
+                        'img',
+                        'url',
+                        'worktype_name',
+                    ];
+                    $groupby = NULL;
+                    $orderby = NULL;
+                    $orderbyascdesc = NULL;
+                    $limit = NULL;
+                    $ninkidatas = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+                    foreach ($ninkidatas as $ninki) {
                         $tmp['title'][$ninkity->worksubid] = $work->worktitleConvert($ninki->title,5);
                         $tmp['tag'][$ninkity->worksubid] = $ninki->worktype_name;
                         $tmp['img'][$ninkity->worksubid] = $ninki->img;
@@ -482,7 +541,23 @@ class LoginNewController extends Controller
          * 新着作品 ジャンルごとに上映前、発売前の作品を取得
          */
         $contentstop['worknew_img'] = FALSE;
-        $workdatas = $work->workModelGet('reserve',NULL,'worktransinfoid',1,NULL,NULL,NULL);
+        $needDB = [
+            'worksubs',
+            'worktransinfos',
+        ];
+        $where = [['worktransinfoid','=',1]];
+        $select = [
+            'work_type',
+            'title',
+            'img',
+            'url',
+            'siteviewday_1',
+        ];
+        $groupby = NULL;
+        $orderby = 'siteviewday_1';
+        $orderbyascdesc = 'ASC';
+        $limit = NULL;
+        $workdatas = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
         if (count($workdatas) != 0) {
             for ($i = 1;$i <= $worktype->worktypecountModelGet();$i++) {
                 $worktypes = $worktype->worktypeModelGet('worktypeid','0'.$i);
@@ -505,7 +580,23 @@ class LoginNewController extends Controller
         /**
          * 新着作品 本日のNEW作品を取得
          */
-        $workdatas = $work->workModelGet('reserve',NULL,'siteviewday_1',date('Y-m-d'),NULL,NULL,NULL);
+        $needDB = [
+            'worksubs',
+        ];
+        $where = [['siteviewday_1','=',date('Y-m-d')]];
+        $select = [
+            'work_type',
+            'title',
+            'img',
+            'url',
+        ];
+        $groupby = NULL;
+        $orderby = NULL;
+        $orderbyascdesc = NULL;
+        $limit = NULL;
+        $workdatas = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+
+        
         if (count($workdatas) != 0) {
             $k = 0;
             foreach ($workdatas as $workd) {
@@ -522,9 +613,32 @@ class LoginNewController extends Controller
          * 今日のレビューレポート(トップページには星評価7以上を1件表示)
          */
         $contentstop['recommendpostreport_img'] = FALSE;
-        $posts = $post->postModelGet('created_at',date('Y-m-d'),'poststar','>=',7);
+
+        $where = [['created_at','=',date('Y-m-d')]];
+        $select = NULL;
+        $posts = $post->postModelGet($where,$select);
         if (count($posts) != 0) {
-            $workreviewreports = $work->workModelGet('recommendpostreport',NULL,NULL,NULL,NULL,NULL,NULL);
+            $needDB = [
+                'worksubs',
+                'posts',
+            ];
+            $where = [
+                ['created_at','=',date('Y-m-d')],
+                ['poststar','>=',7],
+            ];
+            $select = [
+                'title',
+                'furigana',
+                'img',
+                'url',
+                'poststar',
+                'postbody',
+            ];
+            $groupby = NULL;
+            $orderby = 'poststar';
+            $orderbyascdesc = 'DESC';
+            $limit = 1;
+            $workreviewreports = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
             foreach ($workreviewreports as $workreview) {
                 $contentstop['recommendpostreport_title'] = $workreview->title;
                 $contentstop['recommendpostreport_furigana'] = $workreview->furigana;

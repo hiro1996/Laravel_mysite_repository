@@ -14,17 +14,29 @@ class PostController extends Controller
 {
     public function post(Request $request, User $user, Work $work, Favorite $favorite, Browsehistory $browsehistory) {
 
+        $posts['nickname'] = 'Guest';
         if (session('loginid')) { //ログインしている時
             $users = $user->userModelGet(session('loginid'));
             foreach ($users as $ur) {
                 $posts['nickname'] = $ur->nickname;
             };
-        } else { //ログインしていない時
-            $posts['nickname'] = 'Guest';
-        }
-        $worktitle = $work->workModelGet('select',NULL,'title',NULL,NULL,NULL,NULL);
+        } 
+
+        $needDB = [
+            'worksubs',
+            'worktypes',
+            'worktransinfos',
+        ];
+        $where = NULL;
+        $select = ['title'];
+        $groupby = NULL;
+        $orderby = NULL;
+        $orderbyascdesc = NULL;
+        $limit = NULL;
+        $worktitles = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+
         $i = 0;
-        foreach ($worktitle as $title) {
+        foreach ($worktitles as $title) {
             $posts['wotkalltitle'][$i] = $title->title;
             $i++;
         }
@@ -48,12 +60,23 @@ class PostController extends Controller
         $browseworks = $browsehistory->browsehistoryModelGet('normal','loginid',session('loginid'),NULL,NULL,10);
         $posts['browsehistorytime'] = FALSE;
         $posts['browsehistorytitle'] = FALSE;
-        if (count($browseworks) > 0) {
+        if (count($browseworks) != 0) {
             $i = 0;
             foreach ($browseworks as $browse) {
-                $browsehistoriesworks = $work->workModelGet('where','worksubs','workid',$browse->workid,NULL,NULL,NULL);
+                $needDB = [
+                    'worksubs',
+                    'worktypes',
+                    'worktransinfos',
+                ];
+                $where = [['worksubs.workid','=',$browse->workid]];
+                $select = ['title'];
+                $groupby = NULL;
+                $orderby = NULL;
+                $orderbyascdesc = NULL;
+                $limit = NULL;
+                $browsehistoriesworks = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+                
                 $posts['browsehistorytime'][$i] = $browse->history_time;
-
                 foreach ($browsehistoriesworks as $history) {
                     $posts['browsehistorytitle'][$i] = $history->title;
                 }
@@ -61,8 +84,8 @@ class PostController extends Controller
             }
         }
 
-        $posts['worktitle'] = NULL;
-        if ($request->worktitle) $postdisplaydata['worktitle'] = $request->worktitle;
+        $posts['worktitle'] = FALSE;
+        if ($request->worktitle) $posts['worktitle'] = $request->worktitle;
         return view('post.post',compact('posts'));
 
     }

@@ -8,9 +8,8 @@ $title = 'トップページ';
     
     @include('work.workmenu')
 
+    @if ($worksearchresult['worksearchresult_img'])
     <div class="column">
-       
-
         <section class="article-shadow campaign">
             <div class="contentstop-container">
                 <div class="p-3 contentstoptitle" id="worksearchresult"><span class="contentstopbigtitle">検索結果：{{ $worksearchresult['worksearchresult_worktypename'][0] }}</span></div>
@@ -74,8 +73,8 @@ $title = 'トップページ';
                 </div>
             </div>
         </section>
-
     </div>
+    @endif
 
 </article>
 

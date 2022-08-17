@@ -1,7 +1,7 @@
 <?php
     use App\Models\Worktype;
     use App\Models\Work;
-
+use Illuminate\Support\Facades\DB;
 
     $worktype = new Worktype();
     $work = new Work();
@@ -38,8 +38,10 @@
             $workmenugenrecategory_list = ['auther' => $workts->auther];
         }
     }
-
-    $workmenus = $work->worksearchresultModelGet($workmenugenrecategory_list);
+    $select = [
+        'work_type'
+    ];
+    $workmenus = $work->worksearchresultModelGet($workmenugenrecategory_list,$select);
     foreach ($workmenus as $workm) {
         $worktypemenus = $worktype->worktypemenuModelGet(['work_type' => $workm->work_type]);
         foreach ($worktypemenus as $worktm) {
@@ -49,20 +51,58 @@
         }
     }
 
-    $workmenupublisher = $work->workModelGet('workmenuname','worksubs',NULL,NULL,'worksubs.publisher','publisher','publisher_count');
-    foreach ($workmenupublisher as $publisher) {
+    $needDB = [
+        'worksubs',
+    ];
+    $where = NULL;
+    $select = [
+        'publisher',
+        DB::raw('count(publisher) AS publisher_count'),
+    ];
+    $groupby = ['publisher'];
+    $orderby = 'publisher';
+    $orderbyascdesc = 'ASC';
+    $limit = NULL;
+    $workmenupublishers = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+    foreach ($workmenupublishers as $publisher) {
         if ($publisher->publisher != NULL) {
             $workmenuspublisher['出版社'][$publisher->publisher] = $publisher->publisher_count;
         }
     }
-    $workmenulabel = $work->workModelGet('workmenuname','worksubs',NULL,NULL,'worksubs.publicationmagazine_label','publicationmagazine_label','label_count');
-    foreach ($workmenulabel as $label) {
+
+    $needDB = [
+        'worksubs',
+    ];
+    $where = NULL;
+    $select = [
+        'publicationmagazine_label',
+        DB::raw('count(publicationmagazine_label) AS label_count'),
+    ];
+    $groupby = ['publicationmagazine_label'];
+    $orderby = 'publicationmagazine_label';
+    $orderbyascdesc = 'ASC';
+    $limit = NULL;
+    $workmenulabels = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+    foreach ($workmenulabels as $label) {
         if ($label->publicationmagazine_label != NULL) {
             $workmenuslabel['掲載誌・レーベル'][$label->publicationmagazine_label] = $label->label_count;
         }
     }
-    $workmenuauther = $work->workModelGet('workmenuname','worksubs',NULL,NULL,'worksubs.auther','auther','auther_count');
-    foreach ($workmenuauther as $auther) {
+
+    $needDB = [
+        'worksubs',
+    ];
+    $where = NULL;
+    $select = [
+        'auther',
+        DB::raw('count(auther) AS auther_count'),
+    ];
+    $groupby = ['auther'];
+    $orderby = 'auther';
+    $orderbyascdesc = 'ASC';
+    $limit = NULL;
+    $workmenuauthers = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+    foreach ($workmenuauthers as $auther) {
         if ($auther->auther != NULL) {
             $workmenusauther['作者'][$auther->auther] = $auther->auther_count;
         }

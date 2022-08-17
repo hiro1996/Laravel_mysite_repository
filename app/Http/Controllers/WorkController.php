@@ -97,7 +97,36 @@ class WorkController extends Controller
         /**
          * どの作品DBから参照するかとクリックした作品のURLをキーとして、作品詳細画面で表示する作品情報を取得
          */
-        $workdatas = $work->workModelGet('workindetail','worksubs','url',$urlstr,NULL,NULL,NULL);
+        $needDB = [
+            'worksubs',
+            'worktypes',
+            'worktransinfos',
+        ];
+        $where = [['worksubs.url','=',$urlstr]];
+        $select = [
+            'title',
+            'furigana',
+            'category_name',
+            'volume',
+            'img',
+            'explaining',
+            'worktransinfoid',
+            'siteviewday_1',
+            'siteviewday_2',
+            'publisher',
+            'publicationmagazine_label',
+            'auther',
+            'worktypeid',
+            'worktype_name',
+            'worktype_eng',
+            'setvalue',
+        ];
+        $groupby = NULL;
+        $orderby = NULL;
+        $orderbyascdesc = NULL;
+        $limit = NULL;
+        $workdatas = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+
         foreach ($workdatas as $workd) {
             $workdata['worktype'] = $workd->worktypeid;
             $workdata['workgenrne_category_name'] = $workd->category_name;
@@ -235,7 +264,13 @@ class WorkController extends Controller
          * 投稿テーブル(posts)から作品詳細を開こうとしている作品IDに紐づく投稿を取得
          */
         $workdata['postbody'] = FALSE;
-        $postdatas = $post->postModelGet('worksubid',$workdata['worksubid'],NULL,NULL,NULL);
+        $where = [['worksubid','=',$workdata['worksubid']]];
+        $select = [
+            'poststar',
+            'postbody',
+            'created_at',
+        ];
+        $postdatas = $post->postModelGet($where,$select);
         if (count($postdatas) != 0) {
             $i = 0;
             foreach ($postdatas as $pos) {
@@ -316,6 +351,7 @@ class WorkController extends Controller
         $url = explode("/",$workindetails["url"]);
         $urlstr = str_replace("/work_indetail/","",$workindetails["url"]);
         
+        //スキップ(変更がある場合別途検討)
         $works = $work->workModelGet('where','worksubs','url',$urlstr,NULL,NULL,NULL);
 
         foreach ($works as $work) {
@@ -337,6 +373,7 @@ class WorkController extends Controller
         $url = explode("/",$workindetails["url"]);
         $urlstr = str_replace("/work_indetail/","",$workindetails["url"]);
         
+        //スキップ(変更がある場合別途検討)
         $works = $work->workModelGet('where','worksubs','url',$urlstr,NULL,NULL,NULL);
 
         foreach ($works as $work) {
@@ -422,74 +459,93 @@ class WorkController extends Controller
         $label = $request->label;
         $auther = $request->auther;
 
-        $where_list = [];
+        $worksearchresult['worksearchresult_img'] = FALSE;
+        $where = [];
         if ($category_genre) {
             $worktypes = $worktype->worktypeModelGet('worktype_name',$category_genre);
             foreach ($worktypes as $workt) {
                 $category_list = $workt->worktypeid;
             }
-            $where_list = ['work_type' => $category_list];
+            $where = ['work_type' => $category_list];
         }
         if ($category) {
-            $where_list = ['category_name' => $category];
+            $where = ['category_name' => $category];
         }
         if ($publisher) {
-            $where_list = ['publisher' => $publisher];
+            $where = ['publisher' => $publisher];
         }
         if ($label) {
-            $where_list = ['publicationmagazine_label' => $label];
+            $where = ['publicationmagazine_label' => $label];
         }
         if ($auther) {
-            $where_list = ['auther' => $auther];
+            $where = ['auther' => $auther];
         }
-        
-        $worksearchresults = $work->worksearchresultModelGet($where_list);
-        $i = 0;
-        foreach ($worksearchresults as $result) {
-            if ($result->volume != NULL) {
-                $worksearchresult['worksearchresult_title'][$i] = $result->title.''.$result->volume;
-            } else {
-                $worksearchresult['worksearchresult_title'][$i] = $result->title;
-            }
-            $worksearchresult['worksearchresult_furigana'][$i] = $result->furigana;
-            $worksearchresult['worksearchresult_categoryname'][$i] = $result->category_name;
-            $worksearchresult['worksearchresult_url'][$i] = asset($result->url);
-            $worksearchresult['worksearchresult_img'][$i] = $result->img;
-            $worksearchresult['worksearchresult_worktypename'][$i] = $result->worktype_name;
-            if ($result->publisher != NULL) {
-                $worksearchresult['worksearchresult_publisher'][$i] = $result->publisher;
-            } else {
-                $worksearchresult['worksearchresult_publisher'][$i] = '-';
-            }
-            if ($result->publicationmagazine_label != NULL) {
-                $worksearchresult['worksearchresult_label'][$i] = $result->publicationmagazine_label;
-            } else {
-                $worksearchresult['worksearchresult_label'][$i] = '-';
-            }
-            if ($result->auther != NULL) {
-                $worksearchresult['worksearchresult_auther'][$i] = $result->auther;
-            } else {
-                $worksearchresult['worksearchresult_auther'][$i] = '-';
-            }
-            $worksubids = $work->workidModelGet('worksubs','url',$result->url);
-            foreach ($worksubids as $id) {
-                $poststars = $post->postModelGet('worksubid',$id->id,NULL,NULL,NULL);
-                if (count($poststars) != 0) {
-                    $poststarnum = 0;
-                    foreach ($poststars as $star) {
-                        $poststarnum = $poststarnum + $star->poststar;
-                    }
-                    $shosu = $poststarnum / count($poststars);
-                    if (!is_int($shosu)) {
-                        $worksearchresult['worksearchresult_poststaravg'][$i] = ''.(floor($shosu * 10) / 10).'';
-                    } else {
-                        $worksearchresult['worksearchresult_poststaravg'][$i] = ''.$shosu.'.0';
-                    }
+        $select = [
+            'title',
+            'furigana',
+            'category_name',
+            'volume',
+            'img',
+            'url',
+            'publisher',
+            'publicationmagazine_label',
+            'auther',
+            'worktype_name'
+        ];
+        $worksearchresults = $work->worksearchresultModelGet($where,$select);
+        if (count($worksearchresults) != 0) {
+            $i = 0;
+            foreach ($worksearchresults as $result) {
+                if ($result->volume != NULL) {
+                    $worksearchresult['worksearchresult_title'][$i] = $result->title.''.$result->volume;
                 } else {
-                    $worksearchresult['worksearchresult_poststaravg'][$i] = '0.0';
+                    $worksearchresult['worksearchresult_title'][$i] = $result->title;
                 }
+                $worksearchresult['worksearchresult_furigana'][$i] = $result->furigana;
+                $worksearchresult['worksearchresult_categoryname'][$i] = $result->category_name;
+                $worksearchresult['worksearchresult_url'][$i] = asset($result->url);
+                $worksearchresult['worksearchresult_img'][$i] = $result->img;
+                $worksearchresult['worksearchresult_worktypename'][$i] = $result->worktype_name;
+                if ($result->publisher != NULL) {
+                    $worksearchresult['worksearchresult_publisher'][$i] = $result->publisher;
+                } else {
+                    $worksearchresult['worksearchresult_publisher'][$i] = '-';
+                }
+                if ($result->publicationmagazine_label != NULL) {
+                    $worksearchresult['worksearchresult_label'][$i] = $result->publicationmagazine_label;
+                } else {
+                    $worksearchresult['worksearchresult_label'][$i] = '-';
+                }
+                if ($result->auther != NULL) {
+                    $worksearchresult['worksearchresult_auther'][$i] = $result->auther;
+                } else {
+                    $worksearchresult['worksearchresult_auther'][$i] = '-';
+                }
+
+                $worksubids = $work->workidModelGet('worksubs','url',$result->url);
+                foreach ($worksubids as $id) {
+                    $where = [['worksubid','=',$id->id]];
+                    $select = [
+                        'poststar',
+                    ];
+                    $poststars = $post->postModelGet($where,$select);
+                    if (count($poststars) != 0) {
+                        $poststarnum = 0;
+                        foreach ($poststars as $star) {
+                            $poststarnum = $poststarnum + $star->poststar;
+                        }
+                        $shosu = $poststarnum / count($poststars);
+                        if (!is_int($shosu)) {
+                            $worksearchresult['worksearchresult_poststaravg'][$i] = ''.(floor($shosu * 10) / 10).'';
+                        } else {
+                            $worksearchresult['worksearchresult_poststaravg'][$i] = ''.$shosu.'.0';
+                        }
+                    } else {
+                        $worksearchresult['worksearchresult_poststaravg'][$i] = '0.0';
+                    }
+                }
+                $i++;
             }
-            $i++;
         }
         return view('worksearchresult',compact('worksearchresult'));
     }

@@ -7,13 +7,11 @@ use Illuminate\Support\Facades\DB;
 
 class Post extends Model
 {
-    public function postModelGet($wherecolumn1,$wheredata1,$wherecolumn2,$formula,$wheredata2) {
-        $where1 = [
-            $wherecolumn1 => $wheredata1
-        ];
-        $posts = DB::table('posts')->where($where1);
-        if ($wherecolumn2 != NULL) {
-            $posts = $posts->where($wherecolumn2,$formula,$wheredata2);
+    public function postModelGet($where,$select) {
+        $posts = DB::table('posts')
+            ->where($where);
+        if ($select != NULL) {
+            $posts = $posts->select($select);
         }
         $posts = $posts->get();
         return $posts;
