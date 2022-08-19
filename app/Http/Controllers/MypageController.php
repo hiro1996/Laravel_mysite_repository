@@ -83,7 +83,14 @@ class MypageController extends Controller
      */
     public function attribute(Attribute $attribute, Attributeanswer $attributeanswer, Attributetextanswer $attributetextanswer) {
         $attributedata['attributes'] = $attribute->attributeModelGet('attrpage');
-        $attributeanswers = $attributeanswer->attributeanswerModelGet();
+        $needDB = [
+            'attributes'
+        ];
+        $where = [['loginid','=',session('loginid')]];
+        $select = [
+            'attr_id',
+        ];
+        $attributeanswers = $attributeanswer->attributeanswerModelGet($needDB,$where,$select);
         $i = 0;
         foreach ($attributeanswers as $attrans) {
             $attributedata['attrid'][$i] = $attrans->attr_id;
@@ -105,9 +112,16 @@ class MypageController extends Controller
          * attributeテーブルでは、type_idが2番目にテキストになるよう設定しているので、attributetextanswerテーブルに登録しているテキスト値
          * のインデックス番号を同じ2に対応させてあげれば良い。
          */
-        $attributetext = $attributetextanswer->attributetextanswerModelGet();
+        $needDB = [
+            'attributes'
+        ];
+        $where = [['loginid','=',session('loginid')]];
+        $select = [
+            'text',
+        ];
+        $attributetextanswers = $attributetextanswer->attributetextanswerModelGet($needDB,$where,$select);
         $i = 0;
-        foreach ($attributetext as $attrtext) {
+        foreach ($attributetextanswers as $attrtext) {
             $attributedata['attrtext'][$column_num[$i]] = $attrtext->text;
             $i++;
         }
@@ -233,7 +247,14 @@ class MypageController extends Controller
 
     public function information(User $user, Point $point) {
         $points = $point->pointModelGet();
-        $users = $user->userModelGet(session('loginid'));
+
+        $where = [['login','=',session('loginid')]];
+        $select = [
+            'loginid',
+            'nickname',
+            'email'
+        ];
+        $users = $user->userModelGet($where,$select);
         $users = $users[0];
         return view('mypage.information',compact('users','points'));
     }

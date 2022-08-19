@@ -32,15 +32,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function userModelGet($user) {
-        $users = DB::table('users');
-        if ($user != NULL) {
-            $where = [
-                'loginid' => $user,
-            ];
-            $users = $users->where($where);
-        }
-        $users = $users->get();
+    public function userModelGet($where,$select) {
+        $users = DB::table('users')
+            ->where($where)
+            ->select($select)
+            ->get();
         return $users;
     }
 

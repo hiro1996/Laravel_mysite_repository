@@ -16,7 +16,11 @@ class PostController extends Controller
 
         $posts['nickname'] = 'Guest';
         if (session('loginid')) { //ログインしている時
-            $users = $user->userModelGet(session('loginid'));
+            $where = [['login','=',session('loginid')]];
+            $select = [
+                'nickname',
+            ];
+            $users = $user->userModelGet($where,$select);
             foreach ($users as $ur) {
                 $posts['nickname'] = $ur->nickname;
             };
@@ -35,26 +39,33 @@ class PostController extends Controller
         $limit = NULL;
         $worktitles = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
 
-        $i = 0;
-        foreach ($worktitles as $title) {
-            $posts['wotkalltitle'][$i] = $title->title;
-            $i++;
+        $posts['wotkalltitle'] = FALSE;
+        if (count($worktitles) != 0) {
+            $i = 0;
+            foreach ($worktitles as $title) {
+                $posts['wotkalltitle'][$i] = $title->title;
+                $i++;
+            }   
         }
 
 
-        $favoritetmps = $favorite->favoriteAllModelGet();
+        $needDB = [
+            'worksubs',
+            'works',
+        ];
+        $where = [['loginid','=',session('loginid')]];
+        $select = [
+            'title',
+        ];
+        $favorites = $favorite->favoriteModelGet($needDB,$where,$select);
 
         $posts['favoritetitle'] = FALSE;
-        if (count($favoritetmps) > 0) {
+        if (count($favorites) != 0) {
             $i = 0;
-            foreach ($favoritetmps as $favotmp) {
-                $favoritetmp2 = $favorite->favoriteModelGet($favotmp->workid);
-
-                foreach ($favoritetmp2 as $favo) {
-                    $posts['favoritetitle'][$i] = $favo->title;
-                }
-                $i++;
+            foreach ($favorites as $favotmp) {
+                $posts['favoritetitle'][$i] = $favotmp->title;
             }
+            $i++;
         } 
 
         $needDB = [

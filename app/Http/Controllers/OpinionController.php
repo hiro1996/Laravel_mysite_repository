@@ -13,7 +13,11 @@ class OpinionController extends Controller
 {
     public function opinion(User $user) {
         if (session('loginid')) { //ログインしている時
-            $users = $user->userModelGet(session('loginid'));
+            $where = [['login','=',session('loginid')]];
+            $select = [
+                'nickname',
+            ];
+            $users = $user->userModelGet($where,$select);
             foreach ($users as $ur) {
                 $nickname = $ur->nickname;
             };

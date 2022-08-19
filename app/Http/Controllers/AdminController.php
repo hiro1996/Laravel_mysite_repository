@@ -72,7 +72,13 @@ class AdminController extends Controller
     }
 
     public function adminaccount(User $user) {
-        $users = $user->userModelGet(session('loginid'));
+        $where = [['login','=',session('loginid')]];
+        $select = [
+            'loginid',
+            'nickname',
+            'email'
+        ];
+        $users = $user->userModelGet($where,$select);
         foreach ($users as $ur) {
             $nickname = $ur->nickname;
             $loginid = $ur->loginid;
@@ -89,7 +95,11 @@ class AdminController extends Controller
         $adminaccountdata = $request->only('loginid','nickname','email');
         $user->userModelUpdate('loginid',$adminaccountdata["loginid"],'nickname',$adminaccountdata["nickname"]);
         $user->userModelUpdate('loginid',$adminaccountdata["loginid"],'email',$adminaccountdata["email"]);
-        $users = $user->userModelGet($adminaccountdata["loginid"]);
+        $where = [['login','=',$adminaccountdata["loginid"]]];
+        $select = [
+            'loginid',
+        ];
+        $users = $user->userModelGet($where,$select);
         $setmsg = "設定変更しました。";
         return response()->json(
             [
@@ -164,8 +174,11 @@ class AdminController extends Controller
          */
         $user->userModelUpdate('loginid',$loginid,'secret_key',$data["google2fa_secret"]);
 
-
-        $users = $user->userModelGet($loginid);
+        $where = [['login','=',session('loginid')]];
+        $select = [
+            'email'
+        ];
+        $users = $user->userModelGet($where,$select);
         foreach ($users as $ur) {
             $email = $ur->email;
         }
@@ -199,7 +212,12 @@ class AdminController extends Controller
         $loginid = $user->userModelSearch('user_value_id',$accountid,'loginid');
         session(['loginid' => $loginid]);
 
-        $users = $user->userModelGet(session('loginid'));
+        $where = [['login','=',session('loginid')]];
+        $select = [
+            'login_number_of_times',
+            'next_display_login_time'
+        ];
+        $users = $user->userModelGet($where,$select);
         foreach ($users as $ur) {
             $user->userModelUpdate('loginid',session('loginid'),'login_number_of_times',$ur->login_number_of_times + 1);
             $user->userModelUpdate('loginid',session('loginid'),'last_display_login_time',$ur->next_display_login_time);

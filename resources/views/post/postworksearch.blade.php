@@ -20,7 +20,7 @@
     <button type="button" class="btn btn-primary btn-block searchclass" id="#allrecommend">今週のおすすめランキングから探す</button>
 </div> 
 
-@if (!empty($posts['browsehistorytitle']))
+@if ($posts['browsehistorytitle'])
     <div class="worksearch card" id="workhistory">
         <div class="workhistorymodal">
             <h4 class="card-title text-center mb-4 mt-1">閲覧履歴から探す</h4>
@@ -56,7 +56,7 @@
 
 
 
-@if (!empty($posts['favoritetitle']))  
+@if ($posts['favoritetitle'])  
     <div class="worksearch card" id="favorite">
         <div class="workhistorymodal">
             <h4 class="card-title text-center mb-4 mt-1">お気に入りから探す</h4>

@@ -15,7 +15,12 @@ class Attribute extends Model
             case 'attrpage':
                 $contentstopmodal = new Contentstopmodal();
                 $column = 1; 
-                while ($column < count($contentstopmodal->contentstopmodalModelGet()) + 1) {
+                $needDB = [
+                    'printorderjsids'
+                ];
+                $where = NULL;
+                $select = ['print_order'];
+                while ($column < count($contentstopmodal->contentstopmodalModelGet($needDB,$where,$select)) + 1) {
 
                     $attrkey = $contentstopmodal->contentstopmodalModelExist($column);
 

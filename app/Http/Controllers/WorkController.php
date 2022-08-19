@@ -283,12 +283,20 @@ class WorkController extends Controller
          * お気に入りテーブル(favorites)からお気に入りに設定している作品IDを取得し、リストに入れる。
          * リストの中で、作品詳細を開こうとしている作品IDがあれば、デフォルト表示を「お気に入りに登録済み」にする。
          */
-        $favorites = $favorite->favoriteAllModelGet();
+        $needDB = [
+            'worksubs',
+            'works',
+        ];
+        $where = [['loginid','=',session('loginid')]];
+        $select = [
+            'worksubid',
+        ];
+        $favorites = $favorite->favoriteModelGet($needDB,$where,$select);
 
         $favoritelist = [];
-        if (count($favorites) > 0) {
+        if (count($favorites) != 0) {
             foreach ($favorites as $favo) {
-                array_push($favoritelist,$favo->workid);
+                array_push($favoritelist,$favo->worksubid);
             }
         }
 
@@ -325,7 +333,12 @@ class WorkController extends Controller
         /**
          * ジャンル投票用のデータを取得
          */
-        $genreposts = $genrepost->genrepostModelGet();
+        $where = NULL;
+        $select = [
+            'genrepost_select_id',
+            'genre'
+        ];
+        $genreposts = $genrepost->genrepostModelGet($where,$select);
         $arrangementone = 1;
         $arrangementtwo = 1;
         foreach ($genreposts as $genre) {
@@ -395,12 +408,12 @@ class WorkController extends Controller
         $works = $work->workModelGet('where','worksubs','url',$urlstr,NULL,NULL,NULL);
 
         foreach ($works as $work) {
-            $workid = $work->workid;
+            $worksubid = $work->worksubid;
+            $favorite->favoriteModelInsert($work->worksubid);
         }
-        $favorite->favoriteModelInsert($workid);
         return response()->json(
             [
-                "data" => $workid
+                "data" => $worksubid
             ],
         );
     }
@@ -417,12 +430,12 @@ class WorkController extends Controller
         $works = $work->workModelGet('where','worksubs','url',$urlstr,NULL,NULL,NULL);
 
         foreach ($works as $work) {
-            $workid = $work->workid;
+            $worksubid = $work->worksubid;
+            $favorite->favoriteModelInsert($work->worksubid);
         }
-        $favorite->favoriteModelDelete($workid);
         return response()->json(
             [
-                "data" => $workid
+                "data" => $worksubid
             ],
         );
     }

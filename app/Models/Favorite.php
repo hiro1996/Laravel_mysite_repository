@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class Favorite extends Model
 {
-    public function favoriteModelInsert($workid) {
+    public function favoriteModelInsert($worksubid) {
         $insert = [
             'loginid' => session('loginid'),
-            'workid' => $workid,
+            'worksubid' => $worksubid,
         ];
         DB::table('favorites')->insert($insert);
     }
@@ -34,12 +34,18 @@ class Favorite extends Model
         return $favoritesdata;
     }
 
-    public function favoriteModelGet($workid) {
-        $favorites = DB::table('favorites')
-            ->join('works',function($join) use ($workid) {
-                $join->on('works.workid','=','favorites.workid')
-                ->where('favorites.workid','=',$workid);
-        })->get();
+    public function favoriteModelGet($needDB,$where,$select) {
+        $favorites = DB::table('favorites');
+        if (in_array('worksubs',$needDB)) {
+            $favorites = $favorites->join('worksubs','favorites.worksubid','=','worksubs.id');
+        }
+        if (in_array('works',$needDB)) {
+            $favorites = $favorites->join('works','worksubs.workid','=','works.workid');
+        }
+        $favorites = $favorites
+            ->where($where)
+            ->select($select)
+            ->get();
         return $favorites;
     }
 }

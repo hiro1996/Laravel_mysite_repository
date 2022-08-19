@@ -2,21 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class Contentstopmodal extends Model
 {
 
-    public function contentstopmodalModelGet() {
-        $contentstopmodals = DB::table('contentstopmodals')->get();
-        return $contentstopmodals;
-    }
-
-    public function contentstopmodalModalJoinGet() {
-        $contentstopmodals = DB::table('contentstopmodals')->
-            Join('printorderjsids','contentstopmodals.print_order','=','printorderjsids.print_order')->get();
+    public function contentstopmodalModelGet($needDB,$where,$select) {
+        $contentstopmodals = DB::table('contentstopmodals');
+        if (in_array('printorderjsids',$needDB)) {
+            $contentstopmodals = $contentstopmodals->join('printorderjsids','contentstopmodals.print_order','=','printorderjsids.printorderid');
+        }
+        $contentstopmodals = $contentstopmodals
+            ->where($where)
+            ->select($select)
+            ->get();
         return $contentstopmodals;
     }
 

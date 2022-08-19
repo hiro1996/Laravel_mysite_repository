@@ -205,7 +205,11 @@ class LoginNewController extends Controller
              * 先に二要素認証画面へ遷移(ログインIDをリクエストパラメータとして渡す)、その後各カラムを更新。
              */
             $accountid = $user->userModelSearch('loginid',$loginid,'user_value_id');
-            $users = $user->userModelGet($loginid);
+            $where = [['login','=',$loginid]];
+            $select = [
+                'onetime_pass_flag',
+            ];
+            $users = $user->userModelGet($where,$select);
             foreach ($users as $ur) {
                 $onepass = $ur->onetime_pass_flag;
             }
@@ -223,7 +227,12 @@ class LoginNewController extends Controller
              * next_display_login_time 現在ログイン日時 現在の日時をセット
              * updated_at 更新日
              */
-            $users = $user->userModelGet(session('loginid'));
+            $where = [['login','=',session('loginid')]];
+            $select = [
+                'login_number_of_times',
+                'next_display_login_time',
+            ];
+            $users = $user->userModelGet($where,$select);
             foreach ($users as $ur) {
                 $user->userModelUpdate('loginid',session('loginid'),'login_number_of_times',$ur->login_number_of_times + 1);
                 $user->userModelUpdate('loginid',session('loginid'),'last_display_login_time',$ur->next_display_login_time);
@@ -421,7 +430,13 @@ class LoginNewController extends Controller
             }
         }
 
-        $users = $user->userModelGet(NULL);
+        $where = NULL;
+        $select = [
+            'loginid',
+            'age',
+            'gender',
+        ];
+        $users = $user->userModelGet($where,$select);
         foreach ($users as $user) {
             if ($browsehistory->browsehistoryModelExist($user->loginid,NULL)) {
                 $age = (int) (($user->age) / 10); 

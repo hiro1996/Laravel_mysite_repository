@@ -17,13 +17,16 @@ class Attributeanswer extends Model
         DB::table('attributeanswers')->insert($insert);
     }
 
-    public function attributeanswerModelGet() {
-        $where = [
-            'loginid' => session('loginid')
-        ];
-        $attributes = DB::table('attributeanswers')->
-            Join('attributes','attributeanswers.ans_id','=','attributes.answer_id')->where($where)->get();
-        return $attributes;
+    public function attributeanswerModelGet($needDB,$where,$select) {
+        $attributeanswers = DB::table('attributeanswers');
+        if (in_array('attributes',$needDB)) {
+            $attributeanswers = $attributeanswers->join('attributes','attributeanswers.ans_id','=','attributes.answer_id');
+        }
+        $attributeanswers = $attributeanswers
+            ->where($where)
+            ->select($select)
+            ->get();
+        return $attributeanswers;
     }
 
     public function attributeanswerModelDelete() {

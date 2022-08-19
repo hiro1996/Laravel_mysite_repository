@@ -18,13 +18,16 @@ class Attributetextanswer extends Model
         DB::table('attributetextanswers')->insert($insert);
     }
 
-    public function attributetextanswerModelGet() {
-        $where = [
-            'loginid' => session('loginid')
-        ];
-        $attributestext = DB::table('attributetextanswers')->
-            Join('attributes','attributetextanswers.ans_id','=','attributes.answer_id')->where($where)->get();
-        return $attributestext;
+    public function attributetextanswerModelGet($needDB,$where,$select) {
+        $attributestextanswers = DB::table('attributetextanswers');
+        if (in_array('attributes',$needDB)) {
+            $attributestextanswers = $attributestextanswers->join('attributes','attributetextanswers.ans_id','=','attributes.answer_id');
+        }
+        $attributestextanswers = $attributestextanswers
+            ->where($where)
+            ->select($select)
+            ->get();
+        return $attributestextanswers;
     }
 
     public function attributetextanswerModelDelete() {

@@ -8,8 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class Genrepost extends Model
 {
-    public function genrepostModelGet() {
-        $genreposts = DB::table('genreposts')->get();
+    public function genrepostModelGet($where,$select) {
+        $genreposts = DB::table('genreposts')
+            ->where($where)
+            ->select($select)
+            ->get();
         return $genreposts;
     }
 
