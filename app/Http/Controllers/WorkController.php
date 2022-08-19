@@ -13,10 +13,8 @@ use App\Models\Post;
 use App\Models\Record;
 use App\Models\Work;
 use App\Models\Worktype;
-use GuzzleHttp\RetryMiddleware;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\ViewErrorBag;
+use Illuminate\Support\Facades\DB;
 
 class WorkController extends Controller
 {
@@ -39,7 +37,22 @@ class WorkController extends Controller
     }
 
     public function workhistory(Browsehistory $browsehistory) {
-        $browsehistories = $browsehistory->browsehistoryModelGet('normal','loginid',session('loginid'),NULL,NULL,10);
+
+        $needDB = [
+            'worksubs',
+            'works',
+        ];
+        $where = [['loginid','=',session('loginid')]];
+        $select = [
+            'history_time',
+            'title',
+            'img',
+        ];
+        $groupby = NULL;
+        $orderby = 'history_time';
+        $orderbyascdesc = 'DESC';
+        $limit = 10;
+        $browsehistories = $browsehistory->browsehistoryModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
         $i = 0;
         foreach ($browsehistories as $browsehist) {
             $browsehistorydatas['title'][$i] = $browsehist->title;
@@ -77,11 +90,38 @@ class WorkController extends Controller
                 $contentstop['ninkitodayyesterday_button'][$date] = '今月の人気急上昇作品';
             }
 
-            $ninkistodayyesterday = $browsehistory->browsehistoryModelGet(NULL,'history_time_date',$findate,'history_time_date',$startdate,4);
-            foreach ($ninkistodayyesterday as $ninkity) {
-                array_push($ninkitag,$ninkity->worksubid);
+            for ($i = 1;$i <= 2;$i++) {
+                $needDB = [
+                    'worksubs',
+                    'works',
+                    'worktypes',
+                ];
+                $select = [
+                    'worksubid',
+                    'history_time_date',
+                    DB::raw('count(worksubid) AS sameworksubid_count'),
+                ];
+                $groupby = [
+                    'worksubid',
+                    'history_time_date',
+                ];
+                $orderby = 'history_time_date';
+                $orderbyascdesc = 'ASC';
+                $limit = 4;
+
+                if ($i == 1) {
+                    $where = [['history_time_date','=',$findate]];
+                } else {
+                    $where = [['history_time_date','=',$startdate]];
+                }
+
+                $ninkistodayyesterdays = $browsehistory->browsehistoryModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+                foreach ($ninkistodayyesterdays as $ninkity) {
+                    array_push($ninkitag,$ninkity->worksubid);
+                }
             }
         }
+
         
         /**
          * アイコン一覧

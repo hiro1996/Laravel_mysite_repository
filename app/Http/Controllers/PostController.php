@@ -57,7 +57,21 @@ class PostController extends Controller
             }
         } 
 
-        $browseworks = $browsehistory->browsehistoryModelGet('normal','loginid',session('loginid'),NULL,NULL,10);
+        $needDB = [
+            'worksubs',
+            'works',
+            'worktypes',
+        ];
+        $where = [['loginid','=',session('loginid')]];
+        $select = [
+            'worksubid',
+            'history_time',
+        ];
+        $groupby = NULL;
+        $orderby = 'history_time';
+        $orderbyascdesc = 'DESC';
+        $limit = 10;
+        $browseworks = $browsehistory->browsehistoryModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
         $posts['browsehistorytime'] = FALSE;
         $posts['browsehistorytitle'] = FALSE;
         if (count($browseworks) != 0) {
@@ -68,7 +82,7 @@ class PostController extends Controller
                     'worktypes',
                     'worktransinfos',
                 ];
-                $where = [['worksubs.workid','=',$browse->workid]];
+                $where = [['worksubs.workid','=',$browse->worksubid]];
                 $select = ['title'];
                 $groupby = NULL;
                 $orderby = NULL;

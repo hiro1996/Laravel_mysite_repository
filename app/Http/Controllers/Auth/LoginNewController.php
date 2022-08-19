@@ -327,7 +327,6 @@ class LoginNewController extends Controller
                 $needDB = [
                     'worksubs',
                     'worktypes',
-                    'worktransinfos',
                 ];
                 $where = [['works.work_type','=',$worktype_list[$i]]];
                 $select = [
@@ -352,8 +351,24 @@ class LoginNewController extends Controller
             /**
              * 最近チェックした作品
              */
-            
-            $browsehistories = $browsehistory->browsehistoryModelGet('normal','loginid',session('loginid'),NULL,NULL,5);
+            $needDB = [
+                'works',
+                'worksubs',
+                'worktypes',
+            ];
+            $where = [['loginid','=',session('loginid')]];
+            $select = [
+                'history_time',
+                'title',
+                'img',
+                'url',
+                'worktype_name',
+            ];
+            $groupby = NULL;
+            $orderby = NULL;
+            $orderbyascdesc = NULL;
+            $limit = 5;
+            $browsehistories = $browsehistory->browsehistoryModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
             if (count($browsehistories) != 0) {
                 $i = 0;
                 foreach ($browsehistories as $browsehist) {
@@ -431,9 +446,30 @@ class LoginNewController extends Controller
                     }
                 }
                 if ($agegenders[$i][$j]) {
-                    $getdatas = $browsehistory->browsehistoryModelGet('genderattention','loginid',$agegenders[$i][$j],NULL,NULL,5);
+                    $needDB = [
+                        'works',
+                        'worksubs',
+                        'worktypes',
+                    ];
+                    $where = [['loginid','=',$agegenders[$i][$j]]];
+                    $select = [
+                        'worksubid',
+                        'title',
+                        'img',
+                        'url',
+                        'worktype_name',
+                        DB::raw('count(worksubid) AS loginidOfsameworksubid_count'),
+                    ];
+                    $groupby = [
+                        'worksubid',
+                        'worktype_name',
+                    ];
+                    $orderby = 'loginidOfsameworksubid_count';
+                    $orderbyascdesc = 'DESC';
+                    $limit = 5;
+                    $browsehistorydatas = $browsehistory->browsehistoryModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
                     $k = 0;
-                    foreach ($getdatas as $get) {
+                    foreach ($browsehistorydatas as $get) {
                         $contentstop['genderattention_title'][$i][$j][$k] = $work->worktitleConvert($get->title,5);
                         $contentstop['genderattention_tag'][$i][$j][$k] = $get->worktype_name;
                         $contentstop['genderattention_img'][$i][$j][$k] = $get->img;
@@ -465,19 +501,39 @@ class LoginNewController extends Controller
             }
 
             $worksubids = [];
-            $ninkistodayyesterday = $browsehistory->browsehistoryModelGet(NULL,'history_time_date',$findate,'history_time_date',$startdate,4);
+
+            $needDB = [
+                'orwhere',
+                'works',
+                'worksubs',
+                'worktypes',
+            ];
+            $where = 'history_time_date+'.$findate.'+'.$startdate;
+            $select = [
+                'worksubid',
+                'history_time_date',
+                DB::raw('count(worksubid) AS sameworksubid_count'),
+            ];
+            $groupby = [
+                'worksubid',
+                'history_time_date',
+            ];
+            $orderby = 'history_time_date';
+            $orderbyascdesc = 'ASC';
+            $limit = 4;
+            $ninkistodayyesterdays = $browsehistory->browsehistoryModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
 
             $contentstop['ninkitodayyesterday']['title'][$date] = FALSE;
             $contentstop['ninkitodayyesterday']['tag'][$date] = FALSE;
             $contentstop['ninkitodayyesterday']['img'][$date] = FALSE;
             $contentstop['ninkitodayyesterday']['url'][$date] = FALSE;
-            if (count($ninkistodayyesterday) != 0) {
-                foreach ($ninkistodayyesterday as $ninkity) {
+            if (count($ninkistodayyesterdays) != 0) {
+                foreach ($ninkistodayyesterdays as $ninkity) {
                     $ninki1[$ninkity->worksubid][0] = 0; //昨日の作品閲覧数
                     $ninki1[$ninkity->worksubid][1] = 0; //今日の作品閲覧数
                 }
 
-                foreach ($ninkistodayyesterday as $ninkity) {
+                foreach ($ninkistodayyesterdays as $ninkity) {
                     if ($ninki1[$ninkity->worksubid][0] == 0) {
                         $ninki1[$ninkity->worksubid][0] = $ninkity->sameworksubid_count;
                     } else {
@@ -487,7 +543,7 @@ class LoginNewController extends Controller
 
                 arsort($ninki1);
 
-                foreach ($ninkistodayyesterday as $ninkity) {
+                foreach ($ninkistodayyesterdays as $ninkity) {
                     $contentstop['ninkitodayyesterday_wariai'][$date][$ninkity->worksubid] = ($ninki1[$ninkity->worksubid][1] / $ninki1[$ninkity->worksubid][0]) * 100;
 
                     $needDB = [
