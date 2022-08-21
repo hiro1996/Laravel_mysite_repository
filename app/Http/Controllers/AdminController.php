@@ -247,7 +247,15 @@ class AdminController extends Controller
          * ログインしているユーザーが設定しているデフォルト表示を取得
          * 未ログインユーザーは「全ユーザーのおすすめランキング」をデフォルト表示にする
          */
-        $rankingtitlesettings = $rankingtitlesetting->rankingtitlesettingFlagModelGet(session('loginid'));
+        $needDB = [
+            'rankingtablesettings',
+        ];
+        $where = [['loginid','=',session('loginid')]];
+        $select = [
+            'table_title',
+            'button_name',
+        ];
+        $rankingtitlesettings = $rankingtitlesetting->rankingtitlesettingModelGet($needDB,$where,$select);
 
         foreach ($rankingtitlesettings as $rankingtitlesetting) {
             $contentstop['table_title'] = $rankingtitlesetting->table_title;

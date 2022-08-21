@@ -18,24 +18,24 @@ class Genrepostanswer extends Model
     }
 
     // limitで上位何データかを取得できる
-    public function genrepostanswerModelGet($worksubid,$genrepostselectid) {
-        $genrepostanswers = DB::table('genrepostanswers')
-        ->join('genreposts','genrepostanswers.genrepostid','=','genreposts.genrepostid');
-        if ($worksubid != NULL) {
-            $where1 = [
-                'worksubid' => $worksubid
-            ];
-            $genrepostanswers = $genrepostanswers->where($where1);
+    public function genrepostanswerModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit) {
+        $genrepostanswers = DB::table('genrepostanswers');
+        if (in_array('genreposts',$needDB)) {
+            $genrepostanswers = $genrepostanswers->join('genreposts','genrepostanswers.genrepostid','=','genreposts.genrepostid');
         }
-        if ($genrepostselectid != NULL) {
-            $where2 = [
-                'genrepostselectid' => $genrepostselectid
-            ];
-            $genrepostanswers = $genrepostanswers->where($where2);
+        $genrepostanswers = $genrepostanswers
+            ->where($where)
+            ->select($select);
+        if ($groupby != NULL) {
+            $genrepostanswers = $genrepostanswers->groupBy($groupby);
         }
-        $genrepostanswers = $genrepostanswers->select('genreposts.genre','genreposts.background_color',DB::raw('count(genrepostanswers.genrepostid) AS genrepost_count'))
-        ->groupBy('genreposts.genre','genreposts.background_color')
-        ->orderBy('genrepost_count','DESC')->get();
+        if ($orderby != NULL) {
+            $genrepostanswers = $genrepostanswers->orderBy($orderby,$orderbyascdesc);
+        }
+        if ($limit != NULL) {
+            $genrepostanswers = $genrepostanswers->limit($limit);
+        }
+        $genrepostanswers = $genrepostanswers->get();
         return $genrepostanswers;
     }
 

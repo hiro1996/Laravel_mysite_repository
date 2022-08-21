@@ -8,8 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class Printorderjsid extends Model
 {
-    public function printorderjsidModelGet() {
-        $printorderjsids = DB::table('printorderjsids')->get();
+    public function printorderjsidModelGet($where,$select) {
+        $printorderjsids = DB::table('printorderjsids')
+            ->where($where)
+            ->select($select)
+            ->get();
         return $printorderjsids;
     }
 }

@@ -9,11 +9,9 @@ class Post extends Model
 {
     public function postModelGet($where,$select) {
         $posts = DB::table('posts')
-            ->where($where);
-        if ($select != NULL) {
-            $posts = $posts->select($select);
-        }
-        $posts = $posts->get();
+            ->where($where)
+            ->select($select)
+            ->get();
         return $posts;
     }
 

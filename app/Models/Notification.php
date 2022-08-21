@@ -8,8 +8,14 @@ use Illuminate\Support\Facades\DB;
 
 class Notification extends Model
 {
-    public function notificationModelGet() {
-        $notifications = DB::table('notifications')->orderBy('printing_order','DESC')->get();
+    public function notificationModelGet($where,$select,$orderby,$orderbyascdesc) {
+        $notifications = DB::table('notifications')
+            ->where($where)
+            ->select($select);
+        if ($orderby != NULL) {
+            $notifications = $notifications->orderBy($orderby,$orderbyascdesc);
+        }
+        $notifications = $notifications->get();
         return $notifications;
     }
 }

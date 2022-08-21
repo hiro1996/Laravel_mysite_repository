@@ -205,7 +205,7 @@ class LoginNewController extends Controller
              * 先に二要素認証画面へ遷移(ログインIDをリクエストパラメータとして渡す)、その後各カラムを更新。
              */
             $accountid = $user->userModelSearch('loginid',$loginid,'user_value_id');
-            $where = [['login','=',$loginid]];
+            $where = [['loginid','=',$loginid]];
             $select = [
                 'onetime_pass_flag',
             ];
@@ -227,7 +227,7 @@ class LoginNewController extends Controller
              * next_display_login_time 現在ログイン日時 現在の日時をセット
              * updated_at 更新日
              */
-            $where = [['login','=',session('loginid')]];
+            $where = [['loginid','=',session('loginid')]];
             $select = [
                 'login_number_of_times',
                 'next_display_login_time',
@@ -253,10 +253,19 @@ class LoginNewController extends Controller
          * ログインしているユーザーが設定しているデフォルト表示を取得
          * 未ログインユーザーは「全ユーザーのおすすめランキング」をデフォルト表示にする
          */
+        $needDB = [
+            'rankingtablesettings',
+        ];
+        $select = [
+            'table_title',
+            'button_name',
+        ];
         if (!session('loginid')) {
-            $rankingtitlesettings = $rankingtitlesetting->rankingtitlesettingFlagModelGet('Guest');
+            $where = [['loginid','=','Guest']];
+            $rankingtitlesettings = $rankingtitlesetting->rankingtitlesettingModelGet($needDB,$where,$select);
         } else {
-            $rankingtitlesettings = $rankingtitlesetting->rankingtitlesettingFlagModelGet(session('loginid'));
+            $where = [['loginid','=',session('loginid')]];
+            $rankingtitlesettings = $rankingtitlesetting->rankingtitlesettingModelGet($needDB,$where,$select);
         }
         foreach ($rankingtitlesettings as $rankingtitle) {
             $contentstop['table_title'] = $rankingtitle->table_title;
@@ -280,7 +289,11 @@ class LoginNewController extends Controller
              * ユーザーがなんのジャンルを設定しているかを取得、(0 未設定ジャンル、1 設定ジャンル)
              * 文字列で連結されているため、str_splitで分割
              */
-            $rankingtablesettings = $rankingtablesetting->rankingtablesettingModelGet();
+            $where = [['loginid','=',session('loginid')]];
+            $select = [
+                'genresumnum',
+            ];
+            $rankingtablesettings = $rankingtablesetting->rankingtablesettingModelGet($where,$select);
             foreach ($rankingtablesettings as $rankingtable) {
                 $genresumnum = $rankingtable->genresumnum;
             }
@@ -686,7 +699,9 @@ class LoginNewController extends Controller
         $contentstop['recommendpostreport_img'] = FALSE;
 
         $where = [['created_at','=',date('Y-m-d')]];
-        $select = NULL;
+        $select = [
+            'created_at'
+        ];
         $posts = $post->postModelGet($where,$select);
         if (count($posts) != 0) {
             $needDB = [

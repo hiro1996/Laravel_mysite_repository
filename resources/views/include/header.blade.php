@@ -33,12 +33,21 @@
     */
 
     $notification = new Notification();
-    $notifications = $notification->notificationModelGet();
-    $i = 0;
-    foreach ($notifications as $noti) {
-        $contentstop['notification_title'][$i] = $noti->notification_title;
-        $contentstop['notification_img'][$i] = asset($noti->img);
-        $i++;
+    $where = NULL;
+    $select = [
+        'notification_title',
+        'img',
+    ];
+    $orderby = 'printing_order';
+    $orderbyascdesc = 'DESC';
+    $notifications = $notification->notificationModelGet($where,$select,$orderby,$orderbyascdesc);
+    if (count($notifications) != 0) {
+        $i = 0;
+        foreach ($notifications as $noti) {
+            $contentstop['notification_title'][$i] = $noti->notification_title;
+            $contentstop['notification_img'][$i] = asset($noti->img);
+            $i++;
+        }
     }
 
     $currenturl = url()->current();

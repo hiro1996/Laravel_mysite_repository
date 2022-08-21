@@ -19,11 +19,11 @@ class Rankingtablesetting extends Model
         return $rankingtablesettings;
     }
 
-    public function rankingtablesettingModelGet() {
-        $where = [
-            'loginid' => session('loginid')
-        ];
-        $rankingtablesettings = DB::table('rankingtablesettings')->where($where)->get();
+    public function rankingtablesettingModelGet($where,$select) {
+        $rankingtablesettings = DB::table('rankingtablesettings')
+            ->where($where)
+            ->select($select)
+            ->get();
         return $rankingtablesettings;
     }
 

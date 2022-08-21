@@ -19,7 +19,9 @@ class Attribute extends Model
                     'printorderjsids'
                 ];
                 $where = NULL;
-                $select = ['print_order'];
+                $select = [
+                    'print_order'
+                ];
                 while ($column < count($contentstopmodal->contentstopmodalModelGet($needDB,$where,$select)) + 1) {
 
                     $attrkey = $contentstopmodal->contentstopmodalModelExist($column);
@@ -44,7 +46,13 @@ class Attribute extends Model
                 }
 
                 $printorderjsid = new Printorderjsid();
-                $printorderjsids = $printorderjsid->printorderjsidModelGet();
+                $where = NULL;
+                $select = [
+                    'previousidname',
+                    'nextidname',
+                    'modalshowidname',
+                ];
+                $printorderjsids = $printorderjsid->printorderjsidModelGet($where,$select);
     
                 $i = 1;
                 foreach ($printorderjsids as $print) {

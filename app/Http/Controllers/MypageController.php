@@ -196,9 +196,20 @@ class MypageController extends Controller
 
     public function setting(Attribute $attribute, Rankingtitlesetting $rankingtitlesetting, Rankingtablesetting $rankingtablesetting) {
         $attributessetting = $attribute->attributeSettingModelGet();
-        $rankingdefaultsetting = $rankingtitlesetting->rankingtitlesettingFlagModelGet(session('loginid'));
+        $needDB = [
+            'rankingtablesettings',
+        ];
+        $where = [['loginid','=',session('loginid')]];
+        $select = [
+            'table_title',
+        ];
+        $rankingdefaultsetting = $rankingtitlesetting->rankingtitlesettingModelGet($needDB,$where,$select);
         $rankingtitlesetting = $rankingtitlesetting->rankingtitlesettingModelGet();
-        $rankingtablesetting = $rankingtablesetting->rankingtablesettingModelGet();
+        $where = [['loginid','=',session('loginid')]];
+        $select = [
+            'genresumnum',
+        ];
+        $rankingtablesetting = $rankingtablesetting->rankingtablesettingModelGet($where,$select);
 
         $i = 0;
         foreach ($attributessetting as $setting) {
@@ -222,10 +233,12 @@ class MypageController extends Controller
 
         $rankingtablist = []; 
         foreach ($rankingtablesetting as $table) {
-            array_push($rankingtablist,$table->film);
-            array_push($rankingtablist,$table->comic);
-            array_push($rankingtablist,$table->anime);
+            $tmp = str_split($table->genresumnum);
         }
+        for ($i = 0;$i < count($tmp);$i++) {
+            array_push($rankingtablist,$tmp[$i]);
+        }
+
         return view('mypage.setting',compact('attributeq','attributeattrid','defaulttablesetting','tablesetting','firstdisplayflag','rankingtablist'));
     }
 

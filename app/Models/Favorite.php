@@ -26,14 +26,6 @@ class Favorite extends Model
         DB::table('favorites')->where($where1)->orWhere($where2)->delete();
     }
 
-    public function favoriteAllModelGet() {
-        $where = [
-            'loginid' => session('loginid')
-        ];
-        $favoritesdata = DB::table('favorites')->where($where)->get();
-        return $favoritesdata;
-    }
-
     public function favoriteModelGet($needDB,$where,$select) {
         $favorites = DB::table('favorites');
         if (in_array('worksubs',$needDB)) {

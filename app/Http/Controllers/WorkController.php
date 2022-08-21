@@ -269,7 +269,26 @@ class WorkController extends Controller
          * 作品のイメージ取得
          */
         $workdata['genre'] = FALSE;
-        $images = $genrepostanswer->genrepostanswerModelGet($workdata['worksubid'],NULL);
+
+        $needDB = [
+            'genreposts',
+        ];
+        $where = [
+            ['worksubid','=',$workdata['worksubid']],
+        ];
+        $select = [
+            'genre',
+            'background_color',
+            DB::raw('count(genrepostanswers.genrepostid) AS genrepost_count')
+        ];
+        $groupby = [
+            'genre',
+            'background_color',
+        ];
+        $orderby = 'genrepost_count';
+        $orderbyascdesc = 'DESC';
+        $limit = NULL;
+        $images = $genrepostanswer->genrepostanswerModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
         if (count($images) != 0) {
             $i = 0;
             foreach ($images as $img) {
@@ -353,11 +372,37 @@ class WorkController extends Controller
         $workdata["category"] = $category;
 
         $workdata["genrepostanswers"] = FALSE;
-        if ($genrepostanswer->genrepostanswerModelSearch($workdata['worksubid'])) {
+        $needDB = [
+            'genreposts',
+        ];
+        $where = [
+            ['worksubid','=',$workdata['worksubid']],
+        ];
+        $select = ['genre'];
+        $groupby = NULL;
+        $orderby = NULL;
+        $orderbyascdesc = NULL;
+        $limit = NULL;
+        $genrepostanswers = $genrepostanswer->genrepostanswerModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+        if (count($genrepostanswers) != 0) {
             for ($i = 1;$i < 3;$i++) {
-                $genrepostanswers[$i] = $genrepostanswer->genrepostanswerModelGet($workdata['worksubid'],$i);
+                $needDB = [
+                    'genreposts',
+                ];
+                $where = [
+                    ['worksubid','=',$workdata['worksubid']],
+                    ['genrepostanswers.genrepostselectid','=',$i],
+                ];
+                $select = [
+                    'genre',
+                ];
+                $groupby = NULL;
+                $orderby = NULL;
+                $orderbyascdesc = NULL;
+                $limit = NULL;
+                $genrepostanswers = $genrepostanswer->genrepostanswerModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
                 $j = 0;
-                foreach ($genrepostanswers[$i] as $genre) {
+                foreach ($genrepostanswers as $genre) {
                     $genrepostanswersdata[$i][$j] = $genre->genre;
                     $j++;
                 }
@@ -456,7 +501,21 @@ class WorkController extends Controller
             $genrepostanswer->genrepostanswerModelInsert($loginid,$genrepostsreq['worksubid'],$genrepostid,$genrepostselectid);
         }
         for ($i = 1;$i < 3;$i++) {
-            $genrepostanswers[$i] = $genrepostanswer->genrepostanswerModelGet($genrepostsreq['worksubid'],$i);
+            $needDB = [
+                'genreposts',
+            ];
+            $where = [
+                ['worksubid','=',$genrepostsreq['worksubid']],
+                ['genrepostanswers.genrepostselectid','=',$i],
+            ];
+            $select = [
+                'genre',
+            ];
+            $groupby = NULL;
+            $orderby = NULL;
+            $orderbyascdesc = NULL;
+            $limit = NULL;
+            $genrepostanswers[$i] = $genrepostanswer->genrepostanswerModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
             $j = 0;
             foreach ($genrepostanswers[$i] as $genre) {
                 $genrepostanswersdata[$i][$j] = $genre->genre;

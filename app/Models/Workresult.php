@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class Workresult extends Model
 {
-    public function workresultModelGet() {
-        $where = [];
-        $workresults = DB::table('workresults')->get();
+    public function workresultModelGet($where,$select) {
+        $workresults = DB::table('workresults')
+            ->where($where)
+            ->select($select)
+            ->get();
         return $workresults;
     }
 }

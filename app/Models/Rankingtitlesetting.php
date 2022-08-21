@@ -8,20 +8,15 @@ use Illuminate\Support\Facades\DB;
 
 class Rankingtitlesetting extends Model
 {
-    public function rankingtitlesettingFlagModelGet($loginid) {
-        $where = [
-            'loginid' => $loginid
-        ];
-        $rankingflagconfigs = DB::table('rankingtitlesettings')
-            ->join('rankingtablesettings',function($join) use ($where) {
-            $join->on('rankingtitlesettings.first_display_flag','=','rankingtablesettings.rankingtablesetting_default_flag')
-                ->where($where);
-        })->get();
+    public function rankingtitlesettingModelGet($needDB,$where,$select) {
+        $rankingflagconfigs = DB::table('rankingtitlesettings');
+        if (in_array('rankingtablesettings',$needDB)) {
+            $rankingflagconfigs = $rankingflagconfigs->join('rankingtablesettings','rankingtitlesettings.first_display_flag','=','rankingtablesettings.rankingtablesetting_default_flag');
+        } 
+        $rankingflagconfigs = $rankingflagconfigs
+            ->where($where)
+            ->select($select)
+            ->get();
         return $rankingflagconfigs;
-    }
-
-    public function rankingtitlesettingModelGet() {
-        $rankingconfigs = DB::table('rankingtitlesettings')->get();
-        return $rankingconfigs;
     }
 }
