@@ -574,7 +574,16 @@ class WorkController extends Controller
         $worksearchresult['worksearchresult_img'] = FALSE;
         $where = [];
         if ($category_genre) {
-            $worktypes = $worktype->worktypeModelGet('worktype_name',$category_genre);
+            $needDB = [];
+            $where = [['worktype_name','=',$category_genre]];
+            $select = [
+                'worktypeid',
+            ];
+            $groupby = NULL;
+            $orderby = NULL;
+            $orderbyascdesc = NULL;
+            $limit = NULL;
+            $worktypes = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
             foreach ($worktypes as $workt) {
                 $category_list = $workt->worktypeid;
             }

@@ -6,13 +6,39 @@
 
 
     $worktype = new Worktype();
-    $worktypes = $worktype->worktypeModelGet(NULL,NULL);
+    $needDB = [];
+    $where = NULL;
+    $select = [
+        'worktypeid',
+        'worktype_name',
+    ];
+    $groupby = NULL;
+    $orderby = NULL;
+    $orderbyascdesc = NULL;
+    $limit = NULL;
+    $worktypes = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
 
     foreach ($worktypes as $workt) {
         $worktypegenre[$workt->worktypeid] = $workt->worktype_name;
     }
 
-    $worktypemenus = $worktype->worktypemenuModelGet(NULL);
+    $needDB = [
+        'works',
+    ];
+    $where = NULL;
+    $select = [
+        'worktype_name',
+        'category_name',
+        DB::raw('count(category_name) AS category_name_count')
+    ];
+    $groupby = [
+        'worktype_name',
+        'category_name',
+    ];
+    $orderby = NULL;
+    $orderbyascdesc = NULL;
+    $limit = NULL;
+    $worktypemenus = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
     $i = 0;
     foreach ($worktypemenus as $menu) {
         $worktypegenremenu[$menu->worktype_name][$menu->category_name] = $menu->category_name_count;

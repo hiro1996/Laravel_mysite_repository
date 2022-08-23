@@ -8,42 +8,27 @@ use Illuminate\Support\Facades\DB;
 
 class Worktype extends Model
 {
-    public function worktypeModelGet($wherecolumn,$wheredata) {
-        $worksubs = DB::table('worktypes');
-        if ($wherecolumn != NULL) {
-            $where = [
-                $wherecolumn => $wheredata
-            ];
-            $worksubs = $worksubs->where($where);
+    public function worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit) {
+        $worktypes = DB::table('worktypes');
+        if (in_array('works',$needDB)) {
+            $worktypes = $worktypes->join('works','worktypes.worktypeid','=','works.work_type');
         }
-        $worksubs = $worksubs->get();
-        return $worksubs;
-    }
-
-    public function worktypecountModelGet() {
-        $worksubcounts = DB::table('worktypes')->count();
-        return $worksubcounts;
-    }
-
-    public function worktypemenuModelGet($where) {
-        $worktypemenus = DB::table('worktypes')
-            ->join('works', function($join) {
-                $join->on('worktypes.worktypeid','=','works.work_type');
-            })->select('worktypes.worktype_name','works.category_name',DB::raw('count(works.category_name) AS category_name_count'))
-            ->groupBy('worktypes.worktype_name','works.category_name');
-            if ($where) {
-                $worktypemenus = $worktypemenus->where($where);
-            }
-            $worktypemenus = $worktypemenus->get();
-        return $worktypemenus;
-    }
-
-    public function worktypemenusideModelGet() {
-        $worktypesidemenus = DB::table('worktypes')
-            ->join('works','worktypes.worktypeid','=','works.work_type')
-            ->join('worksubs','works.workid','=','worksubs.workid') 
-            ->select('worktypes.worktypeid','worktypes.worktype_name','works.category_name','worksubs.publisher','worksubs.publicationmagazine_label','worksubs.auther')
-            ->get();
-        return $worktypesidemenus;
+        if (in_array('worksubs',$needDB)) {
+            $worktypes = $worktypes->join('worksubs','works.workid','=','worksubs.workid');
+        }
+        $worktypes = $worktypes
+            ->where($where)
+            ->select($select);
+        if ($groupby != NULL) {
+            $worktypes = $worktypes->groupBy($groupby);
+        }
+        if ($orderby != NULL) {
+            $worktypes = $worktypes->orderBy($orderby,$orderbyascdesc);
+        }
+        if ($limit != NULL) {
+            $worktypes = $worktypes->limit($limit);
+        }
+        $worktypes = $worktypes->get();
+        return $worktypes;
     }
 }

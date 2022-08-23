@@ -1,11 +1,22 @@
 <?php
     use App\Models\Worktype;
     use App\Models\Work;
-use Illuminate\Support\Facades\DB;
+    use Illuminate\Support\Facades\DB;
 
     $worktype = new Worktype();
     $work = new Work();
-    $worktypes = $worktype->worktypeModelGet(NULL,NULL);
+    $needDB = [];
+    $where = NULL;
+    $select = [
+        'worktypeid',
+        'worktype_name',
+    ];
+    $groupby = NULL;
+    $orderby = NULL;
+    $orderbyascdesc = NULL;
+    $limit = NULL;
+    $worktypes = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+
 
     foreach ($worktypes as $workt) {
         $worktypegenre[$workt->worktypeid] = $workt->worktype_name;
@@ -16,7 +27,24 @@ use Illuminate\Support\Facades\DB;
 
     $workmenugenrecategory_list = [];
     $workmenupublisherlabelauther_list = [];
-    $worktypesidemenus = $worktype->worktypemenusideModelGet();
+    $needDB = [
+        'works',
+        'worksubs',
+    ];
+    $where = NULL;
+    $select = [
+        'worktypeid',
+        'worktype_name',
+        'category_name',
+        'publisher',
+        'publicationmagazine_label',
+        'auther',
+    ];
+    $groupby = NULL;
+    $orderby = NULL;
+    $orderbyascdesc = NULL;
+    $limit = NULL;
+    $worktypesidemenus = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
     foreach ($worktypesidemenus as $workts) {
         if (strstr($queryurl,$workts->worktype_name)) {
             $workids = $work->workidModelGet('worktypes','worktype_name',$workts->worktype_name);
@@ -43,7 +71,23 @@ use Illuminate\Support\Facades\DB;
     ];
     $workmenus = $work->worksearchresultModelGet($workmenugenrecategory_list,$select);
     foreach ($workmenus as $workm) {
-        $worktypemenus = $worktype->worktypemenuModelGet(['work_type' => $workm->work_type]);
+        $needDB = [
+            'works',
+        ];
+        $where = [['work_type','=',$workm->work_type]];
+        $select = [
+            'worktype_name',
+            'category_name',
+            DB::raw('count(category_name) AS category_name_count')
+        ];
+        $groupby = [
+            'worktype_name',
+            'category_name',
+        ];
+        $orderby = NULL;
+        $orderbyascdesc = NULL;
+        $limit = NULL;
+        $worktypemenus = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
         foreach ($worktypemenus as $worktm) {
             if ($worktm->worktype_name) {
                 $worktypegenremenu[$worktm->worktype_name][$worktm->category_name] = $worktm->category_name_count;

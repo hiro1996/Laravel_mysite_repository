@@ -98,9 +98,19 @@ class LoginNewController extends Controller
             $now = new DateTime();
             $interval = $now->diff($date);
             $user->userModelInsert($loginid,$nickname,$password,$email,$birthday,$interval->y,$gender,1);
-            $workdigitcounts = $worktype->worktypecountModelGet();
+            
+            $needDB = [];
+            $where = NULL;
+            $select = [
+                'id',
+            ];
+            $groupby = NULL;
+            $orderby = NULL;
+            $orderbyascdesc = NULL;
+            $limit = NULL;
+            $workdigitcounts = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
             $digit = '';
-            for ($i = 0;$i < $workdigitcounts;$i++) {
+            for ($i = 0;$i < count($workdigitcounts);$i++) {
                 $digit = $digit.'1';
             }
             $rankingtablesetting->rankingtablesettingModelInsert($loginid,$digit);
@@ -123,7 +133,6 @@ class LoginNewController extends Controller
             $orderbyascdesc = NULL;
             $limit = NULL;
             $workids = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
-            dd($workid,$workids);
             foreach ($workids as $id) {
                 $record->recordModelInsert($loginid,$id->workid,0);
             }
@@ -308,14 +317,33 @@ class LoginNewController extends Controller
             }
 
             for ($i = 0;$i < count($worktype_list);$i++) {
-                $worktypes = $worktype->worktypeModelGet('worktypeid',$worktype_list[$i]);
+                $needDB = [];
+                $where = [['worktypeid','=',$worktype_list[$i]]];
+                $select = [
+                    'worktype_icon',
+                ];
+                $groupby = NULL;
+                $orderby = NULL;
+                $orderbyascdesc = NULL;
+                $limit = NULL;
+                $worktypes = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
                 foreach ($worktypes as $workt) {
                     array_push($icon_list,$workt->worktype_icon);
                 }
             }
 
             for ($i = 0;$i < count($worktype_list);$i++) {
-                $worktypes = $worktype->worktypeModelGet('worktypeid',$worktype_list[$i]);
+                $needDB = [];
+                $where = [['worktypeid','=',$worktype_list[$i]]];
+                $select = [
+                    'worktype_name',
+                    'worktype_eng',
+                ];
+                $groupby = NULL;
+                $orderby = NULL;
+                $orderbyascdesc = NULL;
+                $limit = NULL;
+                $worktypes = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
                 foreach ($worktypes as $workt) {
                     array_push($genre_list,$workt->worktype_eng);
                     array_push($tab_list,$workt->worktype_name);
@@ -624,7 +652,12 @@ class LoginNewController extends Controller
         /**
          * 新着作品 ジャンルごとに上映前、発売前の作品を取得
          */
+        $contentstop['worknew_genre'] = FALSE;
+        $contentstop['worknew_title'] = FALSE;
         $contentstop['worknew_img'] = FALSE;
+        $contentstop['worknew_url'] = FALSE;
+        $contentstop['worknew_date'] = FALSE;
+
         $needDB = [
             'worksubs',
             'worktransinfos',
@@ -643,21 +676,38 @@ class LoginNewController extends Controller
         $limit = NULL;
         $workdatas = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
         if (count($workdatas) != 0) {
-            for ($i = 1;$i <= $worktype->worktypecountModelGet();$i++) {
-                $worktypes = $worktype->worktypeModelGet('worktypeid','0'.$i);
-                foreach ($worktypes as $workt) {
+            $needDB = [];
+            $where = NULL;
+            $select = [
+                'worktypeid',
+            ];
+            $groupby = NULL;
+            $orderby = NULL;
+            $orderbyascdesc = NULL;
+            $limit = NULL;
+            $worktypes = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+
+            for ($i = 1;$i <= count($worktypes);$i++) {
+                $needDB = [];
+                $where = [['worktypeid','=','0'.$i]];
+                $select = [
+                    'worktype_name',
+                ];
+                $groupby = NULL;
+                $orderby = NULL;
+                $orderbyascdesc = NULL;
+                $limit = NULL;
+                $worktypescount = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+                foreach ($worktypescount as $workt) {
                     $contentstop['worknew_genre'][$i] = $workt->worktype_name.'新着作品';
                 }
-                $j = 0;
-                foreach ($workdatas as $workd) {
-                    if ($workd->work_type == '0'.$i) {
-                        $contentstop['worknew_title'][$i][$j] = $work->worktitleConvert($workd->title,5);
-                        $contentstop['worknew_img'][$i][$j] = asset($workd->img);
-                        $contentstop['worknew_url'][$i][$j] = $workd->url;
-                        $contentstop['worknew_date'][$i][$j] = $workd->siteviewday_1.'発売';
-                        $j++;
-                    }
-                }
+            }
+            foreach ($workdatas as $workd) {
+                $num = str_split($workd->work_type);
+                $contentstop['worknew_title'][$num[1]][] = $work->worktitleConvert($workd->title,5);
+                $contentstop['worknew_img'][$num[1]][] = asset($workd->img);
+                $contentstop['worknew_url'][$num[1]][] = $workd->url;
+                $contentstop['worknew_date'][$num[1]][] = $workd->siteviewday_1.'発売';
             }
         }
 
@@ -679,16 +729,24 @@ class LoginNewController extends Controller
         $orderbyascdesc = NULL;
         $limit = NULL;
         $workdatas = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
-
-        
         if (count($workdatas) != 0) {
             $k = 0;
             foreach ($workdatas as $workd) {
-                $contentstop['worknew_genre'][$worktype->worktypecountModelGet()+1] = '本日の新着作品';
-                $contentstop['worknew_title'][$worktype->worktypecountModelGet()+1][$k] = $work->worktitleConvert($workd->title,5);
-                $contentstop['worknew_img'][$worktype->worktypecountModelGet()+1][$k] = asset($workd->img);
-                $contentstop['worknew_url'][$worktype->worktypecountModelGet()+1][$k] = $workd->url;
-                $contentstop['worknew_date'][$worktype->worktypecountModelGet()+1][$k] = '';
+                $needDB = [];
+                $where = NULL;
+                $select = [
+                    'worktypeid',
+                ];
+                $groupby = NULL;
+                $orderby = NULL;
+                $orderbyascdesc = NULL;
+                $limit = NULL;
+                $worktypes = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+                $contentstop['worknew_genre'][count($worktypes)+1] = '本日の新着作品';
+                $contentstop['worknew_title'][count($worktypes)+1][$k] = $work->worktitleConvert($workd->title,5);
+                $contentstop['worknew_img'][count($worktypes)+1][$k] = asset($workd->img);
+                $contentstop['worknew_url'][count($worktypes)+1][$k] = $workd->url;
+                $contentstop['worknew_date'][count($worktypes)+1][$k] = '';
                 $k++;
             }
         }
