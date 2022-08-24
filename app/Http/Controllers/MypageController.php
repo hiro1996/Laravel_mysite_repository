@@ -204,7 +204,15 @@ class MypageController extends Controller
             'table_title',
         ];
         $rankingdefaultsetting = $rankingtitlesetting->rankingtitlesettingModelGet($needDB,$where,$select);
-        $rankingtitlesetting = $rankingtitlesetting->rankingtitlesettingModelGet();
+        $needDB = [
+            'rankingtablesettings',
+        ];
+        $where = [['loginid','=',session('loginid')]];
+        $select = [
+            'table_title',
+            'button_name',
+        ];
+        $rankingtitlesetting = $rankingtitlesetting->rankingtitlesettingModelGet($needDB,$where,$select);
         $where = [['loginid','=',session('loginid')]];
         $select = [
             'genresumnum',

@@ -65,15 +65,6 @@ class Work extends Model
         return $works;
     }
 
-
-    public function workidModelGet($table,$wherecolumn,$wheredata) {
-        $where = [
-            $wherecolumn => $wheredata
-        ];
-        $workdatas = DB::table($table)->where($where)->get();
-        return $workdatas;
-    }
-
     public function worktitleConvert($title,$titlelength) {
         $titleconvert = $title;
         if (mb_strlen($title) > $titlelength) {
@@ -81,16 +72,6 @@ class Work extends Model
             $titleconvert = $tmp.'...';
         } 
         return $titleconvert;
-    }
-
-    public function worksearchresultModelGet($where,$select) {
-        $worksearchresults = DB::table('works')
-            ->join('worksubs','works.workid','=','worksubs.workid') 
-            ->join('worktypes','works.work_type','=','worktypes.worktypeid') 
-            ->where($where)
-            ->select($select)
-            ->get();
-        return $worksearchresults;
     }
 
 }

@@ -232,7 +232,18 @@ class WorkController extends Controller
          * 閲覧履歴テーブル(browsehistories)に作品IDとログインしているユーザーIDもしくは未ログイン時のユーザーを登録
          * すでに登録されている作品IDとユーザーIDの組み合わせがある場合、閲覧日を更新
          */
-        $workids = $work->workidModelGet('worksubs','url',$urlstr);
+        $needDB = [
+            'worksubs'
+        ];
+        $where = [['url','=',$urlstr]];
+        $select = [
+            'id'
+        ];
+        $groupby = NULL;
+        $orderby = NULL;
+        $orderbyascdesc = NULL;
+        $limit = NULL;
+        $workids = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
         $workdata['ninkitag'] = FALSE;
         foreach ($workids as $id) {
             $workdata['worksubid'] = $id->id;
@@ -601,6 +612,10 @@ class WorkController extends Controller
         if ($auther) {
             $where = ['auther' => $auther];
         }
+        $needDB = [
+            'worksubs',
+            'worktypes',
+        ];
         $select = [
             'title',
             'furigana',
@@ -613,7 +628,11 @@ class WorkController extends Controller
             'auther',
             'worktype_name'
         ];
-        $worksearchresults = $work->worksearchresultModelGet($where,$select);
+        $groupby = NULL;
+        $orderby = NULL;
+        $orderbyascdesc = NULL;
+        $limit = NULL;
+        $worksearchresults = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
         if (count($worksearchresults) != 0) {
             $i = 0;
             foreach ($worksearchresults as $result) {
@@ -643,8 +662,19 @@ class WorkController extends Controller
                     $worksearchresult['worksearchresult_auther'][$i] = '-';
                 }
 
-                $worksubids = $work->workidModelGet('worksubs','url',$result->url);
-                foreach ($worksubids as $id) {
+                $needDB = [
+                    'worksubs'
+                ];
+                $where = [['url','=',$result->url]];
+                $select = [
+                    'id'
+                ];
+                $groupby = NULL;
+                $orderby = NULL;
+                $orderbyascdesc = NULL;
+                $limit = NULL;
+                $workids = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+                foreach ($workids as $id) {
                     $where = [['worksubid','=',$id->id]];
                     $select = [
                         'poststar',

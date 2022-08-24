@@ -25,7 +25,7 @@
     $queryurl = request()->fullUrl();
     $queryurl = urldecode($queryurl);
 
-    $workmenugenrecategory_list = [];
+    $where = [];
     $workmenupublisherlabelauther_list = [];
     $needDB = [
         'works',
@@ -47,29 +47,47 @@
     $worktypesidemenus = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
     foreach ($worktypesidemenus as $workts) {
         if (strstr($queryurl,$workts->worktype_name)) {
-            $workids = $work->workidModelGet('worktypes','worktype_name',$workts->worktype_name);
-            foreach ($workids as $id) {
+            $needDB = [];
+            $where = [['worktype_name','=',$workts->worktype_name]];
+            $select = [
+                'worktypeid'
+            ];
+            $groupby = NULL;
+            $orderby = NULL;
+            $orderbyascdesc = NULL;
+            $limit = NULL;
+            $worktypedatas = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+            foreach ($worktypedatas as $id) {
                 $worktypeid = $id->worktypeid;
             }
-            $workmenugenrecategory_list = ['work_type' => $workts->worktypeid];
+            $where = ['work_type' => $workts->worktypeid];
         }
         if (strstr($queryurl,$workts->category_name)) {
-            $workmenugenrecategory_list = ['category_name' => $workts->category_name];
+            $where = ['category_name' => $workts->category_name];
         }
         if (strstr($queryurl,$workts->publisher) && ($workts->publisher != NULL)) {
-            $workmenugenrecategory_list = ['publisher' => $workts->publisher];
+            $where = ['publisher' => $workts->publisher];
         }
         if (strstr($queryurl,$workts->publicationmagazine_label) && ($workts->publicationmagazine_label != NULL)) {
-            $workmenugenrecategory_list = ['publicationmagazine_label' => $workts->publicationmagazine_label];
+            $where = ['publicationmagazine_label' => $workts->publicationmagazine_label];
         }
         if (strstr($queryurl,$workts->auther) && ($workts->auther != NULL)) {
-            $workmenugenrecategory_list = ['auther' => $workts->auther];
+            $where = ['auther' => $workts->auther];
         }
     }
     $select = [
         'work_type'
     ];
-    $workmenus = $work->worksearchresultModelGet($workmenugenrecategory_list,$select);
+    $needDB = [
+        'worksubs',
+        'worktypes',
+    ];
+    
+    $groupby = NULL;
+    $orderby = NULL;
+    $orderbyascdesc = NULL;
+    $limit = NULL;
+    $workmenus = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
     foreach ($workmenus as $workm) {
         $needDB = [
             'works',

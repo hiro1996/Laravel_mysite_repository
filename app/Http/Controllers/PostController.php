@@ -142,14 +142,20 @@ class PostController extends Controller
         $postconf['poststar'] = $request->poststar;
         $postconf['postbody'] = $request->postbody;
 
-        $loginid = 'Guest';
-        if ($postconf['nickname'] !== 'Guest') $loginid = $user->userModelSearch('nickname',$postconf['nickname'],'loginid'); //ログインしていれば、そのユーザーのユーザーIDを取得。まだテストしてない
-        $worksdata = $work->workidModelGet('works','title',$postconf['workname']); //投稿した作品のIDを取得
-        foreach ($worksdata as $workd) {
-            $workssubdata = $work->workidModelGet('worksubs','workid',$workd->workid); //投稿した作品のsubIDを取得
-            foreach ($workssubdata as $worksd) {
-                $post->postModelInsert($loginid,$worksd->id,$postconf['poststar'],$postconf['postbody']); //ユーザーIDと作品IDとレビュー内容を登録
-            }
+        $needDB = [
+            'worksubs'
+        ];
+        $where = [['title','=',$postconf['workname']]];
+        $select = [
+            'id'
+        ];
+        $groupby = NULL;
+        $orderby = NULL;
+        $orderbyascdesc = NULL;
+        $limit = NULL;
+        $worksdatas = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+        foreach ($worksdatas as $workd) {
+            $post->postModelInsert($postconf['nickname'],$workd->id,$postconf['poststar'],$postconf['postbody']); //ユーザーIDと作品IDとレビュー内容を登録
         }
 
         return view('post.postcomplete');
