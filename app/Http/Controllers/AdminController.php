@@ -174,7 +174,9 @@ class AdminController extends Controller
          */
         $user->userModelUpdate('loginid',$loginid,'secret_key',$data["google2fa_secret"]);
 
-        $where = [['login','=',session('loginid')]];
+        session(['loginid' => $loginid]);
+
+        $where = [['loginid','=',session('loginid')]];
         $select = [
             'email'
         ];
@@ -212,7 +214,7 @@ class AdminController extends Controller
         $loginid = $user->userModelSearch('user_value_id',$accountid,'loginid');
         session(['loginid' => $loginid]);
 
-        $where = [['login','=',session('loginid')]];
+        $where = [['loginid','=',session('loginid')]];
         $select = [
             'login_number_of_times',
             'next_display_login_time'
@@ -228,13 +230,26 @@ class AdminController extends Controller
         /**
          * おすすめの映画、アニメのタイトル、画像、URL
          */
-        $works = $work->workModelGet('where','works',NULL,NULL,NULL,NULL,NULL);
+        $needDB = [
+            'worksubs',
+        ];
+        $where = NULL;
+        $select = [
+            'title',
+            'img',
+            'url',
+        ];
+        $groupby = NULL;
+        $orderby = NULL;
+        $orderbyascdesc = NULL;
+        $limit = NULL;
+        $workdatas = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
 
         $i = 1;
-        foreach ($works as $work) {
-            $contentstop['work_title'][$i] = $work->title;
-            $contentstop['work_img'][$i] = $work->img;
-            $contentstop['work_url'][$i] = $work->url;
+        foreach ($workdatas as $workd) {
+            $contentstop['work_title'][$i] = $workd->title;
+            $contentstop['work_img'][$i] = $workd->img;
+            $contentstop['work_url'][$i] = $workd->url;
             $i++;
         }
 
@@ -262,7 +277,7 @@ class AdminController extends Controller
             $contentstop['button_name'] = $rankingtitlesetting->button_name;
         }
 
-        return view('contentstop',compact('contentstop'));
+        return view('mypage.mypage',compact('contentstop'));
 
     }
 }

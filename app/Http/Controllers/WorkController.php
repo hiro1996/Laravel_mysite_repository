@@ -123,6 +123,8 @@ class WorkController extends Controller
         }
 
         
+
+        
         /**
          * アイコン一覧
          */
@@ -156,6 +158,8 @@ class WorkController extends Controller
             'publisher',
             'publicationmagazine_label',
             'auther',
+            'monthly_ranking',
+            'weekly_ranking',
             'worktypeid',
             'worktype_name',
             'worktype_eng',
@@ -204,12 +208,46 @@ class WorkController extends Controller
             } else {
                 $workdata['title'] = $workd->title;
             }
-            $workdata['furigana'] = $workd->furigana;
-            $workdata['explaining'] = $workd->explaining;
-            $workdata['workgenre'] = $workd->worktype_name;
-            $workdata['publisher'] = $workd->publisher;
-            $workdata['publicationmagazine_label'] = $workd->publicationmagazine_label;
-            $workdata['auther'] = $workd->auther;
+            if ($workd->furigana != NULL) {
+                $workdata['furigana'] = $workd->furigana;
+            } else {
+                $workdata['furigana'] = '-';
+            }
+            if ($workd->explaining != NULL) {
+                $workdata['explaining'] = $workd->explaining;
+            } else {
+                $workdata['explaining'] = '-';
+            }
+            if ($workd->worktype_name != NULL) {
+                $workdata['workgenre'] = $workd->worktype_name;
+            } else {
+                $workdata['workgenre'] = '-';
+            }
+            if ($workd->publisher != NULL) {
+                $workdata['publisher'] = $workd->publisher;
+            } else {
+                $workdata['publisher'] = '-';
+            }
+            if ($workd->publicationmagazine_label != NULL) {
+                $workdata['publicationmagazine_label'] = $workd->publicationmagazine_label;
+            } else {
+                $workdata['publicationmagazine_label'] = '-';
+            }
+            if ($workd->auther != NULL) {
+                $workdata['auther'] = $workd->auther;
+            } else {
+                $workdata['auther'] = '-';
+            }
+            if ($workd->monthly_ranking != NULL) {
+                $workdata['monthly_ranking'] = $workd->monthly_ranking;
+            } else {
+                $workdata['monthly_ranking'] = '-';
+            }
+            if ($workd->weekly_ranking != NULL) {
+                $workdata['weekly_ranking'] = $workd->weekly_ranking;
+            } else {
+                $workdata['weekly_ranking'] = '-';
+            }
             $workdata['newtag'] = FALSE;
             if ($workd->worktransinfoid == 2) {
                 $newtagviewmax = date('Y-m-d',strtotime($workd->siteviewday_1.'+ '.$workd->setvalue.'days'));
@@ -626,6 +664,8 @@ class WorkController extends Controller
             'publisher',
             'publicationmagazine_label',
             'auther',
+            'monthly_ranking',
+            'weekly_ranking',
             'worktype_name'
         ];
         $groupby = NULL;
@@ -660,6 +700,16 @@ class WorkController extends Controller
                     $worksearchresult['worksearchresult_auther'][$i] = $result->auther;
                 } else {
                     $worksearchresult['worksearchresult_auther'][$i] = '-';
+                }
+                if ($result->monthly_ranking != NULL) {
+                    $worksearchresult['monthly_ranking'] = $result->monthly_ranking;
+                } else {
+                    $worksearchresult['monthly_ranking'] = '-';
+                }
+                if ($result->weekly_ranking != NULL) {
+                    $worksearchresult['weekly_ranking'] = $result->weekly_ranking;
+                } else {
+                    $worksearchresult['weekly_ranking'] = '-';
                 }
 
                 $needDB = [

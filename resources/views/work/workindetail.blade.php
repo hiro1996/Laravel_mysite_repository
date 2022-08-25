@@ -33,7 +33,7 @@
                             月間人気ランキング  
                         </div>
                         <div class="monthlyrankingnum">
-                            16位  
+                            {{ $workdata['monthly_ranking'] }}位  
                         </div>
                     </div>
                     <div class="weeklyranking d-flex justify-content-around">
@@ -41,7 +41,7 @@
                             週間人気ランキング    
                         </div>
                         <div class="weeklyrankingnum">
-                            16位  
+                            {{ $workdata['weekly_ranking'] }}位  
                         </div>
                     </div>
                 </div>
@@ -63,23 +63,11 @@
                     <dd>{{ $workdata['workgenrne_category_name'] }}</dd>
                     @if (!$workdata['music'])
                         <dt>出版社</dt>
-                        @if ($workdata['publisher'] == NULL)
-                            <dd>-</dd>
-                        @else
-                            <dd>{{ $workdata['publisher'] }}</dd>
-                        @endif
+                        <dd>{{ $workdata['publisher'] }}</dd>
                         <dt>掲載誌・レーベル</dt>
-                        @if ($workdata['publicationmagazine_label'] == NULL)
-                            <dd>-</dd>
-                        @else
-                            <dd>{{ $workdata['publicationmagazine_label'] }}</dd>
-                        @endif
+                        <dd>{{ $workdata['publicationmagazine_label'] }}</dd>
                         <dt>著者・作者</dt>
-                        @if ($workdata['auther'] == NULL)
-                            <dd>-</dd>
-                        @else
-                            <dd>{{ $workdata['auther'] }}</dd>
-                        @endif
+                        <dd>{{ $workdata['auther'] }}</dd>
                     @endif
                     @if ($workdata['genre'])
                     <dt class="tags categorytag">

@@ -127,7 +127,9 @@ class LoginNewController extends Controller
                 'worktransinfos',
             ];
             $where = NULL;
-            $select = ['workid'];
+            $select = [
+                'workid'
+            ];
             $groupby = NULL;
             $orderby = NULL;
             $orderbyascdesc = NULL;
