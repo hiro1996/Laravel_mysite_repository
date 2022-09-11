@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Browsehistory;
 use App\Models\Favorite;
@@ -13,7 +14,6 @@ use App\Models\Post;
 use App\Models\Record;
 use App\Models\Work;
 use App\Models\Worktype;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class WorkController extends Controller
@@ -131,7 +131,6 @@ class WorkController extends Controller
         $workdata['amazonprime'] = FALSE;
         $workdata['yahoocalender'] = FALSE;
         $workdata['hulu'] = FALSE;
-        
         $workdata['book'] = FALSE;
         $workdata['film'] = FALSE;
         $workdata['music'] = FALSE;
@@ -465,27 +464,40 @@ class WorkController extends Controller
          * 各作品IDとレビューIDから各レビューを取得
          */
         if ($workdata['postbody']) {
+            $where = NULL;
+            $select = [
+                'worksubid',
+                'reviewid',
+                DB::raw('count(reviewid) AS review_count')
+            ];
+            $groupby = [
+                'worksubid',
+                'reviewid'
+            ];
+            $having = 'worksubid ='.$workdata['worksubid'];
+            $login_iconcount = $goodiconhistory->goodiconhistoryModelGet($where,$select,$groupby,$having);
+
+            for ($i = 1;$i <= count($workdata['postbody']);$i++) {
+                $heartclickclass[$i] = 'heart beforeclick'.$i;
+                $heartcounts[$i] = 0;
+                $heartonoff[$i] = 'fa-regular fa-heart';
+            }
+                
             if (session('loginid')) {
-                for ($i = 1;$i <= count($workdata['postbody']);$i++) {
-                    $goodiconurl[$i] = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodicon.png';
-                    $forurljudge[$i] = 'beforeclick'.$i;
-                    $login_iconcount = $goodiconhistory->goodiconhistoryModelGet('login_iconcount',$loginid,$workdata['worksubid'],$i);
-                    if ($login_iconcount > 0) {
-                        $goodiconurl[$i] = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodiconpush.png';
-                        $forurljudge[$i] = 'afterclick'.$i;
-                    }
-                    $counts[$i] = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$workdata['worksubid'],$i);
+                foreach ($login_iconcount as $icon) {
+                    $heartclickclass[$icon->reviewid] = 'heart afterclick'.$icon->reviewid;
+                    $heartcounts[$icon->reviewid] = $icon->review_count;
+                    $heartonoff[$icon->reviewid] = 'fa-solid fa-heart';
                 }
             } else {
-                for ($i = 1;$i <= count($workdata['postbody']);$i++) {
-                    $goodiconurl[$i] = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodicon.png';
-                    $forurljudge[$i] = 'beforeclick'.$i;
-                    $counts[$i] = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$workdata['worksubid'],$i);
+                foreach ($login_iconcount as $icon) {
+                    $heartcounts[$icon->reviewid] = $icon->review_count;
                 }
             }
-            $workdata["count"] = $counts;
-            $workdata["goodiconurl"] = $goodiconurl;
-            $workdata["forurljudgeclass"] = $forurljudge;
+
+            $workdata["count"] = $heartcounts;
+            $workdata["heartclickclass"] = $heartclickclass;
+            $workdata["heartonoff"] = $heartonoff;
         } 
         return view('work.workindetail',compact('workdata','favoriteclass','favoritetext'));
     }
@@ -580,35 +592,60 @@ class WorkController extends Controller
     }
 
     public function workindetailgoodiconadd(Request $request, Goodiconhistory $goodiconhistory) {
-        $count = $request->only('workid','reviewid');
-
+        $goodicondata = $request->only('worksubid','reviewid','count','heartclass');
+        // 数値だけ取り出す
+        $goodicondata["count"] = preg_replace('/[^0-9]/', '', $goodicondata["count"]);
+        // 1増やす
+        $goodicondata["count"] = $goodicondata["count"] + 1;
+        // ハートマークと数値の隙間を作るため3文字分空ける
+        $goodicondata["count"] = str_pad((string) ($goodicondata["count"]),mb_strlen($goodicondata["count"])+3," ",STR_PAD_LEFT);
+        
         $loginid = 'Guest';
         if (session('loginid')) $loginid = session('loginid');
-        $goodiconhistory->goodiconhistoryModelInsert($loginid,$count["workid"],$count["reviewid"]);
+        $goodiconhistory->goodiconhistoryModelInsert($loginid,$goodicondata["worksubid"],$goodicondata["reviewid"]);
+        $goodicondata["heartclass"] = "fa-solid fa-heart";
+        $goodicondata["goodidclass"] = "heart afterclick".$goodicondata["reviewid"];
 
-        $goodicon = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodiconpush.png';
-        $counts = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$count["workid"],$count["reviewid"]);
         return response()->json(
             [
-                "count" => $counts,
-                "icon" => $goodicon
+                "result" => "OK",
+                "worksubid" => $goodicondata["worksubid"],
+                "reviewid" => $goodicondata["reviewid"],
+                "count" => $goodicondata["count"],
+                "heartclass" => $goodicondata["heartclass"],
+                "goodidclass" => $goodicondata["goodidclass"]
             ],
         );
     }
 
     public function workindetailgoodicondelete(Request $request, Goodiconhistory $goodiconhistory) {
-        $count = $request->only('workid','reviewid');
+        $goodicondata = $request->only('worksubid','reviewid','count','heartclass');
+        // 数値だけ取り出す
+        $goodicondata["count"] = preg_replace('/[^0-9]/', '', $goodicondata["count"]);
+        // 1減らす
+        $goodicondata["count"] = $goodicondata["count"] - 1;
+        // ハートマークと数値の隙間を作るため3文字分空ける
+        $goodicondata["count"] = str_pad((string) ($goodicondata["count"]),mb_strlen($goodicondata["count"])+3," ",STR_PAD_LEFT);
 
         $loginid = 'Guest';
         if (session('loginid')) $loginid = session('loginid');
-        $goodiconhistory->goodiconhistoryModelDelete($loginid,$count["workid"],$count["reviewid"]);
+        $where = [
+            ['loginid','=',$loginid],
+            ['worksubid','=',$goodicondata["worksubid"]],
+            ['reviewid','=',$goodicondata["reviewid"]]
+        ];
+        $goodiconhistory->goodiconhistoryModelDelete($where);
+        $goodicondata["heartclass"] = "fa-regular fa-heart";
+        $goodicondata["goodidclass"] = "heart beforeclick".$goodicondata["reviewid"];
 
-        $goodicon = 'http://127.0.0.1:8000/assets/img/icon/workindetail/goodicon.png';
-        $counts = $goodiconhistory->goodiconhistoryModelGet('iconcount',NULL,$count["workid"],$count["reviewid"]);
         return response()->json(
             [
-                "count" => $counts,
-                "icon" => $goodicon
+                "result" => "OK",
+                "worksubid" => $goodicondata["worksubid"],
+                "reviewid" => $goodicondata["reviewid"],
+                "count" => $goodicondata["count"],
+                "heartclass" => $goodicondata["heartclass"],
+                "goodidclass" => $goodicondata["goodidclass"]
             ],
         );
     }

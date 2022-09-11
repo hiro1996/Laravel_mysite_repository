@@ -16,7 +16,7 @@ class PostController extends Controller
 
         $posts['nickname'] = 'Guest';
         if (session('loginid')) { //ログインしている時
-            $where = [['login','=',session('loginid')]];
+            $where = [['loginid','=',session('loginid')]];
             $select = [
                 'nickname',
             ];

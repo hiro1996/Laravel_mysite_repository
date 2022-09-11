@@ -42,6 +42,9 @@
     </head>
 
     <body>
+        <script src="https://kit.fontawesome.com/01acc973a4.js" crossorigin="anonymous"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> 

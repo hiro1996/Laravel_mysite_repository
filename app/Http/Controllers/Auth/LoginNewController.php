@@ -15,7 +15,6 @@ use App\Models\Post;
 use App\Models\Printorderjsid;
 use App\Models\Rankingtitlesetting;
 use App\Models\Record;
-use App\Models\Workresult;
 use App\Models\Worktype;
 use DateTime;
 use Illuminate\Support\Facades\DB;

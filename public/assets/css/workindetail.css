@@ -57,6 +57,10 @@
     border-bottom: double 3px  gray;
 }
 
+.heart {
+    text-align: right;
+}
+
 .ninkitag {
     padding-left: 1rem;
     -webkit-transform: skew(-15deg);

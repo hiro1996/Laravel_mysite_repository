@@ -179,9 +179,15 @@
                         <div class="workreviewpostbody">
                             <span>{{ $workdata['postbody'][$i] }}</span>
                         </div>
+                        <div>
+                            <div class="{{ $workdata['heartclickclass'][$i+1] }}" id="goodid{{ $i+1 }}"><i class="{{ $workdata['heartonoff'][$i+1] }}" id="heartid{{ $i+1 }}">&nbsp;{{ $workdata["count"][$i+1] }}</i></div>
+                            <input type="hidden" id="reviewid{{ $i+1 }}" value="{{ $i+1 }}">
+                        </div>
                     </div>
                 </div>
             @endfor
+            <input type="hidden" id="worksubid" value="{{ $workdata['worksubid'] }}">
+            <input type="hidden" id="maxid" value="{{ count($workdata['postdate']) }}">
         @endif
     </div>
 
@@ -307,12 +313,11 @@
 
         for (let i = 1; i <= maxid.value; i++) {
             $('#goodid' + i).click(function() {
-                let workid = document.getElementById("workid");
+                let worksubid = document.getElementById("worksubid");
                 let reviewid = document.getElementById("reviewid" + i);
                 let goodid = document.getElementById("goodid" + i);
-                let goodurlid = document.getElementById("goodurlid" + i);
-
-                if (goodid.className == 'beforeclick' + i) {
+                let heartid = document.getElementById("heartid" + i);
+                if (goodid.className == 'heart beforeclick' + i) {
                     $.ajax({
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -321,17 +326,16 @@
                         url: "/workindetail/goodbutton/add",
                         type: "post",
                         data: {
-                            workid: workid.value,
+                            worksubid: worksubid.value,
                             reviewid: reviewid.value,
+                            count: heartid.innerHTML,
+                            heartclass: heartid.className
                         },
                         dataType: "json",
                     }).done(function(response) {
-                        let countid = document.getElementById("countid" + i);
-                        let goodurlid = document.getElementById("goodurlid" + i);
-                        let goodid = document.getElementById("goodid" + i);
-                        goodid.className = 'afterclick' + i;
-                        countid.innerText = response["count"];
-                        goodurlid.src = response["icon"];
+                        heartid.innerText = response["count"];
+                        heartid.className = response["heartclass"];
+                        goodid.className = response["goodidclass"];
                     }).fail(function(failresponse) {
                         console.log("エラ〜");
                     })
@@ -344,17 +348,16 @@
                         url: "/workindetail/goodbutton/delete",
                         type: "post",
                         data: {
-                            workid: workid.value,
+                            worksubid: worksubid.value,
                             reviewid: reviewid.value,
+                            count: heartid.innerHTML,
+                            heartclass: heartid.className
                         },
                         dataType: "json",
                     }).done(function(response) {
-                        let countid = document.getElementById("countid" + i);
-                        let goodurlid = document.getElementById("goodurlid" + i);
-                        let goodid = document.getElementById("goodid" + i);
-                        goodid.className = 'beforeclick' + i;
-                        countid.innerText = response["count"];
-                        goodurlid.src = response["icon"];
+                        heartid.innerText = response["count"];
+                        heartid.className = response["heartclass"];
+                        goodid.className = response["goodidclass"];
                     }).fail(function(failresponse) {
                         console.log("エラ〜");
                     })
