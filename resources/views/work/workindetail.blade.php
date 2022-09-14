@@ -189,6 +189,34 @@
             <input type="hidden" id="worksubid" value="{{ $workdata['worksubid'] }}">
             <input type="hidden" id="maxid" value="{{ count($workdata['postdate']) }}">
         @endif
+
+        @if ($workdata["work_otherview_img"])
+        <br>
+        <section class="article-shadow recentcheck">
+            <div class="contentstop-container">
+                <div class="p-3 contentstoptitle" id="contentstopcheck"><span class="contentstopbigtitle">この作品を見ている方はこちらも見ています</span></div>
+                <div class="contentstop-container">
+                    <article class="check">
+                        <div class="p-3">
+                            <div class="d-flex justify-content-around">
+                                @for ($i = 0;$i < count($workdata["work_otherview_img"]);$i++) 
+                                    <a href="{{ $workdata['work_otherview_url'][$i] }}">
+                                    <div class="worknewdate">
+                                        <img class="recentimg" src="{{ $workdata['work_otherview_img'][$i] }}">
+                                        <div class="worktitlename">
+                                            <b>{{ $workdata['work_otherview_title'][$i] }}</b>
+                                        </div>
+                                    </div>
+                                    </a>
+                                @endfor
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+        @endif
+
     </div>
 
 

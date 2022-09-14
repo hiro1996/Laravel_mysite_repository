@@ -318,17 +318,23 @@ $title = 'トップページ';
                             @for ($i = 1;$i <= count($contentstop["worknew_img"]);$i++)
                                 <div class="selectgenrearea" id="workgenre{{ $i }}">
                                     <div class="d-flex justify-content-around">
-                                        @for ($j = 0;$j < count($contentstop["worknew_img"][$i]);$j++)
-                                            <div class="worknew">
-                                                <div class="worknewdate">{{ $contentstop['worknew_date'][$i][$j] }}</div>
-                                                <a href="{{ $contentstop['worknew_url'][$i][$j] }}">
-                                                <img class="newimg" src="{{ $contentstop['worknew_img'][$i][$j] }}">
-                                                <div class="worktitlename">
-                                                    <b>{{ $contentstop['worknew_title'][$i][$j] }}</b>
+                                        @if ($contentstop["worknew_img"][$i])
+                                            @for ($j = 0;$j < count($contentstop["worknew_img"][$i]);$j++)
+                                                <div class="worknew">
+                                                    <div class="worknewdate">{{ $contentstop['worknew_date'][$i][$j] }}</div>
+                                                    <a href="{{ $contentstop['worknew_url'][$i][$j] }}">
+                                                        <img class="newimg" src="{{ $contentstop['worknew_img'][$i][$j] }}">
+                                                        <div class="worktitlename">
+                                                            <b>{{ $contentstop['worknew_title'][$i][$j] }}</b>
+                                                        </div>
+                                                    </a>
                                                 </div>
-                                                </a>
+                                            @endfor
+                                        @else
+                                            <div class="worknew">
+                                                新着作品はありません。
                                             </div>
-                                        @endfor
+                                        @endif
                                     </div>
                                 </div>
                             @endfor

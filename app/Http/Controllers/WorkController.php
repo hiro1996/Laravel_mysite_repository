@@ -297,6 +297,7 @@ class WorkController extends Controller
                 $browsehistory->browsehistoryModelInsert($loginid,$workdata['worksubid']);
             }
         } 
+        $browsehistory->browsehistoryModelInsert($loginid,$workdata['worksubid']);
 
         /**
          * 記録テーブル(records)もしくは未ログインユーザー記録テーブル(guestrecords)に履歴閲覧回数を登録しに行く
@@ -499,6 +500,79 @@ class WorkController extends Controller
             $workdata["heartclickclass"] = $heartclickclass;
             $workdata["heartonoff"] = $heartonoff;
         } 
+
+        /**
+         * この作品を見ている方はこちらも見ています
+         */
+        $workdata['loginidlist'] = FALSE;
+        $loginidlist = [];
+        $needDB = [];
+        // 現在表示している作品の作品サブIDを見ているユーザーを取得
+        $where = [
+            ['worksubid','=',$workdata['worksubid']]
+        ];
+        $select = [
+            'loginid',
+            'history_time'
+        ];
+        $groupby = NULL;
+        $orderby = NULL;
+        $orderbyascdesc = NULL;
+        $browsehistories = $browsehistory->browsehistoryModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+        if (count($browsehistories) != 0) {
+            foreach ($browsehistories as $browsehistother) {
+                array_push($loginidlist,$browsehistother->loginid);
+            }
+
+            $needDB = [
+                'orwhere'
+            ];
+            // 現在表示している作品の作品サブIDを見ているユーザーを取得し、
+            // そのユーザーが見ている作品サブID一覧かつ今開いている作品サブIDではないものを取得。
+            $where = 'loginid+';
+            for ($i = 0;$i < count($loginidlist);$i++) {
+                $where = $where.$loginidlist[$i].'+';
+            }
+            $where = $where.'-worksubid+-'.$workdata['worksubid'];
+            $select = [
+                'worksubid',
+                DB::raw('count(worksubid) AS viewworksubid_count'),
+            ];
+            $groupby = [
+                'worksubid',
+            ];
+            $orderby = 'viewworksubid_count';
+            $orderbyascdesc = 'DESC';
+            $limit = 5;
+            $browsehistoriesotherviews = $browsehistory->browsehistoryModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+
+            $workdata["work_otherview_img"] = FALSE;
+            $i = 0;
+            foreach ($browsehistoriesotherviews as $other) {
+                $needDB = [
+                    'worksubs',
+                ];
+                $where = [['id','=',$other->worksubid]];
+                $select = [
+                    'title',
+                    'img',
+                    'url',
+                ];
+                $groupby = NULL;
+                $orderby = NULL;
+                $orderbyascdesc = NULL;
+                $limit = NULL;
+                $otherviews = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+                foreach ($otherviews as $view) {
+                    $workdata["work_otherview_title"][$i] = $work->worktitleConvert($view->title,5);
+                    $workdata["work_otherview_img"][$i] = asset($view->img);
+                    $workdata["work_otherview_url"][$i] = asset($view->url);
+                    $workdata["work_otherview_count"][$i] = $other->viewworksubid_count;
+                }
+                $i++;
+            }
+        }
+
         return view('work.workindetail',compact('workdata','favoriteclass','favoritetext'));
     }
 

@@ -653,12 +653,6 @@ class LoginNewController extends Controller
         /**
          * 新着作品 ジャンルごとに上映前、発売前の作品を取得
          */
-        $contentstop['worknew_genre'] = FALSE;
-        $contentstop['worknew_title'] = FALSE;
-        $contentstop['worknew_img'] = FALSE;
-        $contentstop['worknew_url'] = FALSE;
-        $contentstop['worknew_date'] = FALSE;
-
         $needDB = [
             'worksubs',
             'worktransinfos',
@@ -674,7 +668,7 @@ class LoginNewController extends Controller
         $groupby = NULL;
         $orderby = 'siteviewday_1';
         $orderbyascdesc = 'ASC';
-        $limit = NULL;
+        $limit = 10;
         $workdatas = $work->workModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
         if (count($workdatas) != 0) {
             $needDB = [];
@@ -687,6 +681,14 @@ class LoginNewController extends Controller
             $orderbyascdesc = NULL;
             $limit = NULL;
             $worktypes = $worktype->worktypeModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
+
+            for ($i = 1;$i <= count($worktypes);$i++) {
+                $contentstop['worknew_genre'][$i] = FALSE;
+                $contentstop['worknew_title'][$i] = FALSE;
+                $contentstop['worknew_img'][$i] = FALSE;
+                $contentstop['worknew_url'][$i] = FALSE;
+                $contentstop['worknew_date'][$i] = FALSE;
+            }
 
             for ($i = 1;$i <= count($worktypes);$i++) {
                 $needDB = [];
@@ -710,6 +712,7 @@ class LoginNewController extends Controller
                 $contentstop['worknew_url'][$num[1]][] = $workd->url;
                 $contentstop['worknew_date'][$num[1]][] = $workd->siteviewday_1.'発売';
             }
+            //dd($contentstop['worknew_title'],$contentstop['worknew_genre']);
         }
 
         /**
