@@ -44,7 +44,7 @@
                             <div class="col">
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <p class="columndata">ああああああああ</p>
+                                        <p class="columndata">{{ $users->age }}</p>
                                     </div>
                                 </div>
                             </div> 

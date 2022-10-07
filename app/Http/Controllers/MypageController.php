@@ -269,11 +269,14 @@ class MypageController extends Controller
     public function information(User $user, Point $point) {
         $points = $point->pointModelGet();
 
-        $where = [['login','=',session('loginid')]];
+        $where = [['loginid','=',session('loginid')]];
         $select = [
             'loginid',
             'nickname',
-            'email'
+            'email',
+            'age',
+            'login_number_of_times',
+            'last_display_login_time',
         ];
         $users = $user->userModelGet($where,$select);
         $users = $users[0];

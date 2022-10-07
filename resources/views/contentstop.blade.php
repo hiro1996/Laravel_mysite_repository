@@ -273,6 +273,7 @@ $title = 'トップページ';
                                                     @for ($j = 0;$j < count($contentstop["ninkitodayyesterday"]['img'][$i]);$j++) 
                                                         <div class="workninki">
                                                             {{ $contentstop['ninkitodayyesterday']['tag'][$i][$j] }}
+                                                            {{ $contentstop['ninkitodayyesterday']['wariai'][$i][$j] }}%上昇
                                                             <a href="{{ $contentstop['ninkitodayyesterday']['url'][$i][$j] }}">
                                                             <img class="ninkiimg" src="{{ $contentstop['ninkitodayyesterday']['img'][$i][$j] }}">
                                                             <div class="worktitlename">

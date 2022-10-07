@@ -533,7 +533,7 @@ class WorkController extends Controller
             for ($i = 0;$i < count($loginidlist);$i++) {
                 $where = $where.$loginidlist[$i].'+';
             }
-            $where = $where.'-worksubid+-'.$workdata['worksubid'];
+            $where = $where.'*worksubid+*'.$workdata['worksubid'];
             $select = [
                 'worksubid',
                 DB::raw('count(worksubid) AS viewworksubid_count'),

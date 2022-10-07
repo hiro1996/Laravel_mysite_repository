@@ -20,11 +20,10 @@ class Browsehistory extends Model
             $browsehistories = $browsehistories->join('worktypes','works.work_type','=','worktypes.worktypeid');
         }
         if (in_array('orwhere',$needDB)) {
-            $minus = substr_count($where,'-');
+            $minus = substr_count($where,'*');
             $wheretmp = explode("+",$where);
             $plus = count($wheretmp)-$minus;
             $where1 = $wheretmp[0];
-            $where3 = $wheretmp[$plus];
             $where2 = [];
             for ($i = 1;$i < $plus;$i++) {
                 array_push($where2,$wheretmp[$i]);
@@ -32,16 +31,16 @@ class Browsehistory extends Model
             $browsehistories = $browsehistories->whereIn($where1,$where2);
 
             if ($minus != 0) {
+                $where3 = $wheretmp[$plus];
                 $where4 = [];
                 for ($i = $plus+1;$i < count($wheretmp);$i++) {
                     array_push($where4,$wheretmp[$i]);
                 }
                 // -を削除
-                $where3 = str_replace('-', '', $where3);
+                $where3 = str_replace('*', '', $where3);
                 for ($i = 0;$i < count($where4);$i++) {
-                    $where4[$i] = str_replace('-', '', $where4[$i]);
+                    $where4[$i] = str_replace('*', '', $where4[$i]);
                 }
-                //dd($plus,$minus,$where,$wheretmp,$where1,$where2,$where3,$where4);
                 $browsehistories = $browsehistories->whereNotIn($where3,$where4);
             }
         } else {

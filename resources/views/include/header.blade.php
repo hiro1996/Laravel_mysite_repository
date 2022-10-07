@@ -128,6 +128,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         <script type="text/javascript" src="{{ asset('assets/js/worksearchajax.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/usersearchajax.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('assets/js/clickmakingcsv.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/adminlink.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/contentstop.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/modal.js') }}"></script>

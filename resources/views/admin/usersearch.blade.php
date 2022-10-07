@@ -33,13 +33,15 @@
                     <div class="text-center searchbuttondivclass">
                         <input onclick="usersearchajax()" type="button" id="searchbuttonid" class="btn btn-primary btn-block searchbuttonclass" value="検索">
                     </div> 
+                    <div id="csvid">
+                        <input onclick="clickmakingcsv()" type="button" id="csvid" class="btn btn-primary btn-block searchbuttonclass" value="CSV出力">
+                    </div>
                 </div> 
             </div>
             <br>
             <div class="card" id="collapsesearchbuttonid">
             </div>
-            <div id="csvid">
-            </div>
+            
             <br>
         </div>
 

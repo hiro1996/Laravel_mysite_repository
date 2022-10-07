@@ -26,9 +26,10 @@ function usersearchajax() {
             //必要パラメータ (検索結果数、#、作品名、カテゴリー、説明)
             //tr要素作成
             for (let i = 0;i < Object.keys(response["data"]).length;i++) {
-                createTable += `<tr class="tr-class"><td class="check-` + (i+1) + `"><input type="checkbox" name="check" class="check" id=checkid` + i + `></td><label for="checkid` + i + `"><td class="nickname-` + (i+1) + `" id="checkid` + i + `">${response["data"][i]["nickname"]}</td><td class="times-` + (i+1) + `" id=checkid` + i + `>${response["data"][i]["login_number_of_times"]}</td><td class="nowlogin-` + i + `" id=checkid` + i + `>${response["data"][i]["next_display_login_time"]}</td></label></tr>`;
+                createTable += `<tr class="tr-class"><td class="check-` + (i+1) + `"><input type="checkbox" name="check" class="check" id=checkid` + i + `></td><label for="checkid` + i + `"><td class="nickname-` + (i+1) + `" id="checkid` + i + `">${response["data"][i]["nickname"]}</td><td class="times-` + (i+1) + `" id=checkid` + i + `>${response["data"][i]["login_number_of_times"]}</td><td class="nowlogin-` + (i+1) + `" id=checkid` + i + `>${response["data"][i]["next_display_login_time"]}</td></label></tr>`;
             }
             createTable += `</table></div>`;
+            createTable += `<div id="csvmaxvalue" value="${Object.keys(response["data"]).length}">${Object.keys(response["data"]).length}</div>`;
             $("#collapsesearchbuttonid").html(createTable);
 
             let divElement = document.createElement("div");
@@ -42,27 +43,6 @@ function usersearchajax() {
             imgChildElement.width = 15;
             imgChildElement.height = 15;
 
-            let csvElement = document.createElement("a");
-            csvElement.href = '/csv';
-            var f = "document.download.submit();return false;";
-            csvElement.setAttribute('onclick',f);
-            csvElement.innerText = 'CSV出力';
-
-            let csvformElement = document.createElement("form");
-            csvformElement.action = '/csv';
-            csvformElement.name = 'download';
-            csvformElement.method = 'GET';
-            let csvinputElement = document.createElement("input");
-            csvinputElement.type = 'hidden';
-            csvinputElement.name = 'param';
-
-            csvinputElement.value = 'para';
-            csvformElement.appendChild(csvinputElement);
-            divChildElement.appendChild(imgChildElement);
-            divChildElement.appendChild(csvElement);
-            divChildElement.appendChild(csvformElement);
-            divElement.appendChild(divChildElement);
-            $("#csvid").html(divElement);
         } else {
             $("#collapsesearchbuttonid").html('<div id="not-search">検索結果がありません。</div>');
         }

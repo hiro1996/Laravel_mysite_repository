@@ -122,6 +122,7 @@ Route::post('/workindetail/goodbutton/delete', 'App\Http\Controllers\WorkControl
 
 Route::get('/worksearchresult', 'App\Http\Controllers\WorkController@worksearchresult')->name('worksearchresult');
 
+Route::post('/clickmakingcsv', 'App\Http\Controllers\AdminController@clickmakingcsv');
 
 Auth::routes();
 

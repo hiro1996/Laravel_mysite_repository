@@ -576,14 +576,15 @@ class LoginNewController extends Controller
                 'history_time_date',
             ];
             $orderby = 'history_time_date';
-            $orderbyascdesc = 'ASC';
-            $limit = 4;
+            $orderbyascdesc = 'DESC';
+            $limit = 5;
             $ninkistodayyesterdays = $browsehistory->browsehistoryModelGet($needDB,$where,$select,$groupby,$orderby,$orderbyascdesc,$limit);
 
             $contentstop['ninkitodayyesterday']['title'][$date] = FALSE;
             $contentstop['ninkitodayyesterday']['tag'][$date] = FALSE;
             $contentstop['ninkitodayyesterday']['img'][$date] = FALSE;
             $contentstop['ninkitodayyesterday']['url'][$date] = FALSE;
+            $contentstop['ninkitodayyesterday']['ninkicount'][$date] = FALSE;
             if (count($ninkistodayyesterdays) != 0) {
                 foreach ($ninkistodayyesterdays as $ninkity) {
                     $ninki1[$ninkity->worksubid][0] = 0; //昨日の作品閲覧数
@@ -601,7 +602,8 @@ class LoginNewController extends Controller
                 arsort($ninki1);
 
                 foreach ($ninkistodayyesterdays as $ninkity) {
-                    $contentstop['ninkitodayyesterday_wariai'][$date][$ninkity->worksubid] = ($ninki1[$ninkity->worksubid][1] / $ninki1[$ninkity->worksubid][0]) * 100;
+                    $tmp['ninkitodayyesterday_wariai'][$ninkity->worksubid] = ($ninki1[$ninkity->worksubid][1] / $ninki1[$ninkity->worksubid][0]) * 100;
+                    $tmp['ninkitodayyesterday_wariai'][$ninkity->worksubid] = (int) (round($tmp['ninkitodayyesterday_wariai'][$ninkity->worksubid]));
 
                     $needDB = [
                         'worksubs',
@@ -646,6 +648,11 @@ class LoginNewController extends Controller
                 foreach ($tmp['url'] as $data) {
                     $contentstop['ninkitodayyesterday']['url'][$date][$l] = $data;
                     $l++;
+                }
+                $m = 0;
+                foreach ($tmp['ninkitodayyesterday_wariai'] as $data) {
+                    $contentstop['ninkitodayyesterday']['wariai'][$date][$m] = $data;
+                    $m++;
                 }
             }
         }
@@ -712,7 +719,6 @@ class LoginNewController extends Controller
                 $contentstop['worknew_url'][$num[1]][] = $workd->url;
                 $contentstop['worknew_date'][$num[1]][] = $workd->siteviewday_1.'発売';
             }
-            //dd($contentstop['worknew_title'],$contentstop['worknew_genre']);
         }
 
         /**

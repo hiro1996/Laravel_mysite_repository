@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class Point extends Model
 {
     public function pointModelGet() {
-        $num = 347812;
+        $num = 99048;
         $splitnum = str_split($num);
 
         for ($i = 0;$i < count($splitnum);$i++) {

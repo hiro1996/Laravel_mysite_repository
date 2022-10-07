@@ -9,6 +9,7 @@ use App\Models\Attribute;
 use App\Models\Printorderjsid;
 use App\Models\Rankingtitlesetting;
 use App\Models\Work;
+use Exception;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Mail;
 use PragmaRX\Google2FAQRCode\Google2FA;
@@ -72,7 +73,7 @@ class AdminController extends Controller
     }
 
     public function adminaccount(User $user) {
-        $where = [['login','=',session('loginid')]];
+        $where = [['loginid','=',session('loginid')]];
         $select = [
             'loginid',
             'nickname',
@@ -95,7 +96,7 @@ class AdminController extends Controller
         $adminaccountdata = $request->only('loginid','nickname','email');
         $user->userModelUpdate('loginid',$adminaccountdata["loginid"],'nickname',$adminaccountdata["nickname"]);
         $user->userModelUpdate('loginid',$adminaccountdata["loginid"],'email',$adminaccountdata["email"]);
-        $where = [['login','=',$adminaccountdata["loginid"]]];
+        $where = [['loginid','=',$adminaccountdata["loginid"]]];
         $select = [
             'loginid',
         ];
@@ -123,36 +124,45 @@ class AdminController extends Controller
         );
     }
 
-    public function getcsv(Request $request) {
-        $request = $request->all();
-        $users = [
-            ['name' => '太郎', 'age' => 24],
-            ['name' => '花子', 'age' => 21]
-        ];
-        // カラムの作成
-        $head = ['名前', '年齢'];
-   
-        // 書き込み用ファイルを開く
-        $f = fopen('test.csv', 'w');
-        if ($f) {
-            // カラムの書き込み
-            mb_convert_variables('SJIS', 'UTF-8', $head);
-            fputcsv($f, $head);
-            // データの書き込み
-            foreach ($users as $user) {
-               mb_convert_variables('SJIS', 'UTF-8', $user);
-               fputcsv($f, $user);
-            }
+    public function clickmakingcsv(Request $request) {
+        $csvdata = $request->only('nickname','logintimes','previouslogin');
+
+        for ($i = 0;$i < count($csvdata['nickname']);$i++) {
+            $array[$i] = [
+                'id' => $i,
+                'ニックネーム' => $csvdata['nickname'][$i],
+                'ログイン回数' => $csvdata['logintimes'][$i],
+                '前回のログイン' => $csvdata['previouslogin'][$i]
+            ];
         }
-        // ファイルを閉じる
-        fclose($f);
 
-        header("Content-Type: application/octet-stream");
-        //header('Content-Length: '.filesize('.csv'));
-        header('Content-Disposition: attachment; filename=test.csv');
-        readfile('test.csv');
+        $csvFileName = time() . rand() . '.csv';
+        $fp = fopen($csvFileName, 'w');
+        if ($fp === FALSE) {
+            throw new Exception('ファイルを開けませんでした。');
+        }
 
-        return view('admin.usersearch', compact('users'));
+        $header = ['No','ニックネーム','ログイン回数','直前ログイン'];
+        fputcsv($fp,$header);
+
+        for ($j = 0;$j < count($array);$j++) {
+            // 文字コード変換。エクセルで開けるようにする
+            mb_convert_variables('SJIS', 'UTF-8', $array[$j]);
+            fputcsv($fp,$array[$j]);
+        }
+
+        fclose($fp);
+
+        // ファイルタイプ（csv）
+        header('Content-Type: application/octet-stream');
+        // ファイル名
+        header('Content-Disposition: attachment; filename='.$csvFileName); 
+        // ファイルのサイズ　ダウンロードの進捗状況が表示
+        header('Content-Length: ' . filesize($csvFileName)); 
+        header('Content-Transfer-Encoding: binary');
+        // ファイルを出力する
+        readfile($csvFileName);
+
     }
 
     public function adminonetimepass(Request $request, User $user) {
@@ -277,7 +287,9 @@ class AdminController extends Controller
             $contentstop['button_name'] = $rankingtitlesetting->button_name;
         }
 
-        return view('mypage.mypage',compact('contentstop'));
+        return view('admin.adminpage',compact('contentstop'));
 
     }
+
+    
 }
